@@ -1,0 +1,7 @@
+{
+    "name": "Rooty-Tooty-Gas-Computey",
+    "version": "0.0.1",
+    "scripts": {
+        "test": "jest --passWithNoTests"
+    }
+}
