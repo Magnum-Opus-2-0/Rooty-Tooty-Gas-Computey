@@ -2,7 +2,16 @@
     "name": "Rooty-Tooty-Gas-Computey",
     "version": "0.0.1",
     "scripts": {
-        "test": "jest --passWithNoTests"
+        "test": "jest --passWithNoTests",
+        "start": "react-scripts start",
+        "build": "react-scripts build",
+        "eject": "react-scripts eject"
+    },
+    "dependencies": {
+        "@babel/plugin-proposal-class-properties": "^7.5.5",
+        "react": "^16.10.2",
+        "react-dom": "16.10.2",
+        "react-scripts": "3.2.0"
     },
     "devDependencies": {
         "@babel/core": "^7.6.4",
@@ -10,7 +19,16 @@
         "babel-jest": "^24.9.0",
         "jest": "^24.9.0"
     },
-    "dependencies": {
-        "@babel/plugin-proposal-class-properties": "^7.5.5"
+    "browserslist": {
+        "production": [
+            ">0.2%",
+            "not dead",
+            "not op_mini all"
+        ],
+        "development": [
+            "last 1 chrome version",
+            "last 1 firefox version",
+            "last 1 safari version"
+        ]
     }
 }
