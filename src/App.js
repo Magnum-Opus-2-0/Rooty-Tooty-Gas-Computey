@@ -1,7 +1,7 @@
 import React from 'react';
 import './App.css';
 
-import FilterPopup from './components/FilterPopup';
+import GasStationContainer from './components/GasStationData.js'
 
 class Welcome extends React.Component {
 	render() {
@@ -12,10 +12,8 @@ class Welcome extends React.Component {
 
 function App() {
   return (
-    <div className="Hello-Text">
-      Hello world 123 123
-      <Welcome name="Edward" />
-      <FilterPopup name="test" />
+    <div className="TopLevelDiv">
+        <GasStationContainer/>
     </div>
   );
 }
