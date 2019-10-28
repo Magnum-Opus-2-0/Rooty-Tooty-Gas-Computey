@@ -1,8 +1,10 @@
 import React from 'react';
 import './App.css';
 
+//import FilterPopup from './components/FilterPopup';
+import DropdownMenu from './components/CarInfo.js';
 import GasStationContainer from './components/GasStationData.js'
-import FilterPopup from './components/FilterPopup.js';
+// import CarInfo from "./components/CarInfo";
 
 class Welcome extends React.Component {
 	render() {
@@ -10,13 +12,13 @@ class Welcome extends React.Component {
 	}
 }
 
-
 function App() {
   return (
     <div className="TopLevelDiv">
+    	<DropdownMenu/>
         <GasStationContainer/>
-        <FilterPopup name="Edward" />
     </div>
+
   );
 }
 
