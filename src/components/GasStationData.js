@@ -21,6 +21,8 @@ class GasStationContainer extends React.Component {
         this.state = {
             stationsData: [],
         };
+        
+        this.handleClick = this.handleClick.bind(this);
     }
 
     /**
