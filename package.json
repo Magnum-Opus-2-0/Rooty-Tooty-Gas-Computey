@@ -1,6 +1,7 @@
 {
     "name": "Rooty-Tooty-Gas-Computey",
     "version": "0.0.1",
+    "license": "GNU General Public License v3.0",
     "scripts": {
         "test": "jest --passWithNoTests",
         "start": "node src/server.js",
@@ -19,8 +20,14 @@
     "devDependencies": {
         "@babel/core": "^7.6.4",
         "@babel/preset-env": "^7.6.3",
+        "acorn": "^7.1.0",
         "babel-jest": "^24.9.0",
-        "jest": "^24.9.0"
+        "enzyme": "^3.10.0",
+        "enzyme-adapter-react-16": "^1.15.1",
+        "jest": "^24.9.0",
+        "jest-environment-enzyme": "^7.1.1",
+        "jest-enzyme": "^7.1.1",
+        "typescript": "^3.6.4"
     },
     "browserslist": {
         "production": [
