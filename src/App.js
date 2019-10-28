@@ -1,16 +1,10 @@
 import React from 'react';
 import './App.css';
 
-<<<<<<< HEAD
-import FilterPopup from './components/FilterPopup';
-import CarInfo from './components/CarInfo';
-=======
+//import FilterPopup from './components/FilterPopup';
+import DropdownMenu from './components/CarInfo.js';
 import GasStationContainer from './components/GasStationData.js'
-<<<<<<< HEAD
->>>>>>> master
-=======
-import CarInfo from "./components/CarInfo";
->>>>>>> master
+// import CarInfo from "./components/CarInfo";
 
 class Welcome extends React.Component {
 	render() {
@@ -20,20 +14,9 @@ class Welcome extends React.Component {
 
 function App() {
   return (
-<<<<<<< HEAD
-    <div className="Hello-Text">
-      Hello world 123 123
-      <Welcome name="Edward" />
-      <FilterPopup name="test" />
-      <CarInfo />
-=======
     <div className="TopLevelDiv">
+    	<DropdownMenu/>
         <GasStationContainer/>
-<<<<<<< HEAD
->>>>>>> master
-=======
-        <CarInfo/>
->>>>>>> master
     </div>
 
   );
