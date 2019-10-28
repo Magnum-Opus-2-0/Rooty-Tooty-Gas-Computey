@@ -3,6 +3,76 @@ import { geolocated } from "react-geolocated";
 import './styles/GasStationData.css'
 
 /**
+ * A placeholder object of gas station data until we can get data using an API.
+ *
+ * @type {Array}
+ */
+const debugGasData = [
+    {
+        name: 'Arco',
+        price: 3.82,
+        coords: {
+            latitude: 33.976067,
+            longitude: -117.339343
+        },
+        key: 'key-arco-iowa',
+    },
+    {
+        name: 'Shell',
+        price: 4.00,
+        coords: {
+            latitude: 33.975381,
+            longitude: -117.340335
+        },
+        key: 'key-shell-university',
+    },
+    {
+        name: '76',
+        price: 4.12,
+        coords: {
+            latitude: 33.983209,
+            longitude: -117.341269
+        },
+        key: 'key-76-blaine',
+    },
+    {
+        name: 'Arco',
+        price: 3.80,
+        coords: {
+            latitude: 33.982567,
+            longitude: -117.341772
+        },
+        key: 'key-arco-blaine',
+    },
+    {
+        name: 'Shell',
+        price: 4.38,
+        coords: {
+            latitude: 33.983350,
+            longitude: -117.340284
+        },
+        key: 'key-arco-iowa',
+    },
+    {
+        name: 'Chevron',
+        price: 4.20,
+        coords: {
+            latitude: 33.955115,
+            longitude: -117.332514
+        },
+        key: 'key-chevron-canyoncrest',
+    },
+    {
+        name: 'Mobil',
+        price: 4.05,
+        coords: {
+            latitude: 33.977036,
+            longitude: -117.336895
+        },
+        key: 'key-mobil-university',
+    }];
+
+/**
  * A container to hold all other gas station data components.
  *
  * Handles functionality for clicking the find button and holds the data
@@ -39,6 +109,8 @@ class GasStationContainer extends React.Component {
             console.log('Latitude: ' + this.props.coords.latitude);
         }
         // Todo: Access Gas Station API
+        // Just for now let's use the debug data
+        this.setState({stationsData: debugGasData});
     }
 
     /**
@@ -58,27 +130,7 @@ class GasStationContainer extends React.Component {
                 </div>
                 <StationsList
                     name="Station List"
-                    stationsData={
-                        /*this.state.stationsData*/
-                        [
-                            {
-                                name: 'Arco',
-                                key: 'unique-arco',
-                            },
-                            {
-                                name: 'Chevron',
-                                key: 'unique-chevron',
-                            },
-                            {
-                                name: 'Texaco',
-                                key: 'unique-texaco',
-                            },
-                            {
-                                name: 'Mobil',
-                                key: 'unique-mobile',
-                            }
-                        ]
-                    }
+                    stationsData={this.state.stationsData}
                 />
             </div>
         );
@@ -109,7 +161,7 @@ class StationsList extends React.Component {
         const stations = this.props.stationsData.map(stationData => {
             return (
                 <StationListItem
-                    value={stationData.name}
+                    value={stationData.name + ': $' + stationData.price.toFixed(2)}
                     key={stationData.key}
                 />
             );
