@@ -161,7 +161,7 @@ class StationsList extends React.Component {
         const stations = this.props.stationsData.map(stationData => {
             return (
                 <StationListItem
-                    value={stationData.name + ': $' + stationData.price}
+                    value={stationData.name + ': $' + stationData.price.toFixed(2)}
                     key={stationData.key}
                 />
             );
