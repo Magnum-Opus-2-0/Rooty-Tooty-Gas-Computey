@@ -6,6 +6,10 @@ import FilterPopup from './components/FilterPopup';
 import CarInfo from './components/CarInfo';
 =======
 import GasStationContainer from './components/GasStationData.js'
+<<<<<<< HEAD
+>>>>>>> master
+=======
+import CarInfo from "./components/CarInfo";
 >>>>>>> master
 
 class Welcome extends React.Component {
@@ -25,8 +29,13 @@ function App() {
 =======
     <div className="TopLevelDiv">
         <GasStationContainer/>
+<<<<<<< HEAD
+>>>>>>> master
+=======
+        <CarInfo/>
 >>>>>>> master
     </div>
+
   );
 }
 

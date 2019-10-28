@@ -1,27 +1,28 @@
 import React from 'react';
 
 class CarInfo extends React.Component {
-    render() {
-        return (
-            /*<select>
-                  <option value="volvo">Volvo</option>
-                  <option value="saab">Saab</option>
-                  <option value="opel">Opel</option>
-                  <option value="audi">Audi</option>
-            </select>*/
-            <Dropdown>
-                <Dropdown.Toggle variant="success" id="dropdown-basic">
-                Dropdown Button
-                </Dropdown.Toggle>
+    constructor(props) {
+        super(props);
 
-                <Dropdown.Menu>
-                    <Dropdown.Item href="#/action-1">Action</Dropdown.Item>
-                    <Dropdown.Item href="#/action-2">Another action</Dropdown.Item>
-                    <Dropdown.Item href="#/action-3">Something else</Dropdown.Item>
-                </Dropdown.Menu>
-            </Dropdown>
+        this.state = {
+            name: null,
+            year: null,
+            make: null,
+            model: null,
+            mpg: null,
+        };
+
+    };
+
+    render() {
+        return(
+          <div>
+              Your car's MPG is {this.state.mpg}
+          </div>
+
+
         );
-    }    
+    }
 }
 
 export default CarInfo;
