@@ -151,6 +151,8 @@ class GasStationContainer extends React.Component {
                 <StationsList
                     name="Station List"
                     stationsData={this.state.stationsData}
+                    coords={this.props.coords}
+
                 />
             </div>
         );
@@ -178,10 +180,12 @@ class StationsList extends React.Component {
     render() {
         // First we have to put all of the <StationListItems> in an object so that we can output them all at once later.
         // We cannot use a loop inside the return statement.
+        let sc = new StationCalculation();
         const stations = this.props.stationsData.map(stationData => {
             return (
                 <StationListItem
-                    value={stationData.name + ': $' + stationData.price.toFixed(2)}
+                    value={stationData.name + ': $' + stationData.price.toFixed(2) + '\n'
+                    + sc.calcDistance(this.props.coords, stationData.coords).toFixed(2) + ' miles.'}
                     key={stationData.key}
                 />
             );
@@ -239,7 +243,7 @@ function FindStations(props) {
 }
 export default geolocated({
     positionOptions: {
-        enableHighAccuracy: false,
+        enableHighAccuracy: true,
     },
     userDecisionTimeout: 10000,
 })(GasStationContainer);
