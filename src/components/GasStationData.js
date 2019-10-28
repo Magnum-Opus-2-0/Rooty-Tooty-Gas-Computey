@@ -1,5 +1,6 @@
 import React from 'react'
 import './styles/GasStationData.css'
+import FilterPopup from './FilterPopup.js'
 
 /**
  * A container to hold all other gas station data components.
@@ -99,7 +100,9 @@ class StationsList extends React.Component {
     render() {
         // First we have to put all of the <StationListItems> in an object so that we can output them all at once later.
         // We cannot use a loop inside the return statement.
-        const stations = this.props.stationsData.map(stationData => {
+        const filterPopup = new FilterPopup();
+        const filteredData = filterPopup.filter(this.props.stationsData);
+        const stations = filteredData.map(stationData => {
             return (
                 <StationListItem
                     value={stationData.name}

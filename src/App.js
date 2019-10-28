@@ -2,6 +2,7 @@ import React from 'react';
 import './App.css';
 
 import GasStationContainer from './components/GasStationData.js'
+import FilterPopup from './components/FilterPopup.js';
 
 class Welcome extends React.Component {
 	render() {
@@ -14,6 +15,7 @@ function App() {
   return (
     <div className="TopLevelDiv">
         <GasStationContainer/>
+        <FilterPopup name="Edward" />
     </div>
   );
 }
