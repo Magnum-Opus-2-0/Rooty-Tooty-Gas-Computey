@@ -1,4 +1,5 @@
 import React from 'react'
+import { geolocated } from "react-geolocated";
 import './styles/GasStationData.css'
 
 /**
@@ -20,6 +21,8 @@ class GasStationContainer extends React.Component {
         this.state = {
             stationsData: [],
         };
+        
+        this.handleClick = this.handleClick.bind(this);
     }
 
     /**
@@ -31,6 +34,10 @@ class GasStationContainer extends React.Component {
     handleClick() {
         console.log('FIND Clicked');
         // Todo: Get location
+        if(this.props.isGeolocationAvailable && this.props.isGeolocationEnabled){
+            console.log('Longitude: ' + this.props.coords.longitude);
+            console.log('Latitude: ' + this.props.coords.latitude);
+        }
         // Todo: Access Gas Station API
     }
 
@@ -158,5 +165,11 @@ function FindStations(props) {
         </button>
     );
 }
+export default geolocated({
+    positionOptions: {
+        enableHighAccuracy: false,
+    },
+    userDecisionTimeout: 10000,
+})(GasStationContainer);
 
-export default GasStationContainer
+
