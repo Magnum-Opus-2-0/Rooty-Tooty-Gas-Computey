@@ -2,6 +2,7 @@ import React from 'react';
 import './App.css';
 
 import GasStationContainer from './components/GasStationData.js'
+import CarInfo from "./components/CarInfo";
 
 class Welcome extends React.Component {
 	render() {
@@ -14,7 +15,9 @@ function App() {
   return (
     <div className="TopLevelDiv">
         <GasStationContainer/>
+        <CarInfo/>
     </div>
+
   );
 }
 
