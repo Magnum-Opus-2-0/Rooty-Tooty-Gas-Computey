@@ -3,6 +3,32 @@ import { geolocated } from "react-geolocated";
 import './styles/GasStationData.css'
 
 /**
+ * A placeholder object of gas station data until we can get data using an API.
+ *
+ * @type {Array}
+ */
+const debugGasData = [{
+        name: 'Arco',
+        price: 3.59,
+        key: 'unique-arco',
+    },
+    {
+        name: 'Chevron',
+        price: 3.79,
+        key: 'unique-chevron',
+    },
+    {
+        name: 'Texaco',
+        price: 3.83,
+        key: 'unique-texaco',
+    },
+    {
+        name: 'Mobil',
+        price: 3.83,
+        key: 'unique-mobile',
+    }];
+
+/**
  * A container to hold all other gas station data components.
  *
  * Handles functionality for clicking the find button and holds the data
@@ -39,6 +65,8 @@ class GasStationContainer extends React.Component {
             console.log('Latitude: ' + this.props.coords.latitude);
         }
         // Todo: Access Gas Station API
+        // Just for now let's use the debug data
+        this.setState({stationsData: debugGasData});
     }
 
     /**
@@ -58,27 +86,7 @@ class GasStationContainer extends React.Component {
                 </div>
                 <StationsList
                     name="Station List"
-                    stationsData={
-                        /*this.state.stationsData*/
-                        [
-                            {
-                                name: 'Arco',
-                                key: 'unique-arco',
-                            },
-                            {
-                                name: 'Chevron',
-                                key: 'unique-chevron',
-                            },
-                            {
-                                name: 'Texaco',
-                                key: 'unique-texaco',
-                            },
-                            {
-                                name: 'Mobil',
-                                key: 'unique-mobile',
-                            }
-                        ]
-                    }
+                    stationsData={this.state.stationsData}
                 />
             </div>
         );
@@ -109,7 +117,7 @@ class StationsList extends React.Component {
         const stations = this.props.stationsData.map(stationData => {
             return (
                 <StationListItem
-                    value={stationData.name}
+                    value={stationData.name + ': $' + stationData.price}
                     key={stationData.key}
                 />
             );
