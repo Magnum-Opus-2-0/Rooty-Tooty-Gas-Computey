@@ -6,4 +6,5 @@
 
 .Centered {
     margin: auto;
+    overflow: scroll;
 }
