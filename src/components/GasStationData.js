@@ -1,6 +1,7 @@
 import React from 'react'
 import { geolocated } from "react-geolocated";
 import './styles/GasStationData.css'
+import StationCalculation from "./StationCalculation";
 
 /**
  * A placeholder object of gas station data until we can get data using an API.
@@ -95,6 +96,10 @@ class GasStationContainer extends React.Component {
         this.handleClick = this.handleClick.bind(this);
     }
 
+    getTopFiveStations(stationsList) {
+        stationsList.sort()
+    }
+
     /**
      * Handle the user clicking the FIND button.
      *
@@ -103,14 +108,29 @@ class GasStationContainer extends React.Component {
      */
     handleClick() {
         console.log('FIND Clicked');
-        // Todo: Get location
-        if(this.props.isGeolocationAvailable && this.props.isGeolocationEnabled){
-            console.log('Longitude: ' + this.props.coords.longitude);
-            console.log('Latitude: ' + this.props.coords.latitude);
+        let sc = new StationCalculation();
+
+        if(!this.props.isGeolocationAvailable ) {
+            console.error('Browser not supported.');
+            return;
+        } else if (!this.props.isGeolocationEnabled) {
+            console.error('Location not enabled.');
+            return;
+        } else if (!this.props.coords) {
+            console.warn('Location not yet found. Try again in a moment.');
+            return;
         }
         // Todo: Access Gas Station API
-        // Just for now let's use the debug data
-        this.setState({stationsData: debugGasData});
+        // Just for now let's use the debug data to see our top 5 stations
+        console.log('Longitude: ' + this.props.coords.longitude);
+        console.log('Latitude: ' + this.props.coords.latitude);
+
+        const allStations = debugGasData.slice();
+        // Todo: Call filter function on this
+        const filteredStations = allStations.slice();
+        const topFiveStations = filteredStations.slice().sort(sc.comparePrice).slice(0, 5);
+
+        this.setState({stationsData: topFiveStations});
     }
 
     /**
