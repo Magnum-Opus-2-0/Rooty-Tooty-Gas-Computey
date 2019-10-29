@@ -1,10 +1,10 @@
 import React from 'react';
 import './styles/CarInfo.css'
 
-/*class CarInfo extends React.Component {
+class CarInfo extends React.Component {
     constructor(props) {
         super(props);
-
+        // Todo: Change these to props
         this.state = {
             name: null,
             year: null,
@@ -22,7 +22,7 @@ import './styles/CarInfo.css'
           </div>
         );
     }
-}*/
+}
 
 class DropdownMenu extends React.Component {
   constructor(props) {
@@ -91,5 +91,18 @@ class DropdownMenu extends React.Component {
   }
 }
 
+class CarInfoContainer extends React.Component{
+  render(){
+    return(
+      <div className="CarInfoContainer">
+        <DropdownMenu>
+        </DropdownMenu>
+          <CarInfo>
+          </CarInfo>
+      </div>
+
+    );
+  }
+}
 // export default CarInfo;
-export default DropdownMenu;
+export default CarInfoContainer;
