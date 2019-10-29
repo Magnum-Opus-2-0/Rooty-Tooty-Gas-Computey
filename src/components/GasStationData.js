@@ -95,6 +95,8 @@ class GasStationContainer extends React.Component {
         };
         
         this.handleClick = this.handleClick.bind(this);
+
+        this.props.selectedFilters = ['a', 'b', 'c'];
     }
 
     getTopFiveStations(stationsList) {
@@ -153,7 +155,7 @@ class GasStationContainer extends React.Component {
                     name="Station List"
                     stationsData={this.state.stationsData}
                     coords={this.props.coords}
-
+                    selectedFilters={this.props.selectedFilters}
                 />
             </div>
         );
@@ -179,12 +181,19 @@ class StationsList extends React.Component {
      * @returns {HTMLElement}   An <ol> containing StationListElements.
      */
     render() {
+        console.log("GasStationData::render()");
+        console.log(this.props);
         // First we have to put all of the <StationListItems> in an object so that we can output them all at once later.
         // We cannot use a loop inside the return statement.
         //const filterPopup = new FilterPopup();
         //const filteredData = filterPopup.filter(this.props.stationsData);
         //const stations = filteredData.map(stationData => {
         let sc = new StationCalculation();
+
+        let filterPopup = new FilterPopup();
+        let filteredData = filterPopup.filter(this.props.stationsData, this.props.selectedFilters);
+        this.props.stationsData = filteredData;
+
         const stations = this.props.stationsData.map(stationData => {
             return (
                 <StationListItem
