@@ -34,11 +34,16 @@ class DropdownMenu extends React.Component {
     };
 
     this.handleChange = this.handleChange.bind(this);
-    //this.handleSubmit = this.handleSubmit.bind(this);
+    this.handleSubmit = this.handleSubmit.bind(this);
   }
 
   handleChange(event) {
-    this.setState({value: event.target.value});
+    this.setState({optionState: event.target.value});
+  }
+
+  handleSubmit(event) {
+    alert("Your car's year, make, and model is: " + this.state.optionState);
+    event.preventDefault();
   }
 
   render() {
@@ -47,7 +52,7 @@ class DropdownMenu extends React.Component {
       <form onSubmit={this.handleSubmit}>
         <label>
           Select your car's year:
-          <select> 
+          <select value={this.state.optionState} onChange={this.handleChange}> 
             {this.state.year.map(list => (
                 <option key={list} value={list}>
                     {list}
@@ -59,7 +64,7 @@ class DropdownMenu extends React.Component {
         <br />
         <label>
           Select your car's make:
-          <select> 
+          <select value={this.state.optionState} onChange={this.handleChange}> 
             {this.state.make.map(list => (
                 <option key={list} value={list}>
                     {list}
@@ -71,7 +76,7 @@ class DropdownMenu extends React.Component {
         <br />
         <label>
           Select your car's model:
-          <select> 
+          <select value={this.state.optionState} onChange={this.handleChange}> 
             {this.state.model.map(list => (
                 <option key={list} value={list}>
                 {list}
