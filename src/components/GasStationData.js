@@ -130,7 +130,11 @@ class GasStationContainer extends React.Component {
 
         const allStations = debugGasData.slice();
         // Todo: Call filter function on this
-        const filteredStations = allStations.slice();
+
+        let filterPopup = new FilterPopup();
+        const filteredStations = filterPopup.filter(allStations, ['Arco', 'Mobil']); //allStations.slice();
+        console.log("filteredStations")
+        console.log(filteredStations)
         const topFiveStations = filteredStations.slice().sort(sc.comparePrice).slice(0, 5);
 
         this.setState({stationsData: topFiveStations});
@@ -173,6 +177,8 @@ class GasStationContainer extends React.Component {
 class StationsList extends React.Component {
     constructor(props) {
         super(props);
+        console.log("StationList::constructor()");
+        console.log(this.props.selectedFilters);
     }
 
     /**
@@ -190,9 +196,7 @@ class StationsList extends React.Component {
         //const stations = filteredData.map(stationData => {
         let sc = new StationCalculation();
 
-        let filterPopup = new FilterPopup();
-        let filteredData = filterPopup.filter(this.props.stationsData, this.props.selectedFilters);
-        this.props.stationsData = filteredData;
+        
 
         const stations = this.props.stationsData.map(stationData => {
             return (

@@ -2,8 +2,6 @@ import React from 'react';
 //import { makeStyles } from '@material-ui/core/styles';
 //import Modal from '@material-ui/core/modal';
 
-
-
 class FilterPopup extends React.Component {
     constructor(props) {
         super(props);
@@ -14,20 +12,21 @@ class FilterPopup extends React.Component {
         this.handler = this.handler.bind(this);
     }
 
-    filter(data) {
+    filter(data, filters) {
+        console.log("FilterPopup::filter()")
         console.log(data)
 
-        if (this.state.selectedFilters.length < 1) {
+        if (filters.length < 1) {
             return data;
         }
 
         //this.state.selectedFilters = ['Arco', 'Texaco'];
         let filteredData = [];
         for (let i = 0; i < data.length; i++) {
-            //console.log(i);
-            for (let j = 0; j < this.state.selectedFilters.length; j++) {
-                //console.log("data[i].name: " + data[i].name + "  selectedFilter[j]: " + this.state.selectedFilters[j]);
-                if (data[i].name == this.state.selectedFilters[j]) {
+            console.log(i);
+            for (let j = 0; j < filters.length; j++) {
+                console.log("data[i].name: " + data[i].name + "  selectedFilter[j]: " + filters[j]);
+                if (data[i].name == filters[j]) {
                     filteredData.push(data[i]);
                 }
             }
