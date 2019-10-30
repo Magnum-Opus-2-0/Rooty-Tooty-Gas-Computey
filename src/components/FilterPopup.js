@@ -2,19 +2,22 @@ import React from 'react';
 //import { makeStyles } from '@material-ui/core/styles';
 //import Modal from '@material-ui/core/modal';
 
+const DEF_DISTANCE = 10;
+
 class FilterPopup extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
             filters: ['Arco', 'Chevron', 'Texaco', 'Mobil'],
-            selectedFilters: []
-        }
+            selectedFilters: [],
+            distance: DEF_DISTANCE,
+        };
         this.handler = this.handler.bind(this);
+        this.handleDistanceChange = this.handleDistanceChange.bind(this);
     }
 
-    filter(data, filters) {
-        console.log("FilterPopup::filter()")
-        console.log(data)
+    filter(data) {
+        //console.log(data)
 
         if (filters.length < 1) {
             return data;
@@ -63,6 +66,11 @@ class FilterPopup extends React.Component {
         this.props.updateFilters(array);
     }
 
+    handleDistanceChange(event) {
+        this.setState({distance: event.target.value});
+        console.log('Max search distance: ' + this.state.distance);
+    }
+
     render() {
         return (
             <div>
@@ -76,6 +84,9 @@ class FilterPopup extends React.Component {
                     <FilterOption handler={this.handler} value='texaco' />
                     <FilterOption handler={this.handler} value='mobil' />
                 </select>
+                <MaxDistance
+                    handleChange={this.handleDistanceChange}
+                />
                 <p>Selected Filters:</p>
                 <ul>
                     <li>item 1</li>
@@ -94,6 +105,38 @@ class FilterOption extends React.Component {
             <option onClick={() => handler(this.props.value, this.props.selected)} value={this.props.value}>{this.props.value}</option>
         );
     }
+}
+
+/**
+ * An input field in which the user will type the maximum distance to search.
+ *
+ * props: {
+ *     handleChange {function}  The handler function that saves the data from
+ *                              the input field.
+ * }
+ *
+ * state: none
+ */
+class MaxDistance extends React.Component {
+    constructor(props) {
+        super(props);
+    }
+
+    render() {
+        return (
+            <div>
+                <label>Max Distance
+                <input
+                    type="number"
+                    name="maxDistanceInput"
+                    placeholder={DEF_DISTANCE}
+                    onChange={event => this.props.handleChange(event)}
+                />
+                </label>
+            </div>
+        );
+    }
+
 }
 
 export default FilterPopup;
