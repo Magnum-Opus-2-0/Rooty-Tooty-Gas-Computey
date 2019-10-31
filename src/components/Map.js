@@ -1,6 +1,7 @@
 import React from 'react'
 import {Map, GoogleApiWrapper, Marker} from 'google-maps-react'
 
+
 //For testing purposes. This should be moved to a .css later. Probably.
 const mapStyles ={
     width: '100%',
