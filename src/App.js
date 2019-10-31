@@ -4,6 +4,7 @@ import './App.css';
 import FilterPopup from './components/FilterPopup.js';
 import DropdownMenu from './components/CarInfo.js';
 import GasStationContainer from './components/GasStationData.js';
+import MapContainer from './components/Map'
 import CarInfo from "./components/CarInfo";
 
 class Welcome extends React.Component {
@@ -29,6 +30,7 @@ class App extends React.Component {
                 <DropdownMenu/>
                 <GasStationContainer selectedFilters={this.state.selectedFilters} />
                 <FilterPopup updateFilters={this.updateFilters} />
+                <MapContainer/>
             </div>
         );
     }
