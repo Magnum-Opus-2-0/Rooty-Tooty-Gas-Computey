@@ -16,7 +16,7 @@ class FilterPopup extends React.Component {
         this.handleDistanceChange = this.handleDistanceChange.bind(this);
     }
 
-    filter(data) {
+    filter(data, filters) {
         //console.log(data)
 
         if (filters.length < 1) {
