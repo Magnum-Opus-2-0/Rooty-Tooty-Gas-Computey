@@ -1,6 +1,6 @@
 import React from 'react'
-import {Map, GoogleApiWrapper, Marker} from 'google-maps-react'
-
+import {Map, GoogleApiWrapper, Marker, InfoWindow} from 'google-maps-react'
+import './styles/Map.css'
 
 //For testing purposes. This should be moved to a .css later. Probably.
 const mapStyles ={
@@ -12,21 +12,65 @@ const mapStyles ={
 class MapContainer extends React.Component{
     constructor(props){
         super(props);
-
+        this.state={
+            activeMarker: {},
+            infoOpen: true,
+        };
+        this.handleMarkerClick = this.handleMarkerClick.bind(this);
     }
 
+    handleClose = (props) =>{
+        if(this.state.infoOpen){
+            this.setState({infoOpen: false});
+            this.setState({activeMarker: null});
+
+        }
+    }
+
+    handleMarkerClick = (props, marker, e) =>{
+        console.log('Marker clicked!')
+
+        if(this.state.activeMarker){
+            this.setState({activeMarker: null});
+            this.setState({infoOpen: false})
+        }
+
+        this.setState({activeMarker: marker})
+        this.setState({infoOpen: true})
+
+    }
     displayMarkers = () =>{
         return this.props.stations.map((station, index) => {
-            return <Marker key={index} id={index} position={{
+            return <Marker key={index}
+                           id={index}
+                           position={{
                 lat: station.coords.latitude,
                 lng: station.coords.longitude
             }}
-                           onClick={() => console.log("You clicked me!")} />
+                           onClick={this.handleMarkerClick}/>
         })
     }
 
+    displayWindow = () =>{
+        if(this.state.infoOpen) {
+            return (<InfoWindow
+                    marker={this.state.activeMarker}
+                    visible={this.state.infoOpen}
+                    onClose={this.handleClose}
+                >
+                    <div className='PopupText'>
+                        Hey! This should display some info!
+                    </div>
+                </InfoWindow>
+            );
+        }
+        else{
+            return null
+        }
+    }
+
     render() {
-        if(this.props.coords) {
+        if(this.props.buttonClicked && this.props.coords) {
             return (
                 <Map
                     google={this.props.google}
@@ -35,14 +79,25 @@ class MapContainer extends React.Component{
                     initialCenter={{
                         lat: this.props.coords.latitude,
                         lng: this.props.coords.longitude,
-                    }} // TODO: Get value from actual user data.
+                    }}
                     >
                     {this.displayMarkers()}
+                    {this.displayWindow()}
+
                 </Map>
             );
         }
+        else{
+            return null
+        }
     }
+
 }
+
+/*
+{this.displayWindow()}
+this.handleMarkerClick(station.coords)
+ */
 
 export default GoogleApiWrapper({
     apiKey:'AIzaSyBKdUXDjhwy0AbK1OjnBbuwE8DfjZ9dFtg'
