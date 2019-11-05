@@ -19,23 +19,20 @@ class Welcome extends React.Component {
 
 class App extends React.Component {
     state = {
-        selectedFilters: ['Arco', 'Chevron']
+        selectedFilters: []
     }
 
-    updateFilters(selectedFilters) {
-        console.log("App::updateFilters --> " + selectedFilters)
-        this.setState({selectedFilters: selectedFilters})
+    setSelectedFilters(list) {
+        this.setState({selectedFilters : list})
     }
 
     render() {
-        this.updateFilters = this.updateFilters.bind(this);
+        console.log("App::render()")
         return (
             <div className="TopLevelDiv">
-                <TestParentA />
-
                 <DropdownMenu/>
                 <GasStationContainer selectedFilters={this.state.selectedFilters} />
-                <FilterPopup updateFilters={this.updateFilters} />
+                <FilterPopup setSelectedFilter={(event) => this.setSelectedFilters(event)} />
                 <br />
                 <MultipleSelect />
             </div>

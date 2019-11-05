@@ -95,12 +95,7 @@ class GasStationContainer extends React.Component {
         };
         
         this.handleClick = this.handleClick.bind(this);
-
-        this.props.selectedFilters = ['a', 'b', 'c'];
-    }
-
-    getTopFiveStations(stationsList) {
-        stationsList.sort()
+        
     }
 
     /**
@@ -128,16 +123,11 @@ class GasStationContainer extends React.Component {
         console.log('Longitude: ' + this.props.coords.longitude);
         console.log('Latitude: ' + this.props.coords.latitude);
 
-        const allStations = debugGasData.slice();
+        //const allStations = debugGasData.slice();
         // Todo: Call filter function on this
+        //const topFiveStations = allStations.slice().sort(sc.comparePrice).slice(0, 5);
 
-        let filterPopup = new FilterPopup();
-        const filteredStations = filterPopup.filter(allStations, ['Arco', 'Mobil']); //allStations.slice();
-        console.log("filteredStations")
-        console.log(filteredStations)
-        const topFiveStations = filteredStations.slice().sort(sc.comparePrice).slice(0, 5);
-
-        this.setState({stationsData: topFiveStations});
+        this.setState({stationsData: debugGasData});
     }
 
     /**
@@ -149,6 +139,7 @@ class GasStationContainer extends React.Component {
     render() {
         return(
             <div className="GasStationContainer">
+                <p>Test: {this.props.selectedFilters}</p>
                 <div className="Centered">
                     <FindStations
                         name="Find Button"
@@ -177,8 +168,6 @@ class GasStationContainer extends React.Component {
 class StationsList extends React.Component {
     constructor(props) {
         super(props);
-        console.log("StationList::constructor()");
-        console.log(this.props.selectedFilters);
     }
 
     /**
@@ -186,19 +175,29 @@ class StationsList extends React.Component {
      *
      * @returns {HTMLElement}   An <ol> containing StationListElements.
      */
+    filterByGasStationName() {
+        const data = this.props.stationsData
+        const filters = this.props.selectedFilters
+        if (filters.length < 1) {
+            return data
+        }
+        let stations = []
+        for (let i = 0; i < data.length; i++) {
+            for (let j = 0; j < filters.length; j++) {
+                if (data[i].name == filters[j]) {
+                    stations.push(data[i])
+                    break
+                }
+            }
+        }
+        return stations
+    }
+
     render() {
-        console.log("GasStationData::render()");
-        console.log(this.props);
-        // First we have to put all of the <StationListItems> in an object so that we can output them all at once later.
-        // We cannot use a loop inside the return statement.
-        //const filterPopup = new FilterPopup();
-        //const filteredData = filterPopup.filter(this.props.stationsData);
-        //const stations = filteredData.map(stationData => {
         let sc = new StationCalculation();
-
-        
-
-        const stations = this.props.stationsData.map(stationData => {
+        const filteredData = this.filterByGasStationName()
+        const sortedData = filteredData.slice().sort(sc.comparePrice).slice(0, 5)
+        const stations = sortedData.map(stationData => {
             return (
                 <StationListItem
                     value={stationData.name + ': $' + stationData.price.toFixed(2) + '\n'
