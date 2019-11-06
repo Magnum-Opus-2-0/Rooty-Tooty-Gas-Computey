@@ -1,6 +1,4 @@
 .Hero {
-    /* background: url('../../images/background.jpg'); */
-    /* filter: blur(1px); */
     background: #2A928F;
     width: 100vw;
     height: 100vh;
@@ -11,19 +9,14 @@
 .HeroGroup {
     margin: 0 auto;
     max-width: 100%;
-    padding: 150px 50px;
-}
-
-.HeroGroup {
-    margin: 0;
-    color: white;
+    padding: 50px 50px;
 }
 
 .HeroSlogan {
     font-size: 35px;
-    text-align: right;
-    padding-right: 100px;
-    padding-bottom: 60px;
+    text-align: center;
+    /* padding-right: 100px;
+    padding-bottom: 60px; */
 }
 
 .HeroGroupText {
@@ -33,7 +26,6 @@
     line-height: 1.2;
 }
 
-.HeroGroup  {
-    font: 28px;
+.HeroGroupText2 {
     color: black;
 }

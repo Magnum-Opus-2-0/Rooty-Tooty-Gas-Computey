@@ -10,9 +10,9 @@ const Header = () => (
             <h4 className="logo">Gas Computey</h4>
         </div>
         <div className="NavLinks">
-            <Link to="/"><a href="/"></a>Find Gas</Link>
-            <Link to="/"><a href="/"></a>Gas Map</Link>
-            <Link to="/"><a href="/"></a>Plan Your Trip</Link>
+            <Link to="/findgas">Find Gas</Link>
+            <Link to="/gasmap">Gas Map</Link>
+            <Link to="/planyourtrip">Plan Your Trip</Link>
         </div>
     </div>
 )
