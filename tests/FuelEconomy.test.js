@@ -45,7 +45,7 @@ describe('Year data', () => {
 
         years = fe.fetchYears();
 
-        expect(years.length).toBe(3);
+        expect(years).toHaveLength(3);
         expect(years[0]).toBe('2020');
         expect(years[1]).toBe('2019');
         expect(years[2]).toBe('2018');
@@ -76,11 +76,11 @@ describe('Make data', () => {
         let fe = new FuelEconomyGov();
         let makes;
 
-        mockReq.responseText = MAKES_VALID;
+        mockReq.responseText = MAKES;
 
         makes = fe.fetchMakesBy(2012);
 
-        expect(makes.length).toBe(4);
+        expect(makes).toHaveLength(4);
         expect(makes[0]).toBe('Honda');
         expect(makes[1]).toBe('Tesla');
         expect(makes[2]).toBe('Acura');
@@ -90,7 +90,7 @@ describe('Make data', () => {
     test('Invalid year', () => {
         let fe = new FuelEconomyGov();
 
-        mockReq.responseText = MAKES_INVALID;
+        mockReq.responseText =  INVALID_REQUEST;
 
         expect(fe.fetchMakesBy(1)).toBeFalsy();
     });
@@ -98,12 +98,53 @@ describe('Make data', () => {
     test('Request failure', () => {
         let fe = new FuelEconomyGov();
 
-        mockReq.responseText = MAKES_VALID;
+        mockReq.responseText = MAKES;
         mockReq.send = jest.fn();
 
         expect(fe.fetchYears()).toBeFalsy();
     });
 });
+
+describe('Model data', () => {
+    test('Valid models', () => {
+        let fe = new FuelEconomyGov();
+        let models;
+
+        mockReq.responseText = MODELS;
+
+        models = fe.fetchModelsBy(2020, 'Honda');
+
+        expect(models).toHaveLength(3);
+        expect(models[0]).toBe('Civic');
+        expect(models[1]).toBe('Accord');
+        expect(models[2]).toBe('Fit');
+    });
+
+    test('Invalid year', () => {
+        let fe = new FuelEconomyGov();
+
+        mockReq.responseText = INVALID_REQUEST;
+
+        expect(fe.fetchModelsBy(10, 'Tesla')).toBeFalsy();
+    });
+
+    test('Invalid make', () => {
+        let fe = new FuelEconomyGov();
+
+        mockReq.responseText = INVALID_REQUEST;
+
+        expect(fe.fetchModelsBy(2020, 'Monda')).toBeFalsy();
+    });
+
+    test('Request failure', () => {
+        let fe = new FuelEconomyGov();
+
+        mockReq.send = jest.fn();
+
+        expect(fe.fetchModelsBy(2019, 'Acura')).toBeFalsy();
+    });
+});
+
 
 const YEARS =
     `<menuItems>
@@ -133,7 +174,7 @@ const YEARS =
         </menuItem>
     </menuItems>`;
 
-const MAKES_VALID =
+const MAKES =
     `<menuItems>
         <menuItem>
             <text>
@@ -169,4 +210,32 @@ const MAKES_VALID =
         </menuItem>
     </menuItems>`;
 
-const MAKES_INVALID = `</menuItems>`;
+const MODELS =
+    `<menuItems>
+        <menuItem>
+            <text>
+                Civic
+            </text>
+            <value>
+                Civic
+            </value>
+        </menuItem>
+        <menuItem>
+            <text>
+                Accord
+            </text>
+            <value>
+                Accord
+            </value>
+        </menuItem>
+        <menuItem>
+            <text>
+                Fit
+            </text>
+            <value>
+                Fit
+            </value>
+        </menuItem>
+    </menuItems>`;
+
+const INVALID_REQUEST = `</menuItems>`;

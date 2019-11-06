@@ -95,6 +95,29 @@ class FuelEconomyGov {
 
         return null;
     }
+
+    fetchModelsBy(year, make) {
+        let xml;
+        let ret;
+        let req = new XMLHttpRequest();
+
+        req.open('GET', API_ROOT + 'menu/model?year=' + year + '&make=' + make, false);
+        req.onload = () => { xml = this.onload(req); };
+        req.send(null);
+
+        if (xml) {
+            ret = xml_parser.parse(xml);
+            if (ret) {
+                return ret.menuItems.menuItem.map(value => { return value.value; });
+            } else {
+                console.error('FuelEconomyGov.fetchModelsBy: XML parsing failed.');
+            }
+        } else {
+            console.error('FuelEconomyGov.fetchModelsBy: XML http request failed.');
+        }
+
+        return null;
+    }
 }
 
 export default FuelEconomyGov;
