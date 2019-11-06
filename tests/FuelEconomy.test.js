@@ -69,6 +69,24 @@ describe('Year data', () => {
 
         expect(fe.fetchYears()).toBeFalsy();
     });
+
+    test('Real HTTP request', () => {
+        let fe = new FuelEconomyGov();
+        let years;
+
+        // Switch to the original XML request rather than the mocked one
+        window.XMLHttpRequest = oldReq;
+
+        years = fe.fetchYears();
+
+        expect(years).toBeTruthy();
+        expect(years.length).toBeDefined();
+        expect(years.length).toBeGreaterThan(0);
+
+        // This will change as the years go by, this test will need to be updated.
+        // It might be a bad test, but it lets us know we got the right data
+        expect(years[0]).toBe('2020');
+    });
 });
 
 describe('Make data', () => {
@@ -102,6 +120,22 @@ describe('Make data', () => {
         mockReq.send = jest.fn();
 
         expect(fe.fetchYears()).toBeFalsy();
+    });
+
+    test('Real HTTP request', () => {
+        let fe = new FuelEconomyGov();
+        let makes;
+
+        window.XMLHttpRequest = oldReq;
+
+        makes = fe.fetchMakesBy(2020);
+
+        expect(makes).toBeTruthy();
+        expect(makes.length).toBeDefined();
+        expect(makes.length).toBeGreaterThan(0);
+
+        // This should never change because we will always access the 2020 year
+        expect(makes[0]).toBe('Acura');
     });
 });
 
@@ -142,6 +176,22 @@ describe('Model data', () => {
         mockReq.send = jest.fn();
 
         expect(fe.fetchModelsBy(2019, 'Acura')).toBeFalsy();
+    });
+
+    test('Real HTTP request', () => {
+        let fe = new FuelEconomyGov();
+        let models;
+
+        window.XMLHttpRequest = oldReq;
+
+        models = fe.fetchModelsBy(2019, 'Honda');
+
+        expect(models).toBeTruthy();
+        expect(models.length).toBeDefined();
+        expect(models.length).toBeGreaterThan(0);
+
+        // Hopefully this will not change since we're accessing a past year
+        expect(models[0]).toBe('Accord');
     });
 });
 
