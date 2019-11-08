@@ -83,9 +83,8 @@ describe('Year data', () => {
         expect(years.length).toBeDefined();
         expect(years.length).toBeGreaterThan(0);
 
-        // This will change as the years go by, this test will need to be updated.
-        // It might be a bad test, but it lets us know we got the right data
-        expect(years[0]).toBe('2020');
+        // This should always be true unless the website update their database to contain more older car data
+        expect(years[years.length - 1]).toBe('1984');
     });
 });
 
