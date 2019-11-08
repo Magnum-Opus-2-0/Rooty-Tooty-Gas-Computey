@@ -11,6 +11,12 @@ const oldReq = window.XMLHttpRequest;
 // Global mocked request so we don't have to create a new one for each test/describe
 let mockReq = null;
 
+// Save the old console.error so we can put everything back where we found it
+const oldErr = console.error;
+// We need to save the console error data
+let outputData = "";
+let storelog = inputs => {outputData += inputs};
+
 /**
  * Factory to create mock XML HTTP Request objects.
  * @param responseXML  {string} A string representing the XML response.
@@ -28,15 +34,19 @@ const createMockXHR = responseXML => {
     return mockXHR;
 };
 
-// Mock a new request before each test we run
 beforeEach(() => {
+    // Mock a new request before each test we run
     mockReq = createMockXHR();
     window.XMLHttpRequest = jest.fn(() => mockReq);
+    // Mock the console error before each and reset outputData
+    outputData = "";
+    console.error = jest.fn(storelog);
 });
 
-// Put the old request back after each test we run
+// Put the everything back after each test we run
 afterEach(() => {
     window.XMLHttpRequest = oldReq;
+    console.error = oldErr;
 });
 
 describe('Year data', () => {
@@ -62,6 +72,7 @@ describe('Year data', () => {
         mockReq.responseText = YEARS;
 
         expect(fe.fetchYears()).toBeFalsy();
+        expect(outputData).toBe('FuelEconomyGov.fetchYears: XML http request failed.')
     });
 
     test('Parsing failure', () => {
@@ -71,6 +82,7 @@ describe('Year data', () => {
         mockReq.responseText = 'not xml';
 
         expect(fe.fetchYears()).toBeFalsy();
+        expect(outputData).toBe('FuelEconomyGov.fetchYears: XML parsing failed.')
     });
 
     test('Real HTTP request', () => {
@@ -113,6 +125,7 @@ describe('Make data', () => {
         mockReq.responseText =  INVALID_REQUEST;
 
         expect(fe.fetchMakesBy(1)).toBeFalsy();
+        expect(outputData).toBe('FuelEconomyGov.fetchMakesBy: XML parsing failed.')
     });
 
     test('Request failure', () => {
@@ -121,7 +134,8 @@ describe('Make data', () => {
         mockReq.responseText = MAKES;
         mockReq.send = jest.fn();
 
-        expect(fe.fetchYears()).toBeFalsy();
+        expect(fe.fetchMakesBy()).toBeFalsy();
+        expect(outputData).toBe('FuelEconomyGov.fetchMakesBy: XML http request failed.')
     });
 
     test('Real HTTP request', () => {
@@ -162,6 +176,7 @@ describe('Model data', () => {
         mockReq.responseText = INVALID_REQUEST;
 
         expect(fe.fetchModelsBy(10, 'Tesla')).toBeFalsy();
+        expect(outputData).toBe('FuelEconomyGov.fetchModelsBy: XML parsing failed.')
     });
 
     test('Invalid make', () => {
@@ -170,6 +185,7 @@ describe('Model data', () => {
         mockReq.responseText = INVALID_REQUEST;
 
         expect(fe.fetchModelsBy(2020, 'Monda')).toBeFalsy();
+        expect(outputData).toBe('FuelEconomyGov.fetchModelsBy: XML parsing failed.')
     });
 
     test('Request failure', () => {
@@ -178,6 +194,7 @@ describe('Model data', () => {
         mockReq.send = jest.fn();
 
         expect(fe.fetchModelsBy(2019, 'Acura')).toBeFalsy();
+        expect(outputData).toBe('FuelEconomyGov.fetchModelsBy: XML http request failed.')
     });
 
     test('Real HTTP request', () => {
