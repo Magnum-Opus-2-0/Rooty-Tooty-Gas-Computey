@@ -1,5 +1,8 @@
 import FuelEconomyGov from "../src/data/FuelEconomyGov";
 
+// Because the tests are being run using Node.js, we must use a package that provides it for us.
+window.XMLHttpRequest = require('xmlhttprequest').XMLHttpRequest;
+
 // Suppress console messages
 console.error = jest.fn();
 
