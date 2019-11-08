@@ -1,7 +1,12 @@
 var xml_parser = require('fast-xml-parser');
 var he = require('he');
 
+/**
+ * The root URL for FuelEconomy.gov's API calls.
+ * @type {string}
+ */
 const API_ROOT = 'https://www.fueleconomy.gov/ws/rest/vehicle/';
+
 /**
  * A class to pull data from the FuelEconomy.gov website.
  *
@@ -11,19 +16,31 @@ const API_ROOT = 'https://www.fueleconomy.gov/ws/rest/vehicle/';
 class FuelEconomyGov {
 
     /**
-     * The functionality that should take place when we get our response.
+     * Make an XMLHttpRequest at the given API_ROOT and given apiExtension.
      *
-     * @access private
+     * This is currently done synchronously and this is wrong. I'd like to first
+     * see how this effects the performance of the website, and if it is totally
+     * unbearable, we will need to change the way we store the fetched data.
      *
-     * @param req   {XMLHttpRequest}    The request object to check and retrieve
-     *                                  data from.
-     * @returns {string}    The XML response data as a string.
+     * @see API_ROOT
+     *
+     * @param apiExtension  {string}    The extension of the API_ROOT at which
+     *                                  to make the request.
+     * @returns {string}    A string representation of the XML data returned from
+     *                      FuelEconomy.gov
      */
-    onload(req) {
-        if (req.readyState === 4 && req.status === 200) {
-            // Getting as text because parser takes string not XML
-            return req.responseText;
-        }
+    makeRequest(apiExtension) {
+        let ret = null;
+        let req = new XMLHttpRequest();
+        req.open('GET', API_ROOT + apiExtension, false);
+        req.onload = () => {
+            if (req.readyState === 4 && req.status === 200) {
+                // Getting as text because parser takes string not XML
+                ret = req.responseText;
+            }
+        };
+        req.send(null);
+        return ret;
     }
 
     /**
@@ -37,13 +54,8 @@ class FuelEconomyGov {
      *                  request or parsing failed.
      */
     fetchYears() {
-        let xml;
         let ret;
-        let req = new XMLHttpRequest();
-        // Using synchronous open because we shouldn't load the page without the years
-        req.open('GET', API_ROOT + 'menu/year', false);
-        req.onload = () => { xml = this.onload(req); };
-        req.send(null);
+        let xml = this.makeRequest('menu/year');
 
         if (xml) {
             ret = xml_parser.parse(xml);
@@ -72,15 +84,8 @@ class FuelEconomyGov {
      *                  if the request or parsing failed.
      */
     fetchMakesBy(year) {
-        let xml;
         let ret;
-        let req = new XMLHttpRequest();
-
-        // This is sychronous for now. It should be asychronous, but I'm not sure what the best way to implement
-        // that is.
-        req.open('GET', API_ROOT + 'menu/make?year=' + year, false);
-        req.onload = () => { xml = this.onload(req); };
-        req.send(null);
+        let xml = this.makeRequest('menu/make?year=' + year);
 
         if (xml) {
             ret = xml_parser.parse(xml);
@@ -110,13 +115,8 @@ class FuelEconomyGov {
      *                  and make or null if the request or parsing failed.
      */
     fetchModelsBy(year, make) {
-        let xml;
         let ret;
-        let req = new XMLHttpRequest();
-
-        req.open('GET', API_ROOT + 'menu/model?year=' + year + '&make=' + make, false);
-        req.onload = () => { xml = this.onload(req); };
-        req.send(null);
+        let xml = this.makeRequest('menu/model?year=' + year + '&make=' + make);
 
         if (xml) {
             ret = xml_parser.parse(xml);
