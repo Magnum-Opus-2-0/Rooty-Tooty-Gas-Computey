@@ -66,8 +66,8 @@ class FuelEconomyGov {
      * see how this effects the performance of the website, and if it is totally
      * unbearable, we will need to change the whole way we retrieve data.
      *
-     * @param year  {string}    The string representation of the year to be
-     *                          queried.
+     * @param year  {string|number} The year in which to search for makes.
+     *
      * @returns {Array} An array containing all makes for the given year or null
      *                  if the request or parsing failed.
      */
@@ -96,6 +96,19 @@ class FuelEconomyGov {
         return null;
     }
 
+    /**
+     * Get the available models for the given year and make from
+     * FuelEconomy.gov.
+     *
+     * This is currently done synchronously and this is wrong. I'd like to first
+     * see how this effects the performance of the website, and if it is totally
+     * unbearable, we will need to change the way we retrieve data.
+     *
+     * @param year  {string|number} The year in which to search for models.
+     * @param make  {string}        The make in which to search for models.
+     * @returns {Array} An array containing all the models for the given year
+     *                  and make or null if the request or parsing failed.
+     */
     fetchModelsBy(year, make) {
         let xml;
         let ret;
