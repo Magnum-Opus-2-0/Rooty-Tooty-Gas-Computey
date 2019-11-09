@@ -54,7 +54,7 @@ describe('Year data', () => {
         let fe = new FuelEconomyGov();
         let years;
 
-        mockReq.responseText = YEARS;
+        mockReq.responseText = YEARS_MULTIPLE;
 
         years = fe.fetchYears();
 
@@ -64,25 +64,27 @@ describe('Year data', () => {
         expect(years[2]).toBe('2018');
     });
 
-    test('Request failure', () => {
-        let fe = new FuelEconomyGov();
+    describe('Invalid request', () => {
+        test('Request failure', () => {
+            let fe = new FuelEconomyGov();
 
-        // Mock a send function that never gets data
-        mockReq.send = jest.fn();
-        mockReq.responseText = YEARS;
+            // Mock a send function that never gets data
+            mockReq.send = jest.fn();
+            mockReq.responseText = YEARS_MULTIPLE;
 
-        expect(fe.fetchYears()).toBeFalsy();
-        expect(outputData).toBe('FuelEconomyGov.fetchYears: XML http request failed.')
-    });
+            expect(fe.fetchYears()).toBeFalsy();
+            expect(outputData).toBe('FuelEconomyGov.fetchYears: XML http request failed.')
+        });
 
-    test('Parsing failure', () => {
-        let fe = new FuelEconomyGov();
-        let years;
+        test('Parsing failure', () => {
+            let fe = new FuelEconomyGov();
+            let years;
 
-        mockReq.responseText = 'not xml';
+            mockReq.responseText = 'not xml';
 
-        expect(fe.fetchYears()).toBeFalsy();
-        expect(outputData).toBe('FuelEconomyGov.fetchYears: XML parsing failed.')
+            expect(fe.fetchYears()).toBeFalsy();
+            expect(outputData).toBe('FuelEconomyGov.fetchYears: XML parsing failed.')
+        });
     });
 
     test('Real HTTP request', () => {
@@ -104,38 +106,55 @@ describe('Year data', () => {
 });
 
 describe('Make data', () => {
-    test('Valid request', () => {
-        let fe = new FuelEconomyGov();
-        let makes;
+    describe('Valid request', () => {
+        test('Multiple makes', () => {
+            let fe = new FuelEconomyGov();
+            let makes;
 
-        mockReq.responseText = MAKES;
+            mockReq.responseText = MAKES_MULTIPLE;
 
-        makes = fe.fetchMakesBy(2012);
+            makes = fe.fetchMakesBy(2012);
 
-        expect(makes).toHaveLength(4);
-        expect(makes[0]).toBe('Honda');
-        expect(makes[1]).toBe('Tesla');
-        expect(makes[2]).toBe('Acura');
-        expect(makes[3]).toBe('Chevrolet');
+            expect(makes).toHaveLength(4);
+            expect(makes[0]).toBe('Honda');
+            expect(makes[1]).toBe('Tesla');
+            expect(makes[2]).toBe('Acura');
+            expect(makes[3]).toBe('Chevrolet');
+        });
+
+        test('Single Make', () => {
+            let fe = new FuelEconomyGov();
+            let makes;
+
+            mockReq.responseText = MAKES_SINGLE;
+
+            makes = fe.fetchMakesBy(2000);
+
+            expect(makes).toBeInstanceOf(Array);
+            expect(makes).toHaveLength(1);
+            expect(makes[0]).toBe('Honda');
+        });
     });
 
-    test('Invalid year', () => {
-        let fe = new FuelEconomyGov();
+    describe('Invalid request', () => {
+        test('Year', () => {
+            let fe = new FuelEconomyGov();
 
-        mockReq.responseText =  INVALID_REQUEST;
+            mockReq.responseText =  INVALID_REQUEST;
 
-        expect(fe.fetchMakesBy(1)).toBeFalsy();
-        expect(outputData).toBe('FuelEconomyGov.fetchMakesBy: XML parsing failed.')
-    });
+            expect(fe.fetchMakesBy(1)).toBeFalsy();
+            expect(outputData).toBe('FuelEconomyGov.fetchMakesBy: XML parsing failed.')
+        });
 
-    test('Request failure', () => {
-        let fe = new FuelEconomyGov();
+        test('Request failure', () => {
+            let fe = new FuelEconomyGov();
 
-        mockReq.responseText = MAKES;
-        mockReq.send = jest.fn();
+            mockReq.responseText = MAKES_MULTIPLE;
+            mockReq.send = jest.fn();
 
-        expect(fe.fetchMakesBy()).toBeFalsy();
-        expect(outputData).toBe('FuelEconomyGov.fetchMakesBy: XML http request failed.')
+            expect(fe.fetchMakesBy()).toBeFalsy();
+            expect(outputData).toBe('FuelEconomyGov.fetchMakesBy: XML http request failed.')
+        });
     });
 
     test('Real HTTP request', () => {
@@ -156,45 +175,62 @@ describe('Make data', () => {
 });
 
 describe('Model data', () => {
-    test('Valid models', () => {
-        let fe = new FuelEconomyGov();
-        let models;
+    describe('Valid request', () => {
+        test('Multiple models', () => {
+            let fe = new FuelEconomyGov();
+            let models;
 
-        mockReq.responseText = MODELS;
+            mockReq.responseText = MODELS_MULTIPLE;
 
-        models = fe.fetchModelsBy(2020, 'Honda');
+            models = fe.fetchModelsBy(2020, 'Honda');
 
-        expect(models).toHaveLength(3);
-        expect(models[0]).toBe('Civic');
-        expect(models[1]).toBe('Accord');
-        expect(models[2]).toBe('Fit');
+            expect(models).toHaveLength(3);
+            expect(models[0]).toBe('Civic');
+            expect(models[1]).toBe('Accord');
+            expect(models[2]).toBe('Fit');
+        });
+
+        test('Single model', () => {
+            let fe = new FuelEconomyGov();
+            let models;
+
+            mockReq.responseText = MODELS_SINGLE;
+
+            models = fe.fetchModelsBy(2013, 'Ford');
+
+            expect(models).toBeInstanceOf(Array);
+            expect(models).toHaveLength(1);
+            expect(models[0]).toBe('Explorer');
+        });
     });
 
-    test('Invalid year', () => {
-        let fe = new FuelEconomyGov();
+    describe('Invalid request', () => {
+        test('Invalid year', () => {
+            let fe = new FuelEconomyGov();
 
-        mockReq.responseText = INVALID_REQUEST;
+            mockReq.responseText = INVALID_REQUEST;
 
-        expect(fe.fetchModelsBy(10, 'Tesla')).toBeFalsy();
-        expect(outputData).toBe('FuelEconomyGov.fetchModelsBy: XML parsing failed.')
-    });
+            expect(fe.fetchModelsBy(10, 'Tesla')).toBeFalsy();
+            expect(outputData).toBe('FuelEconomyGov.fetchModelsBy: XML parsing failed.')
+        });
 
-    test('Invalid make', () => {
-        let fe = new FuelEconomyGov();
+        test('Invalid make', () => {
+            let fe = new FuelEconomyGov();
 
-        mockReq.responseText = INVALID_REQUEST;
+            mockReq.responseText = INVALID_REQUEST;
 
-        expect(fe.fetchModelsBy(2020, 'Monda')).toBeFalsy();
-        expect(outputData).toBe('FuelEconomyGov.fetchModelsBy: XML parsing failed.')
-    });
+            expect(fe.fetchModelsBy(2020, 'Monda')).toBeFalsy();
+            expect(outputData).toBe('FuelEconomyGov.fetchModelsBy: XML parsing failed.')
+        });
 
-    test('Request failure', () => {
-        let fe = new FuelEconomyGov();
+        test('Request failure', () => {
+            let fe = new FuelEconomyGov();
 
-        mockReq.send = jest.fn();
+            mockReq.send = jest.fn();
 
-        expect(fe.fetchModelsBy(2019, 'Acura')).toBeFalsy();
-        expect(outputData).toBe('FuelEconomyGov.fetchModelsBy: XML http request failed.')
+            expect(fe.fetchModelsBy(2019, 'Acura')).toBeFalsy();
+            expect(outputData).toBe('FuelEconomyGov.fetchModelsBy: XML http request failed.')
+        });
     });
 
     test('Real HTTP request', () => {
@@ -214,8 +250,26 @@ describe('Model data', () => {
     });
 });
 
+describe('Options data', () => {
+    test('Real HTTP request', () => {
+        let fe = new FuelEconomyGov();
+        let options;
 
-const YEARS =
+        window.XMLHttpRequest = oldReq;
+
+        options = fe.fetchOptionsBy(2012, 'Toyota', 'Corolla');
+
+        expect(options).toBeTruthy();
+        expect(options.length).toBeDefined();
+        expect(options.length).toBeGreaterThan(0);
+
+        expect(options[0].opt).toBe('Auto 4-spd, 4 cyl, 1.8 L');
+        expect(options[0].id).toBe(32181);
+    });
+});
+
+
+const YEARS_MULTIPLE =
     `<menuItems>
         <menuItem>
             <text>
@@ -243,7 +297,7 @@ const YEARS =
         </menuItem>
     </menuItems>`;
 
-const MAKES =
+const MAKES_MULTIPLE =
     `<menuItems>
         <menuItem>
             <text>
@@ -279,7 +333,19 @@ const MAKES =
         </menuItem>
     </menuItems>`;
 
-const MODELS =
+const MAKES_SINGLE =
+    `<menuItems>
+        <menuItem>
+            <text>
+                Honda
+            </text>
+            <value>
+                Honda
+            </value>
+        </menuItem>
+    </menuItems>`;
+
+const MODELS_MULTIPLE =
     `<menuItems>
         <menuItem>
             <text>
@@ -303,6 +369,18 @@ const MODELS =
             </text>
             <value>
                 Fit
+            </value>
+        </menuItem>
+    </menuItems>`;
+
+const MODELS_SINGLE =
+    `<menuItems>
+        <menuItem>
+            <text>
+                Explorer
+            </text>
+            <value>
+                Explorer
             </value>
         </menuItem>
     </menuItems>`;

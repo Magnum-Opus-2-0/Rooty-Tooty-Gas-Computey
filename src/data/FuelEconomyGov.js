@@ -12,6 +12,40 @@ const API_ROOT = 'https://www.fueleconomy.gov/ws/rest/vehicle/';
  *
  * This class does not directly inherit from CarData, but has all of the same
  * functions.
+ *
+ * XML PARSER EXPLANATION:
+ * After the XML data has been returned from FuelEconomy.gov, and it has been
+ * parsed, it will be in one of the following formats:
+ *      - If there are multiple objects
+ *          {
+ *              menuItems: {
+ *                  menuItem: {
+ *                      [
+ *                          data_0,
+ *                          data_1,
+ *                          ...
+ *                          data_n
+ *                      ]
+ *                  }
+ *              }
+ *          }
+ *      - If there is only one object
+ *          {
+ *              menuItems: {
+ *                  data
+ *              }
+ *          }
+ *
+ * The object 'data' will always have the following format:
+ *      {
+ *          text: text_data,
+ *          value: value_data
+ *      }
+ *
+ * The value property will differ depending on what is fetched. Years, makes,
+ * and models will always contain the same value for both text and value, i.e.
+ * the year, make, or model respectively. Options' value property will contain
+ * the car ID.
  */
 class FuelEconomyGov {
 
@@ -40,7 +74,29 @@ class FuelEconomyGov {
             }
         };
         req.send(null);
+
         return ret;
+    }
+
+    /**
+     * Pulls the array of fetched data out of the parsed XML object.
+     *
+     * If the data in the parsed XML object is not an array, it is converted to
+     * one.
+     *
+     * @param data  {object}    The parsed XML object.
+     * @returns {Array} An array representing the fetched data, without the
+     *                  menuItems.menuItem wrapping object. I.e. the data can be
+     *                  accessed from the returned array directly.
+     */
+    getArray(data) {
+        let ret = data.menuItems.menuItem;
+
+        if (ret instanceof Array) {
+            return ret;
+        }
+
+        return [ret];
     }
 
     /**
@@ -60,8 +116,9 @@ class FuelEconomyGov {
         if (xml) {
             ret = xml_parser.parse(xml);
             if (ret) {
+                ret = this.getArray(ret);
                 // This function is supposed to return only an array of years, so discard the extra stuff
-                return ret.menuItems.menuItem.map(value => { return value.value.toString(); });
+                return ret.map(value => { return value.value.toString(); });
             } else {
                 console.error('FuelEconomyGov.fetchYears: XML parsing failed.');
             }
@@ -87,10 +144,13 @@ class FuelEconomyGov {
         let ret;
         let xml = this.makeRequest('menu/make?year=' + year);
 
+
         if (xml) {
             ret = xml_parser.parse(xml);
             if (ret) {
-                return ret.menuItems.menuItem.map(value => { return value.value; });
+                // In the case that we only got one element back, we want to make sure we return the data as an array.
+                ret = this.getArray(ret);
+                return ret.map(value => { return value.value; });
             } else {
                 console.error('FuelEconomyGov.fetchMakesBy: XML parsing failed.');
             }
@@ -110,7 +170,7 @@ class FuelEconomyGov {
      * unbearable, we will need to change the way we retrieve data.
      *
      * @param year  {string|number} The year in which to search for models.
-     * @param make  {string}        The make in which to search for models.
+     * @param make  {string}        The make for which to search for models.
      * @returns {Array} An array containing all the models for the given year
      *                  and make or null if the request or parsing failed.
      */
@@ -121,12 +181,52 @@ class FuelEconomyGov {
         if (xml) {
             ret = xml_parser.parse(xml);
             if (ret) {
-                return ret.menuItems.menuItem.map(value => { return value.value; });
+                // In the case that we only got one element back, we want to make sure we return the data as an array.
+                ret = this.getArray(ret);
+                return ret.map(value => { return value.value; });
             } else {
                 console.error('FuelEconomyGov.fetchModelsBy: XML parsing failed.');
             }
         } else {
             console.error('FuelEconomyGov.fetchModelsBy: XML http request failed.');
+        }
+
+        return null;
+    }
+
+    /**
+     * Get the available options for the given year, make, and model from
+     * FuelEconomy.gov.
+     *
+     * This is done synchronously so it will probably need to be changed.
+     *
+     * @param year  {string|number} The year in which to search for options.
+     * @param make  {string}        The make for which to search for options.
+     * @param model {string}        The model for which to search for options.
+     * @returns {Array} An array containing objects with the properties opt
+     *                  and id.
+     */
+    fetchOptionsBy(year, make, model) {
+        let ret;
+        let xml = this.makeRequest('menu/options?year=' + year + '&make=' + make + '&model=' + model);
+
+        if (xml) {
+            ret = xml_parser.parse(xml);
+            if (ret) {
+                // In the case that we only got one element back, we want to make sure we return the data as an array.
+                ret = this.getArray(ret);
+                // We want to remap the properties to ones that are more descriptive
+                return ret.map(value => {
+                    return {
+                        opt: value.text,
+                        id: value.value
+                    };
+                });
+            } else {
+                console.error('FuelEconomyGov.fetchOptionsBy: XML parsing failed.');
+            }
+        } else {
+            console.error('FuelEconomyGov.fetchOptionsBy: XML http request failed.');
         }
 
         return null;
