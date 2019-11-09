@@ -231,6 +231,25 @@ class FuelEconomyGov {
 
         return null;
     }
+
+
+    fetchCarBy(id) {
+        let ret;
+        let xml = this.makeRequest('/' + id);
+
+        if (xml) {
+            ret = xml_parser.parse(xml).vehicle;
+            if (ret) {
+                return ret;
+            } else {
+                console.error('FuelEconomyGov.fetchCarBy: XML parsing failed.');
+            }
+        } else {
+            console.error('FuelEconomyGov.fetchCarBy: XML http request failed.');
+        }
+
+        return null;
+    }
 }
 
 export default FuelEconomyGov;

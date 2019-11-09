@@ -268,6 +268,22 @@ describe('Options data', () => {
     });
 });
 
+describe('Car data', () => {
+    test('Real HTTP request', () => {
+        let fe = new FuelEconomyGov();
+        let car;
+
+        window.XMLHttpRequest = oldReq;
+
+        car = fe.fetchCarBy(31873);
+
+        console.log(car);
+        expect(car).toBeTruthy();
+        expect(car.city08).toBe(13);
+        expect(car.highway08).toBe(17);
+    });
+});
+
 
 const YEARS_MULTIPLE =
     `<menuItems>
