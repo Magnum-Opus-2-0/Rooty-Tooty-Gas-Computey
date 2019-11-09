@@ -277,7 +277,6 @@ describe('Car data', () => {
 
         car = fe.fetchCarBy(31873);
 
-        console.log(car);
         expect(car).toBeTruthy();
         expect(car.city08).toBe(13);
         expect(car.highway08).toBe(17);
