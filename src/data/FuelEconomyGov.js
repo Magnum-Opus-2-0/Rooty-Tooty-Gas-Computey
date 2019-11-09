@@ -232,7 +232,18 @@ class FuelEconomyGov {
         return null;
     }
 
-
+    /**
+     * Get the data for a car by its ID number in the from FuelEconomy.gov.
+     *
+     * This is done synchronously so it will almost definitely need to be
+     * changed. See the meanings of each property here
+     * {@link https://www.fueleconomy.gov/feg/ws/} under the data description
+     * header.
+     *
+     * @param id    {string|number} The ID number of the car to be fetched.
+     * @returns {object}    The car data represented as an object with
+     *                      properties as defined in the above link.
+     */
     fetchCarBy(id) {
         let ret;
         let xml = this.makeRequest('/' + id);
