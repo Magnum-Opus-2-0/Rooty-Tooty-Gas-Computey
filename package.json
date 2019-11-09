@@ -11,6 +11,7 @@
         "@babel/plugin-proposal-class-properties": "^7.5.5",
         "express": "^4.17.1",
         "express-favicon": "^2.0.1",
+        "fast-xml-parser": "^3.14.0",
         "google-maps-react": "^2.0.2",
         "path": "^0.12.7",
         "react": "^16.10.2",
@@ -18,7 +19,8 @@
         "react-geolocated": "^3.0.1",
         "react-scripts": "3.2.0",
         "reactstrap": "^8.1.1",
-        "semantic-ui-react": "^0.88.1"
+        "semantic-ui-react": "^0.88.1",
+        "xmlhttprequest": "^1.8.0"
     },
     "devDependencies": {
         "@babel/core": "^7.6.4",
