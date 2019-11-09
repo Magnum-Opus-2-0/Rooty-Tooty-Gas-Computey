@@ -1,10 +1,8 @@
 import React from 'react';
-import Header from './Header';
 import './styles/Banner.css';
 
 const Banner = () =>  (
     <div className="Hero">
-        <Header />
         <div className="HeroGroup">
             <div className="HeroSlogan">
                 <h1>It just works.</h1>

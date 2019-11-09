@@ -1,6 +1,6 @@
 import React from 'react';
 import './App.css';
-import { BrowserRouter as Router, Route, Switch, Link } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Switch} from 'react-router-dom';
 
 import FilterPopup from './components/FilterPopup.js';
 import DropdownMenu from './components/CarInfo.js';
@@ -8,7 +8,9 @@ import GasStationContainer from './components/GasStationData.js';
 import Banner from './components/Banner.js';
 import Header from './components/Header.js';
 import CarInfo from './components/CarInfo.js';
-import RoutingPage from './components/Routing.js';
+import FindGas from './components/FindGas.js';
+import GasMap from './components/GasMap.js';
+import PlanYourTrip from './components/PlanYourTrip.js';
 
 class Welcome extends React.Component {
 	render() {
@@ -29,13 +31,20 @@ class App extends React.Component {
     render() {
         this.updateFilters = this.updateFilters.bind(this);
         return (
-            <div className="TopLevelDiv">
-                <Banner />
-                <RoutingPage />
-                {/* <DropdownMenu/> */}
-                {/* <GasStationContainer selectedFilters={this.state.selectedFilters} /> */}
-                {/* <FilterPopup updateFilters={this.updateFilters} /> */}
-            </div>
+            <Router>
+                <div className="TopLevelDiv">
+                    <Banner/>
+                    <Switch>
+                        <Route exact path="/"></Route>
+                        <Route path="/findgas" component={FindGas} />
+                        <Route path="/gasmap" component={GasMap}/>
+                        <Route path="/planyourtrip" component={PlanYourTrip}/>
+                    </Switch>
+                    {/* <DropdownMenu/> */}
+                    {/* <GasStationContainer selectedFilters={this.state.selectedFilters} /> */}
+                    {/* <FilterPopup updateFilters={this.updateFilters} /> */}
+                </div>
+            </Router>
         );
     }
 }

@@ -1,7 +1,7 @@
 import React from 'react';
 import './styles/Header.css';
 import logo from '../images/Logo.png';
-import { BrowserRouter as Link } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 
 const Header = () => (
     <div className="Header">
@@ -10,9 +10,15 @@ const Header = () => (
             <h4 className="logo">Gas Computey</h4>
         </div>
         <div className="NavLinks">
-            <Link to="/findgas">Find Gas</Link>
-            <Link to="/gasmap">Gas Map</Link>
-            <Link to="/planyourtrip">Plan Your Trip</Link>
+            <Link to="/findgas" className="NavLink">
+                <a>Find Gas</a>
+            </Link>
+            <Link to="/gasmap" className="NavLink">
+                <a>Gas Map</a>
+            </Link>
+            <Link to="/planyourtrip" className="NavLink">
+                <a>Plan Your Trip</a>
+            </Link>
         </div>
     </div>
 )
