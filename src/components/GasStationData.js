@@ -101,10 +101,6 @@ class GasStationContainer extends React.Component {
         this.props.selectedFilters = ['a', 'b', 'c'];
     }
 
-    getTopFiveStations(stationsList) {
-        stationsList.sort()
-    }
-
     /**
      * Handle the user clicking the FIND button.
      *
@@ -133,9 +129,15 @@ class GasStationContainer extends React.Component {
         const allStations = debugGasData.slice();
         // Todo: Call filter function on this
         const filteredStations = allStations.slice();
-        const topFiveStations = filteredStations.slice().sort(sc.comparePrice).slice(0, 5);
+        /*
+        const topStations = filteredStations.slice().sort(sc.comparePrice).slice(0, 5);
+        /**/
+        const topStations = filteredStations.slice().sort((stationA, stationB) => {
+            // We will need to change the 50 to the user's car's MPG when car selection is implemented.
+            return sc.compareChass(stationA, stationB, 1, this.props.coords);
+        });
 
-        this.setState({stationsData: topFiveStations});
+        this.setState({stationsData: topStations});
         this.setState({findClicked: true});
     }
 
