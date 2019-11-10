@@ -12,6 +12,7 @@
         "express": "^4.17.1",
         "express-favicon": "^2.0.1",
         "fast-xml-parser": "^3.14.0",
+        "firebase": "^7.3.0",
         "google-maps-react": "^2.0.2",
         "path": "^0.12.7",
         "react": "^16.10.2",
