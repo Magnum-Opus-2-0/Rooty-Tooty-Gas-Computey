@@ -1,29 +1,32 @@
-.Hero {
+/* .Hero {
     background: #2A928F;
     width: 100vw;
     height: 100vh;
     background-size: cover;
     background-position: center;
-}
+} */
 
-.HeroGroup {
+/* .HeroGroup {
     margin: 0 auto;
     max-width: 100%;
-    padding: 50px 50px;
-}
+    padding: 150px 50px;
+} */
 
-.HeroSlogan {
+/* .HeroSlogan {
     font-size: 35px;
     text-align: center;
-}
+    color: black;
+} */
 
-.HeroGroupText {
-    font-size: 30px;
+/* .HeroGroupText {
+    font-size: 25px;
     color: black;
     margin: 0;
+    font-weight: 400;
     line-height: 1.2;
-}
+    text-align: center;
+} */
 
-.HeroGroupText2 {
-    color: black;
-}
+/* .HeroGroupText2 {
+    text-align: center;
+} */
