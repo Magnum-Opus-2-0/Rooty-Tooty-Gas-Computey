@@ -5,7 +5,6 @@ import { BrowserRouter as Router, Route, Switch} from 'react-router-dom';
 import FilterPopup from './components/FilterPopup.js';
 import DropdownMenu from './components/CarInfo.js';
 import GasStationContainer from './components/GasStationData.js';
-<<<<<<< HEAD
 import Home from './components/Home.js';
 import Header from './components/Header.js';
 import CarInfo from './components/CarInfo.js';
@@ -13,10 +12,8 @@ import FindGas from './components/FindGas.js';
 import GasMap from './components/GasMap.js';
 import PlanYourTrip from './components/PlanYourTrip.js';
 import Layout  from './components/Layout';
-=======
 
 import CarInfo from "./components/CarInfo";
->>>>>>> master
 
 class Welcome extends React.Component {
 	render() {
