@@ -13,8 +13,6 @@ import GasMap from './components/GasMap.js';
 import PlanYourTrip from './components/PlanYourTrip.js';
 import Layout  from './components/Layout';
 
-import CarInfo from "./components/CarInfo";
-
 class Welcome extends React.Component {
 	render() {
 		return <h1>Welcome, {this.props.name}</h1>;
