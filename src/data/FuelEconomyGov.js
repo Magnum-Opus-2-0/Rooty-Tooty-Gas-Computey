@@ -58,7 +58,7 @@ class FuelEconomyGov {
      *
      * @see API_ROOT
      *
-     * @param apiExtension  {string}    The extension of the API_ROOT at which
+     * @param {string}  apiExtension    The extension of the API_ROOT at which
      *                                  to make the request.
      * @returns {string}    A string representation of the XML data returned from
      *                      FuelEconomy.gov
@@ -84,7 +84,7 @@ class FuelEconomyGov {
      * If the data in the parsed XML object is not an array, it is converted to
      * one.
      *
-     * @param data  {object}    The parsed XML object.
+     * @param {object} data The parsed XML object.
      * @returns {Array} An array representing the fetched data, without the
      *                  menuItems.menuItem wrapping object. I.e. the data can be
      *                  accessed from the returned array directly.
@@ -135,7 +135,7 @@ class FuelEconomyGov {
      * see how this effects the performance of the website, and if it is totally
      * unbearable, we will need to change the whole way we retrieve data.
      *
-     * @param year  {string|number} The year in which to search for makes.
+     * @param {string|number}   year    The year in which to search for makes.
      *
      * @returns {Array} An array containing all makes for the given year or null
      *                  if the request or parsing failed.
@@ -169,8 +169,8 @@ class FuelEconomyGov {
      * see how this effects the performance of the website, and if it is totally
      * unbearable, we will need to change the way we retrieve data.
      *
-     * @param year  {string|number} The year in which to search for models.
-     * @param make  {string}        The make for which to search for models.
+     * @param {string|number}   year    The year in which to search for models.
+     * @param {string}          make    The make for which to search for models.
      * @returns {Array} An array containing all the models for the given year
      *                  and make or null if the request or parsing failed.
      */
@@ -200,9 +200,9 @@ class FuelEconomyGov {
      *
      * This is done synchronously so it will probably need to be changed.
      *
-     * @param year  {string|number} The year in which to search for options.
-     * @param make  {string}        The make for which to search for options.
-     * @param model {string}        The model for which to search for options.
+     * @param {string|number}   year    The year in which to search for options.
+     * @param {string}          make    The make for which to search for options.
+     * @param {string}          model   The model for which to search for options.
      * @returns {Array} An array containing objects with the properties opt
      *                  and id.
      */
@@ -240,7 +240,7 @@ class FuelEconomyGov {
      * {@link https://www.fueleconomy.gov/feg/ws/} under the data description
      * header.
      *
-     * @param id    {string|number} The ID number of the car to be fetched.
+     * @param {string|number}   id  The ID number of the car to be fetched.
      * @returns {object}    The car data represented as an object with
      *                      properties as defined in the above link.
      */

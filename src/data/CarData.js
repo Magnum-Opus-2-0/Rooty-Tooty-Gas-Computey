@@ -22,8 +22,8 @@ class CarData {
     /**
      * Gets the available makes for a given year from a database.
      *
-     * @param year  {*} The year in which to search for makes. Type is database
-     *                  dependent.
+     * @param {*}   year The year in which to search for makes. Type is database
+     *                   dependent.
      * @returns {Array} An array of makes.
      */
     fetchMakesBy(year) {
@@ -33,10 +33,10 @@ class CarData {
     /**
      * Gets the available models for a given make and year from a database.
      *
-     * @param year  {*} The year in which to search for makes. Type is database
-     *                  dependent.
-     * @param make  {*} The make of which to search for models. Type is database
-     *                  dependent.
+     * @param {*}   year    The year in which to search for makes. Type is database
+     *                      dependent.
+     * @param {*}   make    The make of which to search for models. Type is database
+     *                      dependent.
      * @returns {Array} An array of models.
      */
     fetchModelsBy(year, make) {
@@ -47,12 +47,12 @@ class CarData {
      * Gets the available options for a given make, model and year from a
      * database.
      *
-     * @param year  {*} The year in which to search for options. Type is
-     *                  database dependent.
-     * @param make  {*} The make of which to search for options. Type is
-     *                  database dependent.
-     * @param model {*} The model of which to search for options. Type is
-     *                  database dependent.
+     * @param {*}   year    The year in which to search for options. Type is
+     *                      database dependent.
+     * @param {*}   make    The make of which to search for options. Type is
+     *                      database dependent.
+     * @param {*}   model   The model of which to search for options. Type is
+     *                      database dependent.
      * @returns {Array} An array of options.
      */
     fetchOptionsBy(year, make, model) {
@@ -62,7 +62,7 @@ class CarData {
     /**
      * Gets the car data from a database using the given id.
      *
-     * @param id    {*} The id of the car in the database.
+     * @param {*}   id  The id of the car in the database.
      * @returns {object}    The car represented as an object.
      */
     fetchCarBy(id) {
