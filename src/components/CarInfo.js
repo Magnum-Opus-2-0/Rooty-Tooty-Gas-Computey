@@ -30,7 +30,8 @@ class DropdownMenu extends React.Component {
     this.state = {
         year: ['','2020', '2019', '2018', '2017', '2016'],
         make: ['','Honda', 'Jaguar', 'Nissan', 'Ford', 'Chevy'],
-        model: ['','Accord', 'Corolla', 'Leaf', 'Raptor', 'F-Type']
+        model: ['','Accord', 'Corolla', 'Leaf', 'Raptor', 'F-Type'],
+        optionState: null
     };
 
     this.handleChange = this.handleChange.bind(this);
@@ -47,12 +48,13 @@ class DropdownMenu extends React.Component {
   }
 
   render() {
+    console.log(this.state.optionState)
     return (
     <div class="DropdownMenu">
       <form onSubmit={this.handleSubmit}>
         <label>
           Select your car's year:
-          <select value={this.state.optionState} onChange={this.handleChange}> 
+          <select value={this.state.optionState} onChange={this.handleChange}>
             {this.state.year.map(list => (
                 <option key={list} value={list}>
                     {list}
@@ -64,7 +66,7 @@ class DropdownMenu extends React.Component {
         <br />
         <label>
           Select your car's make:
-          <select value={this.state.optionState} onChange={this.handleChange}> 
+          <select value={this.state.optionState} onChange={this.handleChange}>
             {this.state.make.map(list => (
                 <option key={list} value={list}>
                     {list}
@@ -76,7 +78,7 @@ class DropdownMenu extends React.Component {
         <br />
         <label>
           Select your car's model:
-          <select value={this.state.optionState} onChange={this.handleChange}> 
+          <select value={this.state.optionState} onChange={this.handleChange}>
             {this.state.model.map(list => (
                 <option key={list} value={list}>
                 {list}
