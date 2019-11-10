@@ -131,10 +131,16 @@ class StationCalculation {
      * @param {object} userLocation     The user's location. It must have the
      *                                  properties latitude and longitude.
      *
-     * @returns {number}    The Chass's for the given gas station, station and mpg.
+     * @returns {number}    The Chass's for the given gas station, station, and
+     *                      mpg or -1 if the calculated distance or price is
+     *                      zero.
      */
     calcChass(mpg, station, userLocation) {
-        return mpg / (this.calcDistance(station.coords, userLocation));
+        let dist = this.calcDistance(station.coords, userLocation);
+        if (dist <= 0 || station.price <= 0 || mpg <= 0) {
+            return -1;
+        }
+        return mpg / (dist * station.price);
     }
 
     /**
