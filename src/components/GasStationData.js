@@ -3,6 +3,7 @@ import { geolocated } from "react-geolocated";
 import './styles/GasStationData.css'
 import FilterPopup from './FilterPopup.js'
 import StationCalculation from "./StationCalculation";
+import MapContainer from './Map.js'
 
 /**
  * A placeholder object of gas station data until we can get data using an API.
@@ -92,6 +93,7 @@ class GasStationContainer extends React.Component {
 
         this.state = {
             stationsData: [],
+            findClicked: false,
         };
         
         this.handleClick = this.handleClick.bind(this);
@@ -134,6 +136,7 @@ class GasStationContainer extends React.Component {
         const topFiveStations = filteredStations.slice().sort(sc.comparePrice).slice(0, 5);
 
         this.setState({stationsData: topFiveStations});
+        this.setState({findClicked: true});
     }
 
     /**
@@ -156,6 +159,11 @@ class GasStationContainer extends React.Component {
                     stationsData={this.state.stationsData}
                     coords={this.props.coords}
                     selectedFilters={this.props.selectedFilters}
+                />
+                <MapContainer
+                    coords={this.props.coords}
+                    stations={this.state.stationsData}
+                    buttonClicked={this.state.findClicked}
                 />
             </div>
         );
