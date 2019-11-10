@@ -59,6 +59,8 @@ class StationCalculation {
      *                              longitude to calculate.
      * @param {Object}  locationB   An object with the properties latitude and
      *                              longitude to calculate.
+     * @returns {number}    The distance in miles between the coordinates, or -1
+     *                      if either locationA or locationB is undefined.
      */
     calcDistance(locationA, locationB) {
         const RADIUS = 3958.8; // Miles
