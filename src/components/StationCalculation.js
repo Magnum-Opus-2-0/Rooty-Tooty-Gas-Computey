@@ -105,13 +105,9 @@ class StationCalculation {
         const chassA = this.calcChass(mpg, stationA, userLocation);
         const chassB = this.calcChass(mpg, stationB, userLocation);
 
-        if (chassA > chassB) {
-            return -1;
-        } else if (chassA === chassB) {
-            return 0;
-        }
-
-        return 1;
+        // If we want A to be first, then A will be bigger and we get a -1 from this function
+        // and vice versa.
+        return Math.sign(chassB - chassA);
     }
 
     /**
