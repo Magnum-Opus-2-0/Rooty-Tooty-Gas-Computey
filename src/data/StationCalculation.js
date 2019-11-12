@@ -35,13 +35,8 @@ class StationCalculation {
     compareDistance(stationA, stationB, userLocation) {
         const distA = this.calcDistance(stationA.coords, userLocation);
         const distB = this.calcDistance(stationB.coords, userLocation);
-        if (distA < distB) {
-            return -1;
-        } else if (distA === distB) {
-            return 0;
-        }
-
-        return 1;
+        
+        return Math.sign(distA - distB);
     }
 
     /**
