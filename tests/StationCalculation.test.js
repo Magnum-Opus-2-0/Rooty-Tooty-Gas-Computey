@@ -18,22 +18,59 @@ afterEach(() => {
 });
 
 describe('Compare Price', () => {
-    test('Price A < B', () => {
+    test('A < B', () => {
         let sc = new StationCalculation();
 
         expect(sc.comparePrice(debugGasData[0], debugGasData[2])).toBe(-1);
     });
 
-    test('Price A = B', () => {
+    test('A = B', () => {
         let sc = new StationCalculation();
 
         expect(sc.comparePrice(debugGasData[4], debugGasData[4])).toBe(0);
     });
 
-    test('Price A > B', () => {
+    test('A > B', () => {
         let sc = new StationCalculation();
 
         expect(sc.comparePrice(debugGasData[6], debugGasData[3])).toBe(1);
+    });
+});
+
+describe('Distance', () => {
+    describe('Calculate', () => {
+        test('Valid', () => {
+            let sc = new StationCalculation();
+
+            expect(sc.calcDistance(debugGasData[5].coords, userLocation).toFixed(2)).toBe('1.64');
+        });
+
+        test('Invalid', () => {
+            let sc = new StationCalculation();
+
+            expect(sc.calcDistance(undefined, userLocation)).toBe(-1);
+            expect(outputData).toBe('StationCalculation.calcDistance: Received undefined location.');
+        });
+    });
+
+    describe('Compare', () => {
+        test('A < B', () => {
+            let sc = new StationCalculation();
+
+            expect(sc.compareDistance(debugGasData[6], debugGasData[0], userLocation)).toBe(-1);
+        });
+
+        test('A = B', () => {
+            let sc = new StationCalculation();
+
+            expect(sc.compareDistance(debugGasData[4], debugGasData[4], userLocation)).toBe(0);
+        });
+
+        test('A > B', () => {
+            let sc = new StationCalculation();
+
+            expect(sc.compareDistance(debugGasData[2], debugGasData[0], userLocation)).toBe(1);
+        });
     });
 });
 
