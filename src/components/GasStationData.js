@@ -3,6 +3,7 @@ import { geolocated } from "react-geolocated";
 import './styles/GasStationData.css'
 import FilterPopup from './FilterPopup.js'
 import StationCalculation from "./StationCalculation";
+import MapContainer from './Map.js'
 
 /**
  * A placeholder object of gas station data until we can get data using an API.
@@ -92,10 +93,10 @@ class GasStationContainer extends React.Component {
 
         this.state = {
             stationsData: [],
+            findClicked: false,
         };
         
         this.handleClick = this.handleClick.bind(this);
-        
     }
 
     /**
@@ -125,9 +126,18 @@ class GasStationContainer extends React.Component {
 
         //const allStations = debugGasData.slice();
         // Todo: Call filter function on this
-        //const topFiveStations = allStations.slice().sort(sc.comparePrice).slice(0, 5);
 
-        this.setState({stationsData: debugGasData});
+        const filteredStations = allStations.slice();
+        /*
+        const topStations = filteredStations.slice().sort(sc.comparePrice).slice(0, 5);
+        /**/
+        const topStations = filteredStations.slice().sort((stationA, stationB) => {
+            // We will need to change the 50 to the user's car's MPG when car selection is implemented.
+            return sc.compareChass(stationA, stationB, 1, this.props.coords);
+        });
+
+        this.setState({stationsData: topStations});
+        this.setState({findClicked: true});
     }
 
     /**
@@ -151,6 +161,11 @@ class GasStationContainer extends React.Component {
                     stationsData={this.state.stationsData}
                     coords={this.props.coords}
                     selectedFilters={this.props.selectedFilters}
+                />
+                <MapContainer
+                    coords={this.props.coords}
+                    stations={this.state.stationsData}
+                    buttonClicked={this.state.findClicked}
                 />
             </div>
         );
