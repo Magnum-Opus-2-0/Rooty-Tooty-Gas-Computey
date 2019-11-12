@@ -12,24 +12,17 @@ import Find from './components/Find.js';
 import CarOptions from './components/CarOptions.js';
 import Layout  from './components/Layout';
 
-class Welcome extends React.Component {
-	render() {
-		return <h1>Welcome, {this.props.name}</h1>;
-	}
-}
-
 class App extends React.Component {
     state = {
-        selectedFilters: ['Arco', 'Chevron']
+        selectedFilters: []
     }
 
-    updateFilters(selectedFilters) {
-        console.log("App::updateFilters --> " + selectedFilters)
-        this.setState({selectedFilters: selectedFilters})
+    setSelectedFilters(list) {
+        this.setState({selectedFilters : list})
     }
 
     render() {
-        this.updateFilters = this.updateFilters.bind(this);
+        console.log("App::render()")
         return (
             <React.Fragment>
                 <Header />

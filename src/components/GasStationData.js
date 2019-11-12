@@ -2,7 +2,7 @@ import React from 'react'
 import { geolocated } from "react-geolocated";
 import './styles/GasStationData.css'
 import FilterPopup from './FilterPopup.js'
-import StationCalculation from "./StationCalculation";
+import StationCalculation from "../data/StationCalculation";
 import MapContainer from './Map.js'
 
 /**
@@ -125,13 +125,14 @@ class GasStationContainer extends React.Component {
         console.log("Hey this worked!");
         const allStations = debugGasData.slice();
         // Todo: Call filter function on this
+
         const filteredStations = allStations.slice();
         /*
         const topStations = filteredStations.slice().sort(sc.comparePrice).slice(0, 5);
         /**/
         const topStations = filteredStations.slice().sort((stationA, stationB) => {
             // We will need to change the 50 to the user's car's MPG when car selection is implemented.
-            return sc.compareChass(stationA, stationB, 1, this.props.coords);
+            return sc.compareCost(stationA, stationB, 23, 10, 0.5, this.props.coords);
         });
 
         this.setState({stationsData: topStations});
@@ -187,6 +188,24 @@ class StationsList extends React.Component {
      *
      * @returns {HTMLElement}   An <ol> containing StationListElements.
      */
+    filterByGasStationName() {
+        const data = this.props.stationsData
+        const filters = this.props.selectedFilters
+        if (filters == null || filters.length < 1) {
+            return data
+        }
+        let stations = []
+        for (let i = 0; i < data.length; i++) {
+            for (let j = 0; j < filters.length; j++) {
+                if (data[i].name == filters[j]) {
+                    stations.push(data[i])
+                    break
+                }
+            }
+        }
+        return stations
+    }
+
     render() {
 
         if(!this.state.dataRetrieved){
