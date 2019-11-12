@@ -5,7 +5,6 @@ import FilterPopup from './components/FilterPopup.js';
 import DropdownMenu from './components/CarInfo.js';
 import GasStationContainer from './components/GasStationData.js';
 import CarInfo from "./components/CarInfo";
-import MultipleSelect from './components/FilterMultiSelect.js';
 
 class Welcome extends React.Component {
     constructor(props) {
@@ -33,7 +32,6 @@ class App extends React.Component {
                 <GasStationContainer selectedFilters={this.state.selectedFilters} />
                 <FilterPopup setSelectedFilter={(event) => this.setSelectedFilters(event)} />
                 <br />
-                <MultipleSelect />
             </div>
         );
     }

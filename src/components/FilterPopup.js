@@ -4,7 +4,8 @@ const DEFAULT_FILTER_DISTANCE = 10; // in miles
 
 /*
     FilterPopup class
-    Contains a drop-down menu that lists all gas station filters available.
+    Contains a menu that lists all gas station filters available.
+    Selecting a filter updates this component's parent.
 */
 class FilterPopup extends React.Component {
     constructor(props) {
@@ -39,7 +40,7 @@ class FilterPopup extends React.Component {
 
     /*
         render()
-        Returns a <div> containing a drop-down menu <select> that 
+        Returns a <div> containing a <select> menu that 
         has all gas station <option> that the user can filter by.
     */
     render() {
