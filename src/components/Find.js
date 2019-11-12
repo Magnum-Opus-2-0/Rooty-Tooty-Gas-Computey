@@ -1,9 +1,9 @@
 import React from 'react';
 
-const FindGas = () => (
+const Find = () => (
     <div>
         <h1>Find gas.</h1>
     </div>
 )
 
-export default FindGas;
+export default Find;
