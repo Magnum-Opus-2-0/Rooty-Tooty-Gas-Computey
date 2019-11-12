@@ -111,32 +111,30 @@ class StationCalculation {
     }
 
     /**
-     * Calculate the Chass's between the user and a given station.
+     * Calculate the efficiency of driving to the specified gas station.
      *
-     * 1 Chass is defined as the efficiency of driving to the specified gas
-     * station, or the inverse of money (1/$).
+     * Function assumes the user will fill their tank when they arrive at the
+     * gas station.
      *
-     * @see calcDistance
+     * See {@link https://drive.google.com/file/d/1_uL6mnitSZnn2MbzMCN9XM5LLKvu1r85/view}
      *
-     * @param {number} mpg              The miles per gallon to use for this
-     *                                  calculation.
-     * @param {object} station          The station data to use for this
-     *                                  calculation. It must have the property
-     *                                  coord which contains latitude and
-     *                                  longitude properties.
-     * @param {object} userLocation     The user's location. It must have the
+     * @param {number}  mpg             The miles per gallon.
+     * @param {number}  volumeMax       The tank size in gallons.
+     * @param {number}  volumeCur       The current amount of gas as a fraction
+     *                                  between 1 and 0.
+     * @param {object}  station         An object representing the gas station.
+     *                                  The object must contain a coords
+     *                                  property with latitude and longitude
+     *                                  properties and a price property.
+     * @param {object}  userLocation    An object representing the user's
+     *                                  location. The object must include the
      *                                  properties latitude and longitude.
-     *
-     * @returns {number}    The Chass's for the given gas station, station, and
-     *                      mpg or -1 if the calculated distance or price is
-     *                      zero.
+     * @returns {number}    A number representing the efficiency of driving to
+     *                      the specified gas station.
      */
-    calcChass(mpg, station, userLocation) {
+    calcEfficiency(mpg, volumeMax, volumeCur, station, userLocation) {
         let dist = this.calcDistance(station.coords, userLocation);
-        if (dist <= 0 || station.price <= 0 || mpg <= 0) {
-            return -1;
-        }
-        return mpg / (dist * station.price);
+        return station.price * ((dist / mpg) + volumeMax * (1 - volumeCur));
     }
 
     /**
