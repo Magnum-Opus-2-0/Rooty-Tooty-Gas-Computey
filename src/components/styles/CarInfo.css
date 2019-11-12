@@ -1,0 +1,11 @@
+.CarInfoContainer {
+    display: flex;
+    width: 100%;
+    padding-left: 665px;
+}
+
+@media only screen and (max-width: 600px) {
+    .CarInfoContainer {
+        padding-left: 0px;
+    }
+}
