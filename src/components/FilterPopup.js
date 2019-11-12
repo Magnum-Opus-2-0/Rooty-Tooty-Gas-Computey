@@ -1,108 +1,62 @@
 import React from 'react';
-//import { makeStyles } from '@material-ui/core/styles';
-//import Modal from '@material-ui/core/modal';
 
-const DEF_DISTANCE = 10;
+const DEFAULT_FILTER_DISTANCE = 10; // in miles
 
+/*
+    FilterPopup class
+    Contains a menu that lists all gas station filters available.
+    Selecting a filter updates this component's parent.
+*/
 class FilterPopup extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            filters: ['Arco', 'Chevron', 'Texaco', 'Mobil'],
+            filters: ['Arco', 'Chevron', 'Texaco', 'Mobil', '76'],
             selectedFilters: [],
-            distance: DEF_DISTANCE,
+            distance: DEFAULT_FILTER_DISTANCE,
         };
-        this.handler = this.handler.bind(this);
         this.handleDistanceChange = this.handleDistanceChange.bind(this);
+        this.selectId = "gasStationsList"
     }
 
-    filter(data) {
-        //console.log(data)
-
-        if (this.state.selectedFilters.length < 1) {
-            return data;
-        }
-
-        //this.state.selectedFilters = ['Arco', 'Texaco'];
-        let filteredData = [];
-        for (let i = 0; i < data.length; i++) {
-            //console.log(i);
-            for (let j = 0; j < this.state.selectedFilters.length; j++) {
-                //console.log("data[i].name: " + data[i].name + "  selectedFilter[j]: " + this.state.selectedFilters[j]);
-                if (data[i].name == this.state.selectedFilters[j]) {
-                    filteredData.push(data[i]);
-                }
-            }
-        }
-        return filteredData;
-
-        // return [
-        //  {
-  //               name: 'ArcoFiltered',
-  //               key: 'unique-arco',
-  //           },
-  //           {
-  //               name: 'ChevronFiltered',
-  //               key: 'unique-chevron',
-  //           },
-  //           {
-  //               name: 'TexacoFiltered',
-  //               key: 'unique-texaco',
-  //           }
-        // ]
-    }
-
-    handler(value, isSelected) {
-        // this.setState({selectedFilters: []});
-        // console.log("clicked Select item -- value:" + value);
-        // for (let i = 0; i < this.state.selectedFilters.length; i++) {
-        //     if (this.state.selectedFilters[i] == value) {
-        //         return;
-        //     }
-        // }
-        // console.log("adding " + value + " to this.state.selectedFilters");
-        // this.state.selectedFilters.push(value);
-        let array = [value];
-        this.props.updateFilters(array);
-    }
-
+    /*
+        handleDistanceChange()
+        Sets this state's distance. Called from <MaxDistance>.
+    */
     handleDistanceChange(event) {
         this.setState({distance: event.target.value});
-        console.log('Max search distance: ' + this.state.distance);
     }
 
+    /*
+        sendSelectedFilters()
+        Gets all the filters selected (in the filter drop-down menu) as an array of strings.
+        Calls setSelectedFilter() to modify the filter list of this component's parent state.
+    */
+    sendSelectedFilters() {
+        const nodeList = document.querySelectorAll('#'+this.selectId+' option:checked')
+        const filterList = Array.from(nodeList).map(elem => elem.value)
+        this.props.setSelectedFilters(filterList)
+    }
+
+    /*
+        render()
+        Returns a <div> containing a <select> menu that 
+        has all gas station <option> that the user can filter by.
+    */
     render() {
+        const options = this.state.filters.map((filter) => 
+            <option value={filter}>{filter}</option>
+        );
         return (
             <div>
                 <div>Filters:</div>
-                <button onClick={this.test} type='button'>
-                    Click me!
-                </button>
-                <select name='filters' multiple>
-                    <FilterOption handler={this.handler} value='arco' />
-                    <FilterOption handler={this.handler} value='chevron' />
-                    <FilterOption handler={this.handler} value='texaco' />
-                    <FilterOption handler={this.handler} value='mobil' />
+                <select id={this.selectId} name='filters' multiple onChange={() => this.sendSelectedFilters()}>
+                    {options}
                 </select>
                 <MaxDistance
                     handleChange={this.handleDistanceChange}
                 />
-                <p>Selected Filters:</p>
-                <ul>
-                    <li>item 1</li>
-                    <li>item 2</li>
-                    <li>item 3</li>
-                </ul>
             </div>
-        );
-    }
-}
-
-class FilterOption extends React.Component {
-    render() {
-        let handler = this.props.handler;
-        return (
-            <option onClick={() => handler(this.props.value, this.props.selected)} value={this.props.value}>{this.props.value}</option>
         );
     }
 }
@@ -129,7 +83,7 @@ class MaxDistance extends React.Component {
                 <input
                     type="number"
                     name="maxDistanceInput"
-                    placeholder={DEF_DISTANCE}
+                    placeholder={DEFAULT_FILTER_DISTANCE}
                     onChange={event => this.props.handleChange(event)}
                 />
                 </label>
