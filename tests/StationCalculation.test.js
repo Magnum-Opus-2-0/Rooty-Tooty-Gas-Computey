@@ -154,6 +154,12 @@ describe('Cost', () => {
     });
 });
 
+test('Degree to radians', () => {
+    let sc = new StationCalculation();
+
+    expect(sc.degToRad(360)).toBe(2 * Math.PI);
+});
+
 // 400 W Big Springs Rd
 const userLocation = {
     latitude: 33.976450,
