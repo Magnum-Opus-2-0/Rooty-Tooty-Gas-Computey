@@ -83,31 +83,32 @@ class StationCalculation {
     }
 
     /**
-     * Function to compare stations by Chass's.
+     * Function to compare stations by smart calculation efficiency.
      *
-     * Sorts in descending order by Chass's. 1 Chass is defined as the
-     * efficiency of driving to the specified gas station, or the inverse of
-     * money (1/$).
+     * Sorts in descending order by efficiency.
      *
      * @param {Object}  stationA        An object with a coords property to
      *                                  compare.
      * @param {Object}  stationB        An object with a coords property to
      *                                  compare.
-     * @param {number}  mpg             The miles per gallon to use in the Chass
-     *                                  calculation.
+     * @param {number}  mpg             The miles per gallon to use in the
+     *                                  efficiency calculation.
+     * @param {number}  volumeMax       The tank size in gallons.
+     * @param {number}  volumeCur       The current amount of gas as a fraction
+     *                                  between 0 and 1 (inclusive).
      * @param {Object}  userLocation    An object with latitude and longitude
      *                                  properties to compare against.
-     * @returns {number}    -1 if stationA has a higher Chass than stationB, 0
-     *                      if stationA has an equivalent Chass to stationB, or
+     * @returns {number}    -1 if stationA has a higher efficiency than stationB, 0
+     *                      if stationA has an equivalent efficiency to stationB, or
      *                      1 otherwise.
      */
-    compareChass(stationA, stationB, mpg, userLocation) {
-        const chassA = this.calcChass(mpg, stationA, userLocation);
-        const chassB = this.calcChass(mpg, stationB, userLocation);
+    compareEfficiency(stationA, stationB, mpg, volumeMax, volumeCur, userLocation) {
+        const effA = this.calcEfficiency(mpg, volumeMax, volumeCur, stationA, userLocation);
+        const effB = this.calcEfficiency(mpg, volumeMax, volumeCur, stationB, userLocation);
 
         // If we want A to be first, then A will be bigger and we get a -1 from this function
         // and vice versa.
-        return Math.sign(chassB - chassA);
+        return Math.sign(effB - effA);
     }
 
     /**
@@ -121,7 +122,7 @@ class StationCalculation {
      * @param {number}  mpg             The miles per gallon.
      * @param {number}  volumeMax       The tank size in gallons.
      * @param {number}  volumeCur       The current amount of gas as a fraction
-     *                                  between 1 and 0.
+     *                                  between 0 and 1 (inclusive).
      * @param {object}  station         An object representing the gas station.
      *                                  The object must contain a coords
      *                                  property with latitude and longitude
@@ -133,6 +134,23 @@ class StationCalculation {
      *                      the specified gas station.
      */
     calcEfficiency(mpg, volumeMax, volumeCur, station, userLocation) {
+        if (mpg <= 0) {
+            console.error('StationCalculation.calcEfficiency: MPG cannot be less than or equal to 0.');
+            return -1;
+        }
+        if (volumeMax <= 0) {
+            console.error('StationCalculation.calcEfficiency: Max volume cannot be less than or equal to 0.');
+            return -1;
+        }
+        if (volumeCur > 1) {
+            console.error('StationCalculation.calcEfficiency: Current volume cannot be greater than 1.');
+            return -1;
+        }
+        if (volumeCur < 0) {
+            console.error('StationCalculation.calcEfficiency: Current volume cannot be less than 0.');
+            return -1;
+        }
+
         let dist = this.calcDistance(station.coords, userLocation);
         return station.price * ((dist / mpg) + volumeMax * (1 - volumeCur));
     }
