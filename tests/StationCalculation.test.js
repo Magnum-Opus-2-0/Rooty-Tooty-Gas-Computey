@@ -60,6 +60,41 @@ describe('Efficiency', () => {
             });
         });
     });
+
+    describe('Compare', () => {
+        describe('Valid', () => {
+            test('Station A more efficient than B', () => {
+                let sc = new StationCalculation();
+
+                // debugGas[0]: 13.67
+                // debugGas[1]: 14.33
+                expect(sc.compareEfficiency(debugGasData[0], debugGasData[1], 14, 10, .75, userLocation)).toBe(-1);
+            });
+
+            test('Station A is exactly as efficient as B', () => {
+                let sc = new StationCalculation();
+
+                expect(sc.compareEfficiency(debugGasData[2], debugGasData[2], 15, 11, .23, userLocation)).toBe(0);
+            });
+
+            test('Station A is less efficient than B', () => {
+                let sc = new StationCalculation();
+
+                // debugGas[4]: 19.26
+                // debugGas[5]: 18.57
+                expect(sc.compareEfficiency(debugGasData[4], debugGasData[5], 16, 8, .46, userLocation)).toBe(1);
+            });
+        });
+
+        test('Invalid calculation', () => {
+                let sc = new StationCalculation();
+
+                expect(sc.compareEfficiency(debugGasData[0], debugGasData[1], 0, 14, .5, userLocation)).toBeNull();
+                // Both calculations fail because mpg is 0, so we get two console errors
+                expect(outputData).toBe('StationCalculation.calcEfficiency: MPG cannot be less than or equal to 0.' +
+                    'StationCalculation.calcEfficiency: MPG cannot be less than or equal to 0.');
+            });
+    });
 });
 
 // 400 W Big Springs Rd
