@@ -85,7 +85,8 @@ class StationCalculation {
     /**
      * Function to compare stations by smart calculation efficiency.
      *
-     * Sorts in descending order by efficiency.
+     * Sorts in ascending order by efficiency. That is, the smaller the value of
+     * efficiency, the better.
      *
      * @param {Object}  stationA        An object with a coords property to
      *                                  compare.
@@ -98,17 +99,23 @@ class StationCalculation {
      *                                  between 0 and 1 (inclusive).
      * @param {Object}  userLocation    An object with latitude and longitude
      *                                  properties to compare against.
-     * @returns {number}    -1 if stationA has a higher efficiency than stationB, 0
-     *                      if stationA has an equivalent efficiency to stationB, or
-     *                      1 otherwise.
+     * @returns {number}    -1 if stationA has a higher efficiency than
+     *                      stationB, 0 if stationA has an equivalent efficiency
+     *                      to stationB, 1 if stationB has a higher efficiency
+     *                      than stationA, or null if there was an invalid
+     *                      calculation.
      */
     compareEfficiency(stationA, stationB, mpg, volumeMax, volumeCur, userLocation) {
         const effA = this.calcEfficiency(mpg, volumeMax, volumeCur, stationA, userLocation);
         const effB = this.calcEfficiency(mpg, volumeMax, volumeCur, stationB, userLocation);
 
-        // If we want A to be first, then A will be bigger and we get a -1 from this function
+        if (effA < 0 || effB < 0) {
+            // calcEfficiency outputs an error message if a there was an invalid calculation.
+            return null;
+        }
+        // If we want A to be first, then A will be smaller and we get a -1 from this function
         // and vice versa.
-        return Math.sign(effB - effA);
+        return Math.sign(effA - effB);
     }
 
     /**
@@ -116,6 +123,8 @@ class StationCalculation {
      *
      * Function assumes the user will fill their tank when they arrive at the
      * gas station.
+     *
+     * Smaller efficiency values are better.
      *
      * See {@link https://drive.google.com/file/d/1_uL6mnitSZnn2MbzMCN9XM5LLKvu1r85/view}
      *
