@@ -1,50 +1,101 @@
-import StationCalculation from "../src/components/StationCalculation";
+import StationCalculation from "../src/data/StationCalculation";
 
-describe('Chass tests', () => {
-    describe('Calculations', () => {
+// Save the old console.error so we can put everything back where we found it
+const oldErr = console.error;
+// We need to save the console error data
+let outputData = "";
+let storelog = inputs => {outputData += inputs};
+
+beforeEach(() => {
+    // Mock the console error before each and reset outputData
+    outputData = "";
+    console.error = jest.fn(storelog);
+});
+
+// Put the everything back after each test we run
+afterEach(() => {
+    console.error = oldErr;
+});
+
+describe('Cost', () => {
+    describe('Calculation', () => {
         test('Valid', () => {
             let sc = new StationCalculation();
 
-            // toFixed returns a string
-            expect(sc.calcChass(10, debugGasData[0], userLocation).toFixed(2)).toBe("2.38");
+            // toFixed returns a rounded string representation of the number
+            expect(sc.calcCost(23, 12, .75, debugGasData[0], userLocation).toFixed(2)).toBe('11.64');
         });
 
-        describe('Invalid', () =>{
-            test('Divide by zero', () => {
+        describe('Invalid', () => {
+            test('MPG', () => {
                 let sc = new StationCalculation();
 
-                expect(sc.calcChass(15, debugGasData[1], debugGasData[1].coords)).toBe(-1);
+                expect(sc.calcCost(0, 15, .47, debugGasData[1], userLocation)).toBe(-1);
+                expect(outputData).toBe('StationCalculation.calcCost: MPG cannot be less than or equal to 0.');
             });
 
-            test('Negative Chass', () => {
+            describe('Current volume out of range', () => {
+                test('Too small', () => {
+                    let sc = new StationCalculation();
+
+                    expect(sc.calcCost(50, 10, -.3, debugGasData[2], userLocation)).toBe(-1);
+                    expect(outputData).toBe('StationCalculation.calcCost: Current volume cannot be less than 0.');
+                });
+
+                test('Too big', () => {
+                    let sc = new StationCalculation();
+
+                    expect(sc.calcCost(42, 11, 4, debugGasData[3], userLocation)).toBe(-1);
+                    expect(outputData).toBe('StationCalculation.calcCost: Current volume cannot be greater than' +
+                        ' 1.');
+                });
+            });
+
+            test('Max volume', () => {
                 let sc = new StationCalculation();
 
-                expect(sc.calcChass(-20, debugGasData[1], userLocation)).toBe(-1);
+                expect(sc.calcCost(12, 0, .4, debugGasData[4], userLocation)).toBe(-1);
+                expect(outputData).toBe('StationCalculation.calcCost: Max volume cannot be less than or' +
+                    ' equal to 0.');
             });
         });
     });
 
-    describe('Comparisons', () => {
-        test('Higher A', () => {
-            let sc = new StationCalculation();
+    describe('Compare', () => {
+        describe('Valid', () => {
+            test('Station A more cost than B', () => {
+                let sc = new StationCalculation();
 
-            expect(sc.compareChass(debugGasData[0], debugGasData[1], 15, userLocation)).toBe(-1);
+                // debugGas[0]: 13.67
+                // debugGas[1]: 14.33
+                expect(sc.compareCost(debugGasData[0], debugGasData[1], 14, 10, .75, userLocation)).toBe(-1);
+            });
+
+            test('Station A is exactly as cost as B', () => {
+                let sc = new StationCalculation();
+
+                expect(sc.compareCost(debugGasData[2], debugGasData[2], 15, 11, .23, userLocation)).toBe(0);
+            });
+
+            test('Station A is less cost than B', () => {
+                let sc = new StationCalculation();
+
+                // debugGas[4]: 19.26
+                // debugGas[5]: 18.57
+                expect(sc.compareCost(debugGasData[4], debugGasData[5], 16, 8, .46, userLocation)).toBe(1);
+            });
         });
 
-        test('Higher B', () => {
-            let sc = new StationCalculation();
+        test('Invalid calculation', () => {
+                let sc = new StationCalculation();
 
-            expect(sc.compareChass(debugGasData[2], debugGasData[0], 50, userLocation)).toBe(1);
-        });
-
-        test('Equivalent', () => {
-            let sc = new StationCalculation();
-
-            expect(sc.compareChass(debugGasData[5], debugGasData[5], 23, userLocation)).toBe(0);
-        });
+                expect(sc.compareCost(debugGasData[0], debugGasData[1], 0, 14, .5, userLocation)).toBeNull();
+                // Both calculations fail because mpg is 0, so we get two console errors
+                expect(outputData).toBe('StationCalculation.calcCost: MPG cannot be less than or equal to 0.' +
+                    'StationCalculation.calcCost: MPG cannot be less than or equal to 0.');
+            });
     });
 });
-
 
 // 400 W Big Springs Rd
 const userLocation = {
