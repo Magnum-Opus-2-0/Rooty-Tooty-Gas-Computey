@@ -12,15 +12,6 @@ import Find from './components/Find.js';
 import CarOptions from './components/CarOptions.js';
 import Layout  from './components/Layout';
 
-class Welcome extends React.Component {
-    constructor(props) {
-        super(props);
-    }
-	render() {
-		return <h1>Welcome, {this.props.name}</h1>;
-	}
-}
-
 class App extends React.Component {
     state = {
         selectedFilters: []
