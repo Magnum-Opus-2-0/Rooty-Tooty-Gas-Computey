@@ -2,7 +2,7 @@ import React from 'react'
 import { geolocated } from "react-geolocated";
 import './styles/GasStationData.css'
 import FilterPopup from './FilterPopup.js'
-import StationCalculation from "./StationCalculation";
+import StationCalculation from "../data/StationCalculation";
 import MapContainer from './Map.js'
 
 /**
@@ -133,7 +133,7 @@ class GasStationContainer extends React.Component {
         /**/
         const topStations = filteredStations.slice().sort((stationA, stationB) => {
             // We will need to change the 50 to the user's car's MPG when car selection is implemented.
-            return sc.compareChass(stationA, stationB, 1, this.props.coords);
+            return sc.compareCost(stationA, stationB, 23, 10, 0.5, this.props.coords);
         });
 
         this.setState({stationsData: topStations});
