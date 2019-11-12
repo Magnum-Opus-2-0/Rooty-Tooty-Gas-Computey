@@ -83,10 +83,10 @@ class StationCalculation {
     }
 
     /**
-     * Function to compare stations by smart calculation efficiency.
+     * Function to compare stations by the cost of going there to refuel.
      *
-     * Sorts in ascending order by efficiency. That is, the smaller the value of
-     * efficiency, the better.
+     * Sort in ascending order. The higher the cost the less efficient it is to
+     * go to that station.
      *
      * @param {Object}  stationA        An object with a coords property to
      *                                  compare.
@@ -99,15 +99,14 @@ class StationCalculation {
      *                                  between 0 and 1 (inclusive).
      * @param {Object}  userLocation    An object with latitude and longitude
      *                                  properties to compare against.
-     * @returns {number}    -1 if stationA has a higher efficiency than
-     *                      stationB, 0 if stationA has an equivalent efficiency
-     *                      to stationB, 1 if stationB has a higher efficiency
-     *                      than stationA, or null if there was an invalid
-     *                      calculation.
+     * @returns {number}    -1 if stationA has a lower cost than stationB, 0 if
+     *                      stationA has an equivalent cost to stationB, 1 if
+     *                      stationB has a lower cost than stationA, or null if
+     *                      there was an invalid calculation.
      */
-    compareEfficiency(stationA, stationB, mpg, volumeMax, volumeCur, userLocation) {
-        const effA = this.calcEfficiency(mpg, volumeMax, volumeCur, stationA, userLocation);
-        const effB = this.calcEfficiency(mpg, volumeMax, volumeCur, stationB, userLocation);
+    compareCost(stationA, stationB, mpg, volumeMax, volumeCur, userLocation) {
+        const effA = this.calcCost(mpg, volumeMax, volumeCur, stationA, userLocation);
+        const effB = this.calcCost(mpg, volumeMax, volumeCur, stationB, userLocation);
 
         if (effA < 0 || effB < 0) {
             // calcEfficiency outputs an error message if a there was an invalid calculation.
@@ -142,21 +141,21 @@ class StationCalculation {
      * @returns {number}    A number representing the efficiency of driving to
      *                      the specified gas station.
      */
-    calcEfficiency(mpg, volumeMax, volumeCur, station, userLocation) {
+    calcCost(mpg, volumeMax, volumeCur, station, userLocation) {
         if (mpg <= 0) {
-            console.error('StationCalculation.calcEfficiency: MPG cannot be less than or equal to 0.');
+            console.error('StationCalculation.calcCost: MPG cannot be less than or equal to 0.');
             return -1;
         }
         if (volumeMax <= 0) {
-            console.error('StationCalculation.calcEfficiency: Max volume cannot be less than or equal to 0.');
+            console.error('StationCalculation.calcCost: Max volume cannot be less than or equal to 0.');
             return -1;
         }
         if (volumeCur > 1) {
-            console.error('StationCalculation.calcEfficiency: Current volume cannot be greater than 1.');
+            console.error('StationCalculation.calcCost: Current volume cannot be greater than 1.');
             return -1;
         }
         if (volumeCur < 0) {
-            console.error('StationCalculation.calcEfficiency: Current volume cannot be less than 0.');
+            console.error('StationCalculation.calcCost: Current volume cannot be less than 0.');
             return -1;
         }
 
