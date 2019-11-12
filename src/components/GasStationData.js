@@ -101,6 +101,11 @@ class GasStationContainer extends React.Component {
         this.props.selectedFilters = ['a', 'b', 'c'];
     }
 
+    retrieveStationsFromFirebase() {
+
+
+    }
+
     getTopFiveStations(stationsList) {
         stationsList.sort()
     }
@@ -112,7 +117,7 @@ class GasStationContainer extends React.Component {
      * data nearby. Stores data in the component's state.
      */
     handleClick() {
-        console.log('FIND Clicked');
+        // console.log('FIND Clicked');
         let sc = new StationCalculation();
 
         if(!this.props.isGeolocationAvailable ) {
@@ -127,9 +132,12 @@ class GasStationContainer extends React.Component {
         }
         // Todo: Access Gas Station API
         // Just for now let's use the debug data to see our top 5 stations
-        console.log('Longitude: ' + this.props.coords.longitude);
-        console.log('Latitude: ' + this.props.coords.latitude);
+        // console.log('Longitude: ' + this.props.coords.longitude);
+        // console.log('Latitude: ' + this.props.coords.latitude);
 
+        // TODO: Function call returning list of stations from Firebase
+
+        console.log("Retrieved stations should show up here");
         const allStations = debugGasData.slice();
         // Todo: Call filter function on this
         const filteredStations = allStations.slice();
@@ -137,6 +145,8 @@ class GasStationContainer extends React.Component {
 
         this.setState({stationsData: topFiveStations});
         this.setState({findClicked: true});
+
+        
     }
 
     /**
@@ -189,8 +199,8 @@ class StationsList extends React.Component {
      * @returns {HTMLElement}   An <ol> containing StationListElements.
      */
     render() {
-        console.log("GasStationData::render()");
-        console.log(this.props);
+        // console.log("GasStationData::render()");
+        // console.log(this.props);
         // First we have to put all of the <StationListItems> in an object so that we can output them all at once later.
         // We cannot use a loop inside the return statement.
         //const filterPopup = new FilterPopup();

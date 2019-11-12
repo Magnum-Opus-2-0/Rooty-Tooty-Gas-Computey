@@ -98,7 +98,7 @@ class MapContainer extends React.Component{
                     onClose={this.handleClose}
                 >
                     <div className='PopupText'>
-                        {console.log(this.state.activeStation)}
+                        // {console.log(this.state.activeStation)}
                         <h1 className='PopupHeader'> {this.state.activeStation.name} </h1>
                         <div>Price: ${Number.parseFloat(this.state.activeStation.price).toFixed(2)}</div>
                         <div>Distance: {sc.calcDistance(this.props.coords, this.state.activeStation.coords).toFixed(2)} miles.</div>
