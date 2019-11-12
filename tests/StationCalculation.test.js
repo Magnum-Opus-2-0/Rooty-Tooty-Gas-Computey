@@ -1,50 +1,66 @@
-import StationCalculation from "../src/components/StationCalculation";
+import StationCalculation from "../src/data/StationCalculation";
 
-describe('Chass tests', () => {
-    describe('Calculations', () => {
+// Save the old console.error so we can put everything back where we found it
+const oldErr = console.error;
+// We need to save the console error data
+let outputData = "";
+let storelog = inputs => {outputData += inputs};
+
+beforeEach(() => {
+    // Mock the console error before each and reset outputData
+    outputData = "";
+    console.error = jest.fn(storelog);
+});
+
+// Put the everything back after each test we run
+afterEach(() => {
+    console.error = oldErr;
+});
+
+describe('Efficiency', () => {
+    describe('Calculation', () => {
         test('Valid', () => {
             let sc = new StationCalculation();
 
-            // toFixed returns a string
-            expect(sc.calcChass(10, debugGasData[0], userLocation).toFixed(2)).toBe("2.38");
+            // toFixed returns a rounded string representation of the number
+            expect(sc.calcEfficiency(23, 12, .75, debugGasData[0], userLocation).toFixed(2)).toBe('11.64');
         });
 
-        describe('Invalid', () =>{
-            test('Divide by zero', () => {
+        describe('Invalid', () => {
+            test('MPG', () => {
                 let sc = new StationCalculation();
 
-                expect(sc.calcChass(15, debugGasData[1], debugGasData[1].coords)).toBe(-1);
+                expect(sc.calcEfficiency(0, 15, .47, debugGasData[1], userLocation)).toBe(-1);
+                expect(outputData).toBe('StationCalculation.calcEfficiency: MPG cannot be less than or equal to 0.');
             });
 
-            test('Negative Chass', () => {
+            describe('Current volume out of range', () => {
+                test('Too small', () => {
+                    let sc = new StationCalculation();
+
+                    expect(sc.calcEfficiency(50, 10, -.3, debugGasData[2], userLocation)).toBe(-1);
+                    expect(outputData).toBe('StationCalculation.calcEfficiency: Current volume cannot be less than 0.');
+                });
+
+                test('Too big', () => {
+                    let sc = new StationCalculation();
+
+                    expect(sc.calcEfficiency(42, 11, 4, debugGasData[3], userLocation)).toBe(-1);
+                    expect(outputData).toBe('StationCalculation.calcEfficiency: Current volume cannot be greater than' +
+                        ' 1.');
+                });
+            });
+
+            test('Max volume', () => {
                 let sc = new StationCalculation();
 
-                expect(sc.calcChass(-20, debugGasData[1], userLocation)).toBe(-1);
+                expect(sc.calcEfficiency(12, 0, .4, debugGasData[4], userLocation)).toBe(-1);
+                expect(outputData).toBe('StationCalculation.calcEfficiency: Max volume cannot be less than or' +
+                    ' equal to 0.');
             });
-        });
-    });
-
-    describe('Comparisons', () => {
-        test('Higher A', () => {
-            let sc = new StationCalculation();
-
-            expect(sc.compareChass(debugGasData[0], debugGasData[1], 15, userLocation)).toBe(-1);
-        });
-
-        test('Higher B', () => {
-            let sc = new StationCalculation();
-
-            expect(sc.compareChass(debugGasData[2], debugGasData[0], 50, userLocation)).toBe(1);
-        });
-
-        test('Equivalent', () => {
-            let sc = new StationCalculation();
-
-            expect(sc.compareChass(debugGasData[5], debugGasData[5], 23, userLocation)).toBe(0);
         });
     });
 });
-
 
 // 400 W Big Springs Rd
 const userLocation = {
