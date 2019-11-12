@@ -124,7 +124,7 @@ class GasStationContainer extends React.Component {
         console.log('Longitude: ' + this.props.coords.longitude);
         console.log('Latitude: ' + this.props.coords.latitude);
 
-        //const allStations = debugGasData.slice();
+        const allStations = debugGasData.slice();
         // Todo: Call filter function on this
 
         const filteredStations = allStations.slice();
@@ -149,7 +149,6 @@ class GasStationContainer extends React.Component {
     render() {
         return(
             <div className="GasStationContainer">
-                <p>Test: {this.props.selectedFilters}</p>
                 <div className="Centered">
                     <FindStations
                         name="Find Button"
@@ -193,7 +192,7 @@ class StationsList extends React.Component {
     filterByGasStationName() {
         const data = this.props.stationsData
         const filters = this.props.selectedFilters
-        if (filters.length < 1) {
+        if (filters == null || filters.length < 1) {
             return data
         }
         let stations = []

@@ -35,7 +35,7 @@ class FilterPopup extends React.Component {
     sendSelectedFilters() {
         const nodeList = document.querySelectorAll('#'+this.selectId+' option:checked')
         const filterList = Array.from(nodeList).map(elem => elem.value)
-        this.props.setSelectedFilter(filterList)
+        this.props.setSelectedFilters(filterList)
     }
 
     /*
