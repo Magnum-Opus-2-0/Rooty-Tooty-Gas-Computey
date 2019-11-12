@@ -70,13 +70,10 @@ const Header = (props) => {
                 <Collapse isOpen={isOpen} navbar>
                     <Nav className="ml-auto" navbar>
                         <NavItem>
-                            <NavLink href="/findgas">Find Gas</NavLink>
+                            <NavLink href="/find">Find</NavLink>
                         </NavItem>
                         <NavItem>
-                            <NavLink href="/gasmap">Gas Map</NavLink>
-                        </NavItem>
-                        <NavItem>
-                            <NavLink href="/planyourtrip">Plan Your Trip</NavLink>
+                            <NavLink href="/caroptions">Car Options</NavLink>
                         </NavItem>
                     </Nav>
                 </Collapse>
