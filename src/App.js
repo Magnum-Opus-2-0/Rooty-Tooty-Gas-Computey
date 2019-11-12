@@ -2,7 +2,6 @@ import React from 'react';
 import './App.css';
 
 import FilterPopup from './components/FilterPopup.js';
-import TestParentA from './components/EdwardTest.js'
 import DropdownMenu from './components/CarInfo.js';
 import GasStationContainer from './components/GasStationData.js';
 import CarInfo from "./components/CarInfo";
