@@ -17,6 +17,26 @@ afterEach(() => {
     console.error = oldErr;
 });
 
+describe('Compare Price', () => {
+    test('Price A < B', () => {
+        let sc = new StationCalculation();
+
+        expect(sc.comparePrice(debugGasData[0], debugGasData[2])).toBe(-1);
+    });
+
+    test('Price A = B', () => {
+        let sc = new StationCalculation();
+
+        expect(sc.comparePrice(debugGasData[4], debugGasData[4])).toBe(0);
+    });
+
+    test('Price A > B', () => {
+        let sc = new StationCalculation();
+
+        expect(sc.comparePrice(debugGasData[6], debugGasData[3])).toBe(1);
+    });
+});
+
 describe('Cost', () => {
     describe('Calculation', () => {
         test('Valid', () => {
