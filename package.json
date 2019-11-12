@@ -1,7 +1,11 @@
 {
     "name": "Rooty-Tooty-Gas-Computey",
     "version": "0.0.1",
-    "license": "GNU General Public License v3.0",
+    "license": "GPL-3.0-or-later",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/Magnum-Opus-2-0/Rooty-Tooty-Gas-Computey"
+    },
     "scripts": {
         "test": "jest --passWithNoTests",
         "start": "node src/server.js",
@@ -13,9 +17,10 @@
         "bootstrap": "^4.3.1",
         "express": "^4.17.1",
         "express-favicon": "^2.0.1",
-        "nodemon": "^1.19.4",
         "fast-xml-parser": "^3.14.0",
         "google-maps-react": "^2.0.2",
+        "jquery": "^3.4.1",
+        "nodemon": "^1.19.4",
         "path": "^0.12.7",
         "react": "^16.11.0",
         "react-dom": "^16.10.2",
