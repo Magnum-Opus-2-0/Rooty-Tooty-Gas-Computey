@@ -95,37 +95,34 @@ class GasStationContainer extends React.Component {
             stationsData: [],
             findClicked: false,
         };
-        
-        this.handleClick = this.handleClick.bind(this);
 
         this.props.selectedFilters = ['a', 'b', 'c'];
+        this.retrieveData = this.retrieveData.bind(this);
     }
 
-    /**
+    /** retrieveData
      * Handle the user clicking the FIND button.
      *
      * Gets the user's current location. Makes the API call to find gas station
      * data nearby. Stores data in the component's state.
      */
-    handleClick() {
+    retrieveData(){
         console.log('FIND Clicked');
         let sc = new StationCalculation();
 
         if(!this.props.isGeolocationAvailable ) {
             console.error('Browser not supported.');
-            return;
+            return false;
         } else if (!this.props.isGeolocationEnabled) {
             console.error('Location not enabled.');
-            return;
+            return false;
         } else if (!this.props.coords) {
             console.warn('Location not yet found. Try again in a moment.');
-            return;
+            return false;
         }
         // Todo: Access Gas Station API
         // Just for now let's use the debug data to see our top 5 stations
-        console.log('Longitude: ' + this.props.coords.longitude);
-        console.log('Latitude: ' + this.props.coords.latitude);
-
+        console.log("Hey this worked!");
         const allStations = debugGasData.slice();
         // Todo: Call filter function on this
         const filteredStations = allStations.slice();
@@ -139,6 +136,7 @@ class GasStationContainer extends React.Component {
 
         this.setState({stationsData: topStations});
         this.setState({findClicked: true});
+        return true;
     }
 
     /**
@@ -150,17 +148,13 @@ class GasStationContainer extends React.Component {
     render() {
         return(
             <div className="GasStationContainer">
-                <div className="Centered">
-                    <FindStations
-                        name="Find Button"
-                        onClick={this.handleClick}
-                    />
-                </div>
                 <StationsList
                     name="Station List"
                     stationsData={this.state.stationsData}
                     coords={this.props.coords}
                     selectedFilters={this.props.selectedFilters}
+                    dataCall={this.retrieveData}
+
                 />
                 <MapContainer
                     coords={this.props.coords}
@@ -183,6 +177,9 @@ class GasStationContainer extends React.Component {
 class StationsList extends React.Component {
     constructor(props) {
         super(props);
+        this.state={
+            dataRetrieved: false,
+        }
     }
 
     /**
@@ -191,36 +188,48 @@ class StationsList extends React.Component {
      * @returns {HTMLElement}   An <ol> containing StationListElements.
      */
     render() {
-        console.log("GasStationData::render()");
-        console.log(this.props);
-        // First we have to put all of the <StationListItems> in an object so that we can output them all at once later.
-        // We cannot use a loop inside the return statement.
-        //const filterPopup = new FilterPopup();
-        //const filteredData = filterPopup.filter(this.props.stationsData);
-        //const stations = filteredData.map(stationData => {
-        let sc = new StationCalculation();
 
-        let filterPopup = new FilterPopup();
-        let filteredData = filterPopup.filter(this.props.stationsData, this.props.selectedFilters);
-        this.props.stationsData = filteredData;
+        if(!this.state.dataRetrieved){
+            if(this.props.dataCall()){
+                this.setState({dataRetrieved: true})
+            }
+        }
 
-        const stations = this.props.stationsData.map(stationData => {
+        if(this.state.dataRetrieved) {
+            console.log("GasStationData::render()");
+            console.log(this.props);
+            // First we have to put all of the <StationListItems> in an object so that we can output them all at once later.
+            // We cannot use a loop inside the return statement.
+            //const filterPopup = new FilterPopup();
+            //const filteredData = filterPopup.filter(this.props.stationsData);
+            //const stations = filteredData.map(stationData => {
+            let sc = new StationCalculation();
+
+            let filterPopup = new FilterPopup();
+            let filteredData = filterPopup.filter(this.props.stationsData, this.props.selectedFilters);
+            this.props.stationsData = filteredData;
+
+            const stations = this.props.stationsData.map(stationData => {
+                return (
+                    <StationListItem
+                        value={stationData.name + ': $' + stationData.price.toFixed(2) + '\n'
+                        + sc.calcDistance(this.props.coords, stationData.coords).toFixed(2) + ' miles.'}
+                        key={stationData.key}
+                    />
+                );
+            });
+
             return (
-                <StationListItem
-                    value={stationData.name + ': $' + stationData.price.toFixed(2) + '\n'
-                    + sc.calcDistance(this.props.coords, stationData.coords).toFixed(2) + ' miles.'}
-                    key={stationData.key}
-                />
+                <div className="Centered">
+                    <ol>
+                        {stations}
+                    </ol>
+                </div>
             );
-        });
-
-        return (
-            <div className="Centered">
-                <ol>
-                    {stations}
-                </ol>
-            </div>
-        );
+        }
+        else{
+            return null;
+        }
     }
 }
 
@@ -244,26 +253,7 @@ function StationListItem(props) {
     );
 }
 
-/**
- * A button that finds nearby gas stations.
- *
- * props: {
- *     onClick  {function}  The click handler function.
- * }
- * state: none
- *
- * @param props {object}    The props object passed to this React component.
- * @returns {HTMLElement}   A <button> with the text "FIND".
- */
-function FindStations(props) {
-    return (
-        <button
-            onClick={props.onClick}
-        >
-            FIND
-        </button>
-    );
-}
+
 export default geolocated({
     positionOptions: {
         enableHighAccuracy: true,
