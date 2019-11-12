@@ -8,9 +8,8 @@ import GasStationContainer from './components/GasStationData.js';
 import Home from './components/Home.js';
 import Header from './components/Header.js';
 import CarInfo from './components/CarInfo.js';
-import FindGas from './components/FindGas.js';
-import GasMap from './components/GasMap.js';
-import PlanYourTrip from './components/PlanYourTrip.js';
+import Find from './components/Find.js';
+import CarOptions from './components/CarOptions.js';
 import Layout  from './components/Layout';
 
 class Welcome extends React.Component {
@@ -39,9 +38,8 @@ class App extends React.Component {
                         <div className="TopLevelDiv">
                             <Switch>
                                 <Route exact path="/" component={Home}></Route>
-                                <Route path="/findgas" component={FindGas} />
-                                <Route path="/gasmap" component={GasMap}/>
-                                <Route path="/planyourtrip" component={PlanYourTrip}/>
+                                <Route path="/find" component={Find} />
+                                <Route path="/caroptions" component={CarOptions}/>
                             </Switch>
                             {/* <DropdownMenu/> */}
                             {/* <GasStationContainer selectedFilters={this.state.selectedFilters} /> */}
