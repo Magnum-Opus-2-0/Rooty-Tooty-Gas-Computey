@@ -1,6 +1,6 @@
 import React from 'react'
 import {Map, GoogleApiWrapper, Marker, InfoWindow} from 'google-maps-react'
-import StationCalculation from "./StationCalculation";
+import StationCalculation from "../data/StationCalculation";
 import './styles/Map.css'
 
 //For testing purposes. This should be moved to a .css later. Probably.
