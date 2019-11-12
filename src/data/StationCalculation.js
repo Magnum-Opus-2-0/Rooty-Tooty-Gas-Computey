@@ -14,13 +14,7 @@ class StationCalculation {
      *                      otherwise.
      */
     comparePrice(stationA, stationB) {
-        if (stationA.price < stationB.price) {
-            return -1;
-        } else if (stationA.price === stationB.price) {
-            return 0;
-        }
-
-        return 1;
+        return Math.sign(stationA.price - stationB.price);
     }
 
     /**
