@@ -58,6 +58,7 @@ class StationCalculation {
     calcDistance(locationA, locationB) {
         const RADIUS = 3958.8; // Miles
         if(typeof locationA === 'undefined' || typeof locationB === 'undefined'){
+            console.error('StationCalculation.calcDistance: Received undefined location.');
             return -1;
         }
         else {
