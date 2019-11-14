@@ -6,3 +6,4 @@ build/
 credentials.env
 rooty-tooty-gas-computey-firebase-adminsdk-d4wd7-8a67611e58.json
 .env
+firebase_import.sh
