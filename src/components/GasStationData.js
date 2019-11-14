@@ -4,6 +4,7 @@ import './styles/GasStationData.css'
 import FilterPopup from './FilterPopup.js'
 import StationCalculation from "./StationCalculation";
 import MapContainer from './Map.js'
+import Firebase from './Firebase'
 
 /**
  * A placeholder object of gas station data until we can get data using an API.
@@ -138,9 +139,18 @@ class GasStationContainer extends React.Component {
         // TODO: Function call returning list of stations from Firebase
 
         console.log("Retrieved stations should show up here");
-        const allStations = debugGasData.slice();
+        let allStationsRef = this.props.firebase.getAllStationsRef();
+
+        let allStationsArr = [];
+        allStationsRef.orderByChild("distance").on("child_added", function(snapshot) {  // https://firebase.google.com/docs/database/admin/retrieve-data#ordering-by-key
+
+            console.log(snapshot.key + " is " + snapshot.val().distance + " mi away.");
+            allStationsArr.push(snapshot.val());
+        });
+        // const allStations = debugGasData.slice();
         // Todo: Call filter function on this
-        const filteredStations = allStations.slice();
+        // console.log(allStationsRef);
+        const filteredStations = allStationsArr.slice();
         const topFiveStations = filteredStations.slice().sort(sc.comparePrice).slice(0, 5);
 
         this.setState({stationsData: topFiveStations});
