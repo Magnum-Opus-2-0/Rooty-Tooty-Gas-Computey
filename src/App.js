@@ -9,7 +9,7 @@ import CarInfo from "./components/CarInfo";
 
 class Welcome extends React.Component {
 	render() {
-		return <h1>Welcome, {this.props.name}</h1>;
+		return <h1>Welcome, {this.props.name}</h1>; //
 	}
 }
 
@@ -28,9 +28,9 @@ class App extends React.Component {
         return (
             <div className="TopLevelDiv">
                 <DropdownMenu/>
-                <GasStationContainer selectedFilters={this.state.selectedFilters} />
+                <GasStationContainer selectedFilters={this.state.selectedFilters} firebase={this.props.firebase} />
                 <FilterPopup updateFilters={this.updateFilters} />
-            </div>
+            </div> //
         );
     }
 }
