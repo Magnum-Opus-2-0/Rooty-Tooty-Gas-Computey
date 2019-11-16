@@ -1,11 +1,9 @@
 import React from 'react';
-import GasStationFilterContainer from './GasStationFilterContainer.js';
+import GasStationContainer from "./GasStationData";
+import GasStationFilterContainer from "./GasStationFilterContainer";
 
 const Find = () => (
-    <div>
-        <h1>Find gas.</h1>
-        <GasStationFilterContainer />
-    </div>
+    <GasStationFilterContainer/>
 )
 
 export default Find;
