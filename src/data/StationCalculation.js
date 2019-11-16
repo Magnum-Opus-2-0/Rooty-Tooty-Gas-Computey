@@ -14,13 +14,7 @@ class StationCalculation {
      *                      otherwise.
      */
     comparePrice(stationA, stationB) {
-        if (stationA.price < stationB.price) {
-            return -1;
-        } else if (stationA.price === stationB.price) {
-            return 0;
-        }
-
-        return 1;
+        return Math.sign(stationA.price - stationB.price);
     }
 
     /**
@@ -41,13 +35,8 @@ class StationCalculation {
     compareDistance(stationA, stationB, userLocation) {
         const distA = this.calcDistance(stationA.coords, userLocation);
         const distB = this.calcDistance(stationB.coords, userLocation);
-        if (distA < distB) {
-            return -1;
-        } else if (distA === distB) {
-            return 0;
-        }
-
-        return 1;
+        
+        return Math.sign(distA - distB);
     }
 
     /**
@@ -64,6 +53,7 @@ class StationCalculation {
     calcDistance(locationA, locationB) {
         const RADIUS = 3958.8; // Miles
         if(typeof locationA === 'undefined' || typeof locationB === 'undefined'){
+            console.error('StationCalculation.calcDistance: Received undefined location.');
             return -1;
         }
         else {
