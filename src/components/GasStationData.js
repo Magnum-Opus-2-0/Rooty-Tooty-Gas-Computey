@@ -141,25 +141,48 @@ class GasStationContainer extends React.Component {
     }
 
     /**
+     * Return the list of filtered gas stations.
+     *
+     * @returns {HTMLElement}   An <ol> containing StationListElements.
+     */
+    filterByGasStationName(stationList, filterList) {
+
+        const filteredStationList = [];
+        if (filterList == null || filterList.length < 1) {
+            return stationList
+        }
+
+        for (let i = 0; i < stationList.length; i++) {
+            for (let j = 0; j < filterList.length; j++) {
+                if (stationList[i].name && stationList[i].name == filterList[j]) {
+                    filteredStationList.push(stationList[i])
+                    break
+                }
+            }
+        }
+        return filteredStationList
+    }
+
+    /**
      * Render all components related to gas station data.
      *
      * @returns {HTMLElement}   The <div> containing all gas station data
      *                          related components.
      */
     render() {
+        let filteredData = this.filterByGasStationName(this.state.stationsData, this.props.selectedFilters);
         return(
             <div className="GasStationContainer">
                 <StationsList
                     name="Station List"
-                    stationsData={this.state.stationsData}
+                    stationsData={filteredData}
                     coords={this.props.coords}
-                    selectedFilters={this.props.selectedFilters}
                     dataCall={this.retrieveData}
 
                 />
                 <MapContainer
                     coords={this.props.coords}
-                    stations={this.state.stationsData}
+                    stations={filteredData}
                     buttonClicked={this.state.findClicked}
                 />
             </div>
@@ -183,28 +206,6 @@ class StationsList extends React.Component {
         }
     }
 
-    /**
-     * Render the list of gas stations.
-     *
-     * @returns {HTMLElement}   An <ol> containing StationListElements.
-     */
-    filterByGasStationName() {
-        const data = this.props.stationsData
-        const filters = this.props.selectedFilters
-        if (filters == null || filters.length < 1) {
-            return data
-        }
-        let stations = []
-        for (let i = 0; i < data.length; i++) {
-            for (let j = 0; j < filters.length; j++) {
-                if (data[i].name == filters[j]) {
-                    stations.push(data[i])
-                    break
-                }
-            }
-        }
-        return stations
-    }
 
     render() {
 
@@ -224,9 +225,7 @@ class StationsList extends React.Component {
             //const stations = filteredData.map(stationData => {
             let sc = new StationCalculation();
 
-            let filteredData = this.filterByGasStationName();
-            this.props.stationsData = filteredData;
-
+            //this.setState({stationsData: filteredData});
             const stations = this.props.stationsData.map(stationData => {
                 return (
                     <StationListItem
