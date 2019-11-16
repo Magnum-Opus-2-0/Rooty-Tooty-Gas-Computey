@@ -102,11 +102,6 @@ class GasStationContainer extends React.Component {
         this.props.selectedFilters = ['a', 'b', 'c'];
     }
 
-    retrieveStationsFromFirebase() {
-
-
-    }
-
     getTopFiveStations(stationsList) {
         stationsList.sort()
     }
@@ -131,32 +126,42 @@ class GasStationContainer extends React.Component {
             console.warn('Location not yet found. Try again in a moment.');
             return;
         }
-        // Todo: Access Gas Station API
-        // Just for now let's use the debug data to see our top 5 stations
-        // console.log('Longitude: ' + this.props.coords.longitude);
-        // console.log('Latitude: ' + this.props.coords.latitude);
-
-        // TODO: Function call returning list of stations from Firebase
 
         console.log("Retrieved stations should show up here");
         let allStationsRef = this.props.firebase.getAllStationsRef();
 
-        let allStationsArr = [];
-        allStationsRef.orderByChild("distance").on("child_added", function(snapshot) {  // https://firebase.google.com/docs/database/admin/retrieve-data#ordering-by-key
+        // let allStationsArr = [];
+        // https://firebase.google.com/docs/database/admin/retrieve-data#ordering-by-key
+        // allStationsRef.orderByChild("reg_price").on("child_added", function(snapshot) {
 
-            console.log(snapshot.key + " is " + snapshot.val().distance + " mi away.");
-            allStationsArr.push(snapshot.val());
-        });
-        // const allStations = debugGasData.slice();
-        // Todo: Call filter function on this
-        // console.log(allStationsRef);
-        const filteredStations = allStationsArr.slice();
-        const topFiveStations = filteredStations.slice().sort(sc.comparePrice).slice(0, 5);
+        //     //console.log(snapshot.key + " is " + snapshot.val().distance + " mi away.");
+        //     allStationsArr.push(snapshot.val());
+        // });
 
-        this.setState({stationsData: topFiveStations});
-        this.setState({findClicked: true});
+        function onData(data) {
 
-        
+            let allStationsArr = data.val();
+
+            console.log("In onData()");
+
+            console.log("allStationsArr");
+            console.log(allStationsArr);
+
+            let fiveStations = allStationsArr.slice(0,5);
+            console.log("fiveStations:");
+            console.log(fiveStations);
+
+            //Todo: filter and sort array here
+
+            this.setState({ stationsData: fiveStations});
+            this.setState({findClicked: true});
+
+            
+        };
+
+        onData = onData.bind(this);
+
+        allStationsRef.on("value", onData);
     }
 
     /**
@@ -173,7 +178,7 @@ class GasStationContainer extends React.Component {
                         name="Find Button"
                         onClick={this.handleClick}
                     />
-                </div>
+                </div>  //
                 <StationsList
                     name="Station List"
                     stationsData={this.state.stationsData}
@@ -185,7 +190,7 @@ class GasStationContainer extends React.Component {
                     stations={this.state.stationsData}
                     buttonClicked={this.state.findClicked}
                 />
-            </div>
+            </div>  //
         );
     }
 }
@@ -237,7 +242,7 @@ class StationsList extends React.Component {
                 <ol>
                     {stations}
                 </ol>
-            </div>
+            </div> 
         );
     }
 }
@@ -258,7 +263,7 @@ function StationListItem(props) {
     return (
         <li key={props.key}>
             {props.value}
-        </li>
+        </li>   //
     );
 }
 
@@ -279,7 +284,7 @@ function FindStations(props) {
             onClick={props.onClick}
         >
             FIND
-        </button>
+        </button>   //
     );
 }
 export default geolocated({
