@@ -224,8 +224,7 @@ class StationsList extends React.Component {
             //const stations = filteredData.map(stationData => {
             let sc = new StationCalculation();
 
-            let filterPopup = new FilterPopup();
-            let filteredData = filterPopup.filter(this.props.stationsData, this.props.selectedFilters);
+            let filteredData = this.filterByGasStationName();
             this.props.stationsData = filteredData;
 
             const stations = this.props.stationsData.map(stationData => {
