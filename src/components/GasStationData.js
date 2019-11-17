@@ -96,7 +96,6 @@ class GasStationContainer extends React.Component {
             findClicked: false,
         };
 
-        this.props.selectedFilters = ['a', 'b', 'c'];
         this.retrieveData = this.retrieveData.bind(this);
     }
 
