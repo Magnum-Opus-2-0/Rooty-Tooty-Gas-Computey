@@ -140,8 +140,8 @@ class GasStationContainer extends React.Component {
                 // with all fields valid.
                 if (value.station && value.reg_price && value.lat && value.lng && value.id)
                     result.push(new GasStationWrapper(
-                        (value.station ? value.station : "MexiCali"),
-                        (value.reg_price),
+                        value.station,
+                        value.reg_price,
                         value.lat,
                         value.lng,
                         value.id

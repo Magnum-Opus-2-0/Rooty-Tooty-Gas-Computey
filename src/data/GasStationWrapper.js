@@ -1,6 +1,6 @@
 class GasStationWrapper {
 
-	constructor(name, price, lat, lng, key) {
+	constructor(name='MexiCali', price, lat, lng, key) {
 
 		this.name = name;
 		// If NaN, make it an arbitrarily large value so it shows up as expensive gas
