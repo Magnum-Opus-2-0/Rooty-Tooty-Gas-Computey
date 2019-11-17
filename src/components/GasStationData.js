@@ -220,7 +220,7 @@ class GasStationContainer extends React.Component {
                     stations={filteredData}
                     buttonClicked={this.state.findClicked}
                 />
-            </div>  //
+            </div>
         );
     }
 }
@@ -309,7 +309,7 @@ function StationListItem(props) {
     return (
         <li key={props.key}>
             {props.value}
-        </li>   //
+        </li>
     );
 }
 
