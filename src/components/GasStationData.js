@@ -4,6 +4,8 @@ import './styles/GasStationData.css'
 import FilterPopup from './FilterPopup.js'
 import StationCalculation from "../data/StationCalculation";
 import MapContainer from './Map.js'
+import Firebase from './Firebase'
+import GasStationWrapper from '../data/GasStationWrapper';
 
 /**
  * A placeholder object of gas station data until we can get data using an API.
@@ -107,7 +109,7 @@ class GasStationContainer extends React.Component {
      * data nearby. Stores data in the component's state.
      */
     retrieveData(){
-        console.log('FIND Clicked');
+        // console.log('FIND Clicked');
         let sc = new StationCalculation();
 
         if(!this.props.isGeolocationAvailable ) {
@@ -120,23 +122,56 @@ class GasStationContainer extends React.Component {
             console.warn('Location not yet found. Try again in a moment.');
             return false;
         }
-        // Todo: Access Gas Station API
-        // Just for now let's use the debug data to see our top 5 stations
-        console.log("Hey this worked!");
-        const allStations = debugGasData.slice();
-        // Todo: Call filter function on this
 
-        const filteredStations = allStations.slice();
-        /*
-        const topStations = filteredStations.slice().sort(sc.comparePrice).slice(0, 5);
-        /**/
-        const topStations = filteredStations.slice().sort((stationA, stationB) => {
-            // We will need to change the 50 to the user's car's MPG when car selection is implemented.
-            return sc.compareCost(stationA, stationB, 23, 10, 0.5, this.props.coords);
-        });
+        let allStationsRef = this.props.firebase.getAllStationsRef();
 
-        this.setState({stationsData: topStations});
-        this.setState({findClicked: true});
+        function onData(data) {
+
+            let allStationsRaw = data.val();
+
+            // TODO: integrate StationCalculation::compareCost here
+            //       in an anonymous function.
+            //       Must be anonymous in order to receive more than 2 arguments.
+            let allStationsArr = allStationsRaw.reduce((result, value) => {
+
+                // If not all fields are valid,
+                // don't push a GasStationWrapper.
+                // In effect, this filters our data by stations
+                // with all fields valid.
+                if (value.station && value.reg_price && value.lat && value.lng && value.id)
+                    result.push(new GasStationWrapper(
+                        (value.station ? value.station : "MexiCali"),
+                        (value.reg_price),
+                        value.lat,
+                        value.lng,
+                        value.id
+                        ));
+
+                return result;
+            }, []);
+
+            //Todo: filter and sort array here
+            let sc = new StationCalculation();  // TODO replace with compareCost once we have the info
+
+            // Sort by price * distance
+            allStationsArr.sort((stationA, stationB) => {
+
+                let stationA_PD = stationA.price * sc.calcDistance(stationA.coords, this.props.coords);
+                let stationB_PD = stationB.price * sc.calcDistance(stationB.coords, this.props.coords);
+
+                return Math.sign(stationA_PD - stationB_PD);
+
+            });
+
+            let fiveStations = allStationsArr.slice(0,5);
+
+            this.setState({ stationsData: fiveStations});
+            this.setState({findClicked: true});
+            
+        };
+        onData = onData.bind(this);
+        allStationsRef.on("value", onData);
+        
         return true;
     }
 
@@ -160,7 +195,7 @@ class GasStationContainer extends React.Component {
                 }
             }
         }
-        return filteredStationList
+        return filteredStationList;
     }
 
     /**
@@ -185,7 +220,7 @@ class GasStationContainer extends React.Component {
                     stations={filteredData}
                     buttonClicked={this.state.findClicked}
                 />
-            </div>
+            </div>  //
         );
     }
 }
@@ -209,6 +244,16 @@ class StationsList extends React.Component {
 
     render() {
 
+        // console.log("GasStationData::render()");
+        // console.log(this.props);
+        // First we have to put all of the <StationListItems> in an object so that we can output them all at once later.
+        // We cannot use a loop inside the return statement.
+        //const filterPopup = new FilterPopup();
+        //const filteredData = filterPopup.filter(this.props.stationsData);
+        //const stations = filteredData.map(stationData => {
+        let sc = new StationCalculation();
+
+
         if(!this.state.dataRetrieved){
             if(this.props.dataCall()){
                 this.setState({dataRetrieved: true})
@@ -229,7 +274,7 @@ class StationsList extends React.Component {
             const stations = this.props.stationsData.map(stationData => {
                 return (
                     <StationListItem
-                        value={stationData.name + ': $' + stationData.price.toFixed(2) + '\n'
+                        value={stationData.name + ': $' + Number.parseFloat(stationData.price).toFixed(2) + '\n'
                         + sc.calcDistance(this.props.coords, stationData.coords).toFixed(2) + ' miles.'}
                         key={stationData.key}
                     />
@@ -243,11 +288,9 @@ class StationsList extends React.Component {
                     </ol>
                 </div>
             );
-        }
-        else{
-            return null;
-        }
-    }
+
+        } else return null;
+    }   //end Render()
 }
 
 /**
@@ -266,9 +309,10 @@ function StationListItem(props) {
     return (
         <li key={props.key}>
             {props.value}
-        </li>
+        </li>   //
     );
 }
+
 
 
 export default geolocated({

@@ -12,6 +12,12 @@ import Find from './components/Find.js';
 import CarOptions from './components/CarOptions.js';
 import Layout  from './components/Layout';
 
+class Welcome extends React.Component {
+	render() {
+		return <h1>Welcome, {this.props.name}</h1>; //
+	}
+}
+
 class App extends React.Component {
     state = {
         selectedFilters: []
@@ -23,6 +29,8 @@ class App extends React.Component {
 
     render() {
         console.log("App::render()")
+        console.log("App::this.props.firebase:");
+        console.log(this.props.firebase);
         return (
             <React.Fragment>
                 <Header />
@@ -31,12 +39,9 @@ class App extends React.Component {
                         <div className="TopLevelDiv">
                             <Switch>
                                 <Route exact path="/" component={Home}></Route>
-                                <Route path="/find" component={Find} />
+                                <Route path="/find" render={(props) => <Find {...props} firebase={this.props.firebase} /> } />
                                 <Route path="/caroptions" component={CarOptions}/>
                             </Switch>
-                            {/* <DropdownMenu/> */}
-                            {/* <GasStationContainer selectedFilters={this.state.selectedFilters} /> */}
-                            {/* <FilterPopup updateFilters={this.updateFilters} /> */}
                         </div>
                     </Router>
                 </Layout>

@@ -107,6 +107,7 @@ class StationCalculation {
         return Math.sign(effA - effB);
     }
 
+
     /**
      * Calculate the efficiency of driving to the specified gas station.
      *
