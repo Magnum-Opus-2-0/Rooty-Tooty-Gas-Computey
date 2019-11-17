@@ -6,6 +6,7 @@ import StationCalculation from "../data/StationCalculation";
 import MapContainer from './Map.js'
 import Firebase from './Firebase'
 import GasStationWrapper from '../data/GasStationWrapper';
+import user from '../data/UserData';
 
 
 /**
@@ -54,6 +55,10 @@ class GasStationContainer extends React.Component {
             return false;
         }
 
+        // Set the user's location
+        user.location.latitude = this.props.coords.latitude;
+        user.location.longitude = this.props.coords.longitude;
+
         let allStationsRef = this.props.firebase.getAllStationsRef();
 
         function onData(data) {
@@ -87,8 +92,8 @@ class GasStationContainer extends React.Component {
             // Sort by price * distance
             allStationsArr.sort((stationA, stationB) => {
 
-                let stationA_PD = stationA.price * sc.calcDistance(stationA.coords, this.props.coords);
-                let stationB_PD = stationB.price * sc.calcDistance(stationB.coords, this.props.coords);
+                let stationA_PD = stationA.price * sc.calcDistance(stationA.coords, user.location);
+                let stationB_PD = stationB.price * sc.calcDistance(stationB.coords, user.location);
 
                 return Math.sign(stationA_PD - stationB_PD);
 
