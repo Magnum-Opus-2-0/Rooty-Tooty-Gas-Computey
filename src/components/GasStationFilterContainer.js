@@ -1,6 +1,7 @@
 import React from 'react';
 import FilterPopup from './FilterPopup.js';
 import GasStationContainer from './GasStationData';
+import Firebase from './Firebase'
 
 export default class GasStationFilterContainer extends React.Component {
 	constructor(props) {
@@ -23,9 +24,11 @@ export default class GasStationFilterContainer extends React.Component {
     }
 
 	render() {
+		console.log("In GasStationFilterContainer::render(),");
+		console.log(this.props.firebase);
 		return (
 			<div>
-				<GasStationContainer selectedFilters={this.state.selectedFilters} />
+				<GasStationContainer selectedFilters={this.state.selectedFilters} firebase={this.props.firebase} />
                 <FilterPopup setSelectedFilters={this.setSelectedFilters} />
 			</div>
 		);
