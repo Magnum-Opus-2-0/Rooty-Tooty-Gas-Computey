@@ -5,8 +5,8 @@ import './styles/Map.css'
 
 //For testing purposes. This should be moved to a .css later. Probably.
 const mapStyles ={
-    width: '100%',
-    height: '100%',
+    width: '50%',
+    height: '50%',
 };
 
 /**
