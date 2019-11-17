@@ -1,7 +1,8 @@
 import user from '../src/data/UserData';
 
 function resetUser() {
-    user.car = null;
+    user.mpg = -1;
+    user.carID = "";
     user.location.latitude = 0;
     user.location.longitude = 0;
     user.tankSize = -1;
@@ -26,8 +27,12 @@ describe('Continuity check', () => {
 });
 
 describe('Default values', () => {
-    test('Car', () => {
-        expect(user.car).toBeNull();
+    test('MPG', () => {
+        expect(user.mpg).toBe(-1);
+    });
+
+    test('Car ID', () => {
+        expect(user.carID).toBe("");
     });
 
     test('Location', () => {
@@ -45,10 +50,16 @@ describe('Default values', () => {
 });
 
 describe('Change values', () => {
-    test('Car', () => {
-        user.car = { make: 'Honda', model: 'Civic', year: 2020, mpg: 32 };
+    test('MPG', () => {
+        user.mpg = 34;
 
-        expect(user.car).toEqual({ make: 'Honda', model: 'Civic', year: 2020, mpg: 32 });
+        expect(user.mpg).toBe(34);
+    });
+
+    test('Car ID', () => {
+        user.carID = '1232';
+
+        expect(user.carID).toBe('1232');
     });
 
     describe('Location', () => {

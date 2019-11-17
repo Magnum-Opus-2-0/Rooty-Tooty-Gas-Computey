@@ -1,13 +1,23 @@
 
 export default {
     /**
-     * The data for the user's car.
+     * The mpg of the user's car.
      *
-     * Defaults to null if data has not yet been retrieved.
+     * Defaults to -1 if the data has not yet been retrieved.
      *
      * @type {object}
      */
-    car: null,
+    mpg: -1,
+
+    /**
+     * The ID of the user's car.
+     *
+     * Defaults to empty string if data has not yet been retrieved. This will
+     * change depending on the database used.
+     *
+     * @type {string|number}
+     */
+    carID: "",
 
     /**
      * The user's location.
