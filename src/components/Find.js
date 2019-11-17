@@ -3,7 +3,10 @@ import GasStationContainer from "./GasStationData";
 import GasStationFilterContainer from "./GasStationFilterContainer";
 
 const Find = () => (
-    <GasStationFilterContainer/>
+	<React.Fragment>
+		
+		<GasStationFilterContainer/>
+	</React.Fragment>
 )
 
 export default Find;

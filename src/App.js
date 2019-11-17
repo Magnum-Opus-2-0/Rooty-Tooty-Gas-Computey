@@ -26,7 +26,6 @@ class App extends React.Component {
         return (
             <React.Fragment>
                 <Header />
-                <Layout>
                     <Router>
                         <div className="TopLevelDiv">
                             <Switch>
@@ -39,7 +38,6 @@ class App extends React.Component {
                             {/* <FilterPopup updateFilters={this.updateFilters} /> */}
                         </div>
                     </Router>
-                </Layout>
             </React.Fragment>
         );
     }
