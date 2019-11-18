@@ -1,6 +1,11 @@
 import React, { Component } from 'react';
 import { Button, Form, FormGroup, Label, Input, Col } from 'reactstrap';
 import FuelEconomyGov from '../data/FuelEconomyGov';
+import Slider, { Range } from 'rc-slider';
+import 'rc-slider/assets/index.css';
+import 'rc-tooltip/assets/bootstrap.css';
+import './styles/CarOptions.css'
+import Tooltip from 'rc-tooltip';
 
 const FuelEconomy = new FuelEconomyGov();
 
@@ -16,10 +21,13 @@ class DropdownMenu extends Component {
             option: [],
             optionText: [],
             currentOption: "",
+            carCityMPG: "",
+            carHWMPG: "",
+            userInputTank: 0,
             id: [],
             currentID: "",
             currentCar: null,
-            optionState: null
+            optionState: null,
         };
 
         this.yearChange = this.yearChange.bind(this);
@@ -156,21 +164,40 @@ class DropdownMenu extends Component {
                     // console.log("Button clicked")
                     if (this.state.currentID) {
                         this.setState({
-                            currentCar: FuelEconomy.fetchCarBy(this.state.currentID)
+                            currentCar: FuelEconomy.fetchCarBy(this.state.currentID),
                         }, () => {
-                            // console.log(this.state.currentCar)
+                            console.log(this.state.currentCar)
                         })
                     }
             })
 
         });
     }
+
+    handleSlider (props) {
+        const { value, dragging, index, ...restProps } = props;
+        // console.log(value)
+        return (
+            <Tooltip
+                prefixCls="rc-slider-tooltip"
+                overlay={value}
+                visible={dragging}
+                placement="top"
+                key={index}
+            >
+                <Slider.Handle value={value} {...restProps} />
+            </Tooltip>
+        );
+    };
     /**
      *  Renders the list of car years
      *
      *  @returns {HTMLElement} An <option> containing car years
     */
     render() {
+
+        const wrapperStyle = { width: 400 };
+        // const { inputValue } = this.state;
         let years = FuelEconomy.fetchYears();
         // Adds one or more elements to the beginning of an array and returns the new length of the array
         years.unshift("");
@@ -183,44 +210,57 @@ class DropdownMenu extends Component {
         })
 
         return (
-            <Form onSubmit={this.handleSubmit}>
-                <FormGroup row>
-                    <Label for="exampleSelect" sm={2}>Select year</Label>
-                    <Col sm={10}>
-                        <Input type="select" name="select" id="exampleSelect" onChange={this.yearChange}>
-                            {years}
-                        </Input>
-                    </Col>
-                </FormGroup>
-                <FormGroup row>
-                    <Label for="exampleSelect" sm={2}>Select make</Label>
-                    <Col sm={10}>
-                        <Input type="select" name="select" id="exampleSelect" onChange={this.makeChange}>
-                            {this.state.make}
-                        </Input>
-                    </Col>
-                </FormGroup>
-                <FormGroup row>
-                    <Label for="exampleSelect" sm={2}>Select model</Label>
-                    <Col sm={10}>
-                        <Input type="select" name="select" id="exampleSelect" onChange={this.modelChange}>
-                            {this.state.model}
-                        </Input>
-                    </Col>
-                </FormGroup>
-                <FormGroup row>
-                    <Label for="exampleSelect" sm={2}>Select options</Label>
-                    <Col sm={10}>
-                        <Input type="select" name="select" id="exampleSelect" onChange={this.optionChange}>
-                            {this.state.option}
-                        </Input>
-                    </Col>
-                </FormGroup>
-                {/* Todo: Make submit button do something  */}
-                <Button>
-                    Submit
-                </Button>
-            </Form>
+            <div className="userform">
+                <h4>Please input your car</h4>
+                <br />
+                <Form onSubmit={this.handleSubmit}>
+                    <FormGroup row>
+                        <Label for="exampleSelect" sm={2}>Select year</Label>
+                        <Col sm={10}>
+                            <Input type="select" name="select" id="exampleSelect" onChange={this.yearChange}>
+                                {years}
+                            </Input>
+                        </Col>
+                    </FormGroup>
+                    <FormGroup row>
+                        <Label for="exampleSelect" sm={2}>Select make</Label>
+                        <Col sm={10}>
+                            <Input type="select" name="select" id="exampleSelect" onChange={this.makeChange}>
+                                {this.state.make}
+                            </Input>
+                        </Col>
+                    </FormGroup>
+                    <FormGroup row>
+                        <Label for="exampleSelect" sm={2}>Select model</Label>
+                        <Col sm={10}>
+                            <Input type="select" name="select" id="exampleSelect" onChange={this.modelChange}>
+                                {this.state.model}
+                            </Input>
+                        </Col>
+                    </FormGroup>
+                    <FormGroup row>
+                        <Label for="exampleSelect" sm={2}>Select options</Label>
+                        <Col sm={10}>
+                            <Input type="select" name="select" id="exampleSelect" onChange={this.optionChange}>
+                                {this.state.option}
+                            </Input>
+                        </Col>
+                    </FormGroup>
+                    <h6 className="mpgtext">
+                        City MPG: {this.state.currentCar ? this.state.currentCar["city08"] : "N/A"}
+                    </h6>
+                    <h6 className="mpgtext">
+                        Highway MPG: {this.state.currentCar ? this.state.currentCar["highway08"] : "N/A"}
+                    </h6>
+                    <br />
+                    <h6 className="mpgtext">
+                    Car Tank:
+                    </h6>
+                    <div style={wrapperStyle}>
+                        <Slider min={0} max={100} defaultValue={0} handle={this.handleSlider}/>
+                    </div>
+                </Form>
+            </div>
         );
     }
 }
