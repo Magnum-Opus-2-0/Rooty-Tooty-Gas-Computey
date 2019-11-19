@@ -26,7 +26,6 @@ class App extends React.Component {
         return (
             <React.Fragment>
                 <Header />
-                <Layout>
                     <Router>
                         <div className="TopLevelDiv">
                             <Switch>
@@ -36,7 +35,6 @@ class App extends React.Component {
                             </Switch>
                         </div>
                     </Router>
-                </Layout>
             </React.Fragment>
         );
     }

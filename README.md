@@ -27,3 +27,7 @@ import Input from '@material-ui/core/Input';
 ```
 
 Then, you must install and save that module to the project by typing: `npm install --save module_name`. Example: `npm install --save clsx`
+
+
+"start": "node src/server.js"
+"start": "react-scripts start"
