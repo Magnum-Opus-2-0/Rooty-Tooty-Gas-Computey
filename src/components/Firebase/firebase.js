@@ -18,10 +18,10 @@ class Firebase {
 	constructor() {
 
 		app.initializeApp(firebaseConfig);
-    this.db = app.database();
+        this.db = app.database();
 	}
 
-  getAllStationsRef = () => this.db.ref('stations_data/stations');
+    getAllStationsRef = () => this.db.ref('stations_data/stations');
 }
 
 export default Firebase;
