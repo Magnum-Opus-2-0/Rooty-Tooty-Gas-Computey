@@ -138,7 +138,8 @@ class GasStationContainer extends React.Component {
                 // don't push a GasStationWrapper.
                 // In effect, this filters our data by stations
                 // with all fields valid.
-                if (value.station && value.reg_price && value.lat && value.lng && value.id)
+                if (value.station && value.reg_price && value.lat && value.lng && value.id
+                    && value.station.length > 1)
                     result.push(new GasStationWrapper(
                         value.station,
                         value.reg_price,
