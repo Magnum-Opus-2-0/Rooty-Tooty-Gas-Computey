@@ -127,6 +127,7 @@ class GasStationContainer extends React.Component {
         function onData(data) {
 
             let allStationsRaw = data.val();
+            let stationNames = new Set();
 
             // TODO: integrate StationCalculation::compareCost here
             //       in an anonymous function.
@@ -146,8 +147,14 @@ class GasStationContainer extends React.Component {
                         value.id
                         ));
 
+                // Populate stationNames
+                if (value.station && value.station.length > 1) stationNames.add(value.station);
+
                 return result;
             }, []);
+
+            console.log("stationNames:");
+            console.log(stationNames);
 
             //Todo: filter and sort array here
             let sc = new StationCalculation();  // TODO replace with compareCost once we have the info
@@ -165,7 +172,7 @@ class GasStationContainer extends React.Component {
             let fiveStations = allStationsArr.slice(0,5);
 
             this.setState({ stationsData: fiveStations});
-            this.setState({findClicked: true});
+            this.setState({ findClicked: true});
 
         };
         onData = onData.bind(this);
