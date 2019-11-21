@@ -203,7 +203,7 @@ class DropdownMenu extends Component {
         });
     }
 
-    handleSlider (props) {
+    handleSlider(props) {
         const { value, dragging, index, ...restProps } = props;
 
         return (
@@ -218,12 +218,14 @@ class DropdownMenu extends Component {
             </Tooltip>
         );
     };
+
     /**
      *  Renders the list of car years
      *
      *  @returns {HTMLElement} An <option> containing car years
     */
     render() {
+        const { cookies } = this.props;
 
         const wrapperStyle = { width: 400 };
         // const { inputValue } = this.state;
@@ -236,7 +238,7 @@ class DropdownMenu extends Component {
                     {year}
                 </option>
             );
-        })
+        });
 
         return (
             <div className="userform">
@@ -286,7 +288,13 @@ class DropdownMenu extends Component {
                     Car Tank:
                     </h6>
                     <div style={wrapperStyle}>
-                        <Slider min={0} max={100} defaultValue={0} handle={this.handleSlider}/>
+                        <Slider min={0}
+                                max={100}
+                                defaultValue={50}
+                                step={10}
+                                handle={this.handleSlider}
+                                // When we change the slider, save the user's tank fill to cookies
+                                onAfterChange={(value) => { cookies.set('tankFill', value / 100.0, cookiesOptions); }}/>
                     </div>
                 </Form>
             </div>
