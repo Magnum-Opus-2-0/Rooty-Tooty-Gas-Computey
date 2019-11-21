@@ -102,7 +102,7 @@ describe('Cost', () => {
                 user.tankFill = .12;
                 user.location = userLocation;
 
-                expect(sc.calcCostUser(debugGasData[0]).toFixed(2)).toBe('50.56');
+                expect(sc.calcCostUser(debugGasData[0], user).toFixed(2)).toBe('50.56');
             });
         });
 
@@ -176,7 +176,7 @@ describe('Cost', () => {
                 user.tankFill = .62;
                 user.location = userLocation;
 
-                expect(sc.compareCostUser(debugGasData[0], debugGasData[4])).toBe(-1);
+                expect(sc.compareCostUser(debugGasData[0], debugGasData[4], user)).toBe(-1);
             });
         });
 
