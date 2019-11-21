@@ -30,7 +30,6 @@ class GasStationContainer extends React.Component {
             findClicked: false,
         };
 
-        this.props.selectedFilters = ['a', 'b', 'c'];
         this.retrieveData = this.retrieveData.bind(this);
     }
 
@@ -103,11 +102,11 @@ class GasStationContainer extends React.Component {
 
             this.setState({ stationsData: fiveStations});
             this.setState({findClicked: true});
-            
+
         };
         onData = onData.bind(this);
         allStationsRef.on("value", onData);
-        
+
         return true;
     }
 
@@ -145,20 +144,28 @@ class GasStationContainer extends React.Component {
         let mapStyle = {'height': '80vh'};
         
         return(
-            <div className="GasStationContainer">
-                <StationsList
-                    name="Station List"
-                    stationsData={filteredData}
-                    coords={this.props.coords}
-                    dataCall={this.retrieveData}
+            <React.Fragment>
+                <div className="container">
+                   <div className="row">
+                        <div className="col">
+                            <StationsList
+                                name="Station List"
+                                stationsData={filteredData}
+                                coords={this.props.coords}
+                                dataCall={this.retrieveData}
 
-                />
-                <MapContainer
-                    coords={this.props.coords}
-                    stations={filteredData}
-                    buttonClicked={this.state.findClicked}
-                />
-            </div>
+                            />
+                        </div>
+                        <div className="col" style={mapStyle}>
+                            <MapContainer
+                                coords={this.props.coords}
+                                stations={filteredData}
+                                buttonClicked={this.state.findClicked}
+                            />
+                        </div>
+                    </div>
+                </div>
+            </React.Fragment>
         );
     }
 }
