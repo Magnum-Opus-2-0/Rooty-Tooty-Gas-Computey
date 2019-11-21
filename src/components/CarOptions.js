@@ -6,7 +6,7 @@ import 'rc-slider/assets/index.css';
 import 'rc-tooltip/assets/bootstrap.css';
 import './styles/CarOptions.css'
 import Tooltip from 'rc-tooltip';
-import { withCookies, Cookies } from 'react-cookie';
+import { withCookies } from 'react-cookie';
 
 const FuelEconomy = new FuelEconomyGov();
 
