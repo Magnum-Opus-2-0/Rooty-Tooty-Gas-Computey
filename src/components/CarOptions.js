@@ -209,7 +209,7 @@ class DropdownMenu extends Component {
         return (
             <Tooltip
                 prefixCls="rc-slider-tooltip"
-                overlay={value}
+                overlay={value + '%'}
                 visible={dragging}
                 placement="top"
                 key={index}
