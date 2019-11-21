@@ -8,6 +8,8 @@ import Firebase from './Firebase'
 import GasStationWrapper from '../data/GasStationWrapper';
 import user from '../data/UserData';
 
+import { withCookies } from 'react-cookie';
+
 
 /**
  * A container to hold all other gas station data components.
@@ -25,10 +27,21 @@ class GasStationContainer extends React.Component {
     constructor(props) {
         super(props);
 
+        const { cookies } = this.props;
+
         this.state = {
             stationsData: [],
             findClicked: false,
         };
+
+        // Set user properties. If the user has not yet inputted their car data, we use the default values specified by
+        // the UserData module.
+        user.mpg = cookies.get('mpg') || user.mpg;
+        user.carID = cookies.get('carID') || user.carID;
+        user.tankSize = cookies.get('tankSize') || user.tankSize;
+        user.tankFill = cookies.get('tankFill') || user.tankFill;
+
+        console.log(user);
 
         this.retrieveData = this.retrieveData.bind(this);
     }
@@ -265,6 +278,6 @@ export default geolocated({
         enableHighAccuracy: true,
     },
     userDecisionTimeout: 10000,
-})(GasStationContainer);
+})(withCookies(GasStationContainer));
 
 
