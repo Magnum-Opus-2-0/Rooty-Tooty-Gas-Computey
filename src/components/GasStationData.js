@@ -104,11 +104,17 @@ class GasStationContainer extends React.Component {
             // Sort by price * distance
             allStationsArr.sort((stationA, stationB) => {
 
-                let stationA_PD = stationA.price * sc.calcDistance(stationA.coords, user.location);
-                let stationB_PD = stationB.price * sc.calcDistance(stationB.coords, user.location);
+                // If the user inputted car options let's use the smart calculation. Otherwise we'll use pure distance.
+                // TODO: Put a switch statement here to let the user decide the type of calculation
+                if (user.tankFill != -1 && user.mpg != -1) {
+                    // Until we have user's tank size, we'll just use a 10 gallon tank
+                    return sc.compareCost(stationA, stationB, user.mpg, 10, user.tankFill, user.location);
+                    /* This can be used once we have all of the user data. All we're missing right now is the tankSize.
+                    return sc.compareCostUser(stationA, stationB, user);
+                     */
+                }
 
-                return Math.sign(stationA_PD - stationB_PD);
-
+                return sc.compareDistance(stationA, stationB, user.location);
             });
 
             let fiveStations = allStationsArr.slice(0,5);
