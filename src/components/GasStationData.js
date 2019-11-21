@@ -142,6 +142,8 @@ class GasStationContainer extends React.Component {
      */
     render() {
         let filteredData = this.filterByGasStationName(this.state.stationsData, this.props.selectedFilters);
+        let mapStyle = {'height': '80vh'};
+        
         return(
             <div className="GasStationContainer">
                 <StationsList
@@ -219,7 +221,7 @@ class StationsList extends React.Component {
 
             return (
                 <div className="Centered">
-                    <ol>
+                    <ol onClick={() => console.log('ASS')}>
                         {stations}
                     </ol>
                 </div>
