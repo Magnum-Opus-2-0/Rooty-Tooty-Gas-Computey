@@ -15,6 +15,10 @@ Website URL: https://rooty-tooty-gas-computey.herokuapp.com/
 
 Whenever you make changes, you must type `npm run build`, then `npm start`, and refresh the webpage.
 
+### Start Options
+The default start mode is to build and start a Node server (`"start": "node src/server.js"`).
+It is also possible to start the local server without Node (`"start": "react-scripts start"`).
+
 ## How to make changes
 
 If you include a new library or module, such as:
@@ -28,6 +32,3 @@ import Input from '@material-ui/core/Input';
 
 Then, you must install and save that module to the project by typing: `npm install --save module_name`. Example: `npm install --save clsx`
 
-
-"start": "node src/server.js"
-"start": "react-scripts start"
