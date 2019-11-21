@@ -141,8 +141,8 @@ class GasStationContainer extends React.Component {
      */
     render() {
         let filteredData = this.filterByGasStationName(this.state.stationsData, this.props.selectedFilters);
-        let mapStyle = {'height': '80vh'};
-        
+        let mapStyle = {'height': '85vh'};
+
         return(
             <React.Fragment>
                 <div className="container">
