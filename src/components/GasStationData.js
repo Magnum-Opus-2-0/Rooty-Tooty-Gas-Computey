@@ -6,76 +6,10 @@ import StationCalculation from "../data/StationCalculation";
 import MapContainer from './Map.js'
 import Firebase from './Firebase'
 import GasStationWrapper from '../data/GasStationWrapper';
+import user from '../data/UserData';
 
-/**
- * A placeholder object of gas station data until we can get data using an API.
- *
- * @type {Array}
- */
-const debugGasData = [
-    {
-        name: 'Arco',
-        price: 3.82,
-        coords: {
-            latitude: 33.976067,
-            longitude: -117.339343
-        },
-        key: 'key-arco-iowa',
-    },
-    {
-        name: 'Shell',
-        price: 4.00,
-        coords: {
-            latitude: 33.975381,
-            longitude: -117.340335
-        },
-        key: 'key-shell-university',
-    },
-    {
-        name: '76',
-        price: 4.12,
-        coords: {
-            latitude: 33.983209,
-            longitude: -117.341269
-        },
-        key: 'key-76-blaine',
-    },
-    {
-        name: 'Arco',
-        price: 3.80,
-        coords: {
-            latitude: 33.982567,
-            longitude: -117.341772
-        },
-        key: 'key-arco-blaine',
-    },
-    {
-        name: 'Shell',
-        price: 4.38,
-        coords: {
-            latitude: 33.983350,
-            longitude: -117.340284
-        },
-        key: 'key-arco-iowa',
-    },
-    {
-        name: 'Chevron',
-        price: 4.20,
-        coords: {
-            latitude: 33.955115,
-            longitude: -117.332514
-        },
-        key: 'key-chevron-canyoncrest',
-    },
-    {
-        name: 'Mobil',
-        price: 4.05,
-        coords: {
-            latitude: 33.977036,
-            longitude: -117.336895
-        },
-        key: 'key-mobil-university',
-    }];
+import { withCookies } from 'react-cookie';
+
 
 /**
  * A container to hold all other gas station data components.
@@ -93,10 +27,21 @@ class GasStationContainer extends React.Component {
     constructor(props) {
         super(props);
 
+        const { cookies } = this.props;
+
         this.state = {
             stationsData: [],
             findClicked: false,
         };
+
+        // Set user properties. If the user has not yet inputted their car data, we use the default values specified by
+        // the UserData module.
+        user.mpg = cookies.get('mpg') || user.mpg;
+        user.carID = cookies.get('carID') || user.carID;
+        user.tankSize = cookies.get('tankSize') || user.tankSize;
+        user.tankFill = cookies.get('tankFill') || user.tankFill;
+
+        console.log(user);
 
         this.retrieveData = this.retrieveData.bind(this);
     }
@@ -121,6 +66,10 @@ class GasStationContainer extends React.Component {
             console.warn('Location not yet found. Try again in a moment.');
             return false;
         }
+
+        // Set the user's location
+        user.location.latitude = this.props.coords.latitude;
+        user.location.longitude = this.props.coords.longitude;
 
         let allStationsRef = this.props.firebase.getAllStationsRef();
 
@@ -155,11 +104,17 @@ class GasStationContainer extends React.Component {
             // Sort by price * distance
             allStationsArr.sort((stationA, stationB) => {
 
-                let stationA_PD = stationA.price * sc.calcDistance(stationA.coords, this.props.coords);
-                let stationB_PD = stationB.price * sc.calcDistance(stationB.coords, this.props.coords);
+                // If the user inputted car options let's use the smart calculation. Otherwise we'll use pure distance.
+                // TODO: Put a switch statement here to let the user decide the type of calculation
+                if (user.tankFill != -1 && user.mpg != -1) {
+                    // Until we have user's tank size, we'll just use a 10 gallon tank
+                    return sc.compareCost(stationA, stationB, user.mpg, 10, user.tankFill, user.location);
+                    /* This can be used once we have all of the user data. All we're missing right now is the tankSize.
+                    return sc.compareCostUser(stationA, stationB, user);
+                     */
+                }
 
-                return Math.sign(stationA_PD - stationB_PD);
-
+                return sc.compareDistance(stationA, stationB, user.location);
             });
 
             let fiveStations = allStationsArr.slice(0,5);
@@ -205,7 +160,8 @@ class GasStationContainer extends React.Component {
      */
     render() {
         let filteredData = this.filterByGasStationName(this.state.stationsData, this.props.selectedFilters);
-        let mapStyle = {'height': '95vh'}
+        let mapStyle = {'height': '85vh'};
+
         return(
             <React.Fragment>
                 <div className="container">
@@ -291,7 +247,7 @@ class StationsList extends React.Component {
 
             return (
                 <div className="Centered">
-                    <ol>
+                    <ol onClick={() => console.log('ASS')}>
                         {stations}
                     </ol>
                 </div>
@@ -328,6 +284,6 @@ export default geolocated({
         enableHighAccuracy: true,
     },
     userDecisionTimeout: 10000,
-})(GasStationContainer);
+})(withCookies(GasStationContainer));
 
 

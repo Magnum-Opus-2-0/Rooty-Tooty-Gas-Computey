@@ -15,6 +15,10 @@ Website URL: https://rooty-tooty-gas-computey.herokuapp.com/
 
 Whenever you make changes, you must type `npm run build`, then `npm start`, and refresh the webpage.
 
+### Start Options
+The default start mode is to build and start a Node server (`"start": "node src/server.js"`).
+It is also possible to start the local server without Node (`"start": "react-scripts start"`).
+
 ## How to make changes
 
 If you include a new library or module, such as:
@@ -28,6 +32,23 @@ import Input from '@material-ui/core/Input';
 
 Then, you must install and save that module to the project by typing: `npm install --save module_name`. Example: `npm install --save clsx`
 
+## Cookies
+Rooty Tooty Gas Computey makes use of cookies to store a users' car data. By storing the data, a
+user does not have to reenter their car options every time they visit the site.
 
-"start": "node src/server.js"
-"start": "react-scripts start"
+As a developer, you have these cookies available to you after a user has entered all of their
+car options:
+- `mpg`: The combined city and highway MPG of the user's car.
+- `carID`: The ID of the user's car as specified by the car database. We are currently using
+    [FuelEconomy.gov](https://www.fueleconomy.gov/feg/ws/).
+- `year`: The year of the user's car.
+- `make`: The make of the user's car.
+- `model`: The model of the user's car.
+- `option`: The option/trim of the user's car.
+- `tankSize`: The size of the user's gas tank in gallons.
+- `tankFill`: The current fill of the user's gas tank as a percentage.
+
+The cookies are set individually, so they may be accessed after the user enters their relevant car
+data. That is, `year` is available as soon as they select a year from the year dropdown, their
+tank fill on the slider, etc. The two cookies `mpg` and `carID` are only available after the user
+selects data from all three dropdowns.

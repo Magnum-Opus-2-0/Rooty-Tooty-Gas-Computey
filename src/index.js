@@ -7,13 +7,16 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 
 import App from './App';
 import Firebase, { FirebaseContext } from './components/Firebase';
+import { CookiesProvider } from 'react-cookie';
 
 const firebase = new Firebase();
 
 ReactDOM.render(
-  <FirebaseContext.Provider value={firebase}>
-    <App firebase={firebase}/>
-  </FirebaseContext.Provider>,	//
+    <FirebaseContext.Provider value={firebase}>
+        <CookiesProvider>
+            <App firebase={firebase}/>
+        </CookiesProvider>
+    </FirebaseContext.Provider>,	//
   document.getElementById('root'),
 );
 

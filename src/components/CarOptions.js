@@ -6,12 +6,17 @@ import 'rc-slider/assets/index.css';
 import 'rc-tooltip/assets/bootstrap.css';
 import './styles/CarOptions.css'
 import Tooltip from 'rc-tooltip';
+import { withCookies } from 'react-cookie';
 
 const FuelEconomy = new FuelEconomyGov();
+
+// Currently the only options we need are to set the path to the root so cookies are accessible to all modules/pages.
+const cookiesOptions = { path: '/' };
 
 class DropdownMenu extends Component {
     constructor(props) {
         super(props);
+
         this.state = {
             currentYear: "",
             make: [],
@@ -34,6 +39,7 @@ class DropdownMenu extends Component {
         this.makeChange = this.makeChange.bind(this);
         this.modelChange = this.modelChange.bind(this);
         this.optionChange = this.optionChange.bind(this);
+        // this.handleSlider = this.handleSlider.bind(this);
     }
 
     /**
@@ -43,6 +49,9 @@ class DropdownMenu extends Component {
     *   @returns {HTMLElement} A <option> containing car makes
     */
     yearChange(event) {
+        // Make cookies available to this function
+        const { cookies } = this.props;
+
         // When user selects multiple fields but decides to select another year
         // This.setState will clear the make, model, and option dropdown menu
         this.setState({
@@ -54,7 +63,7 @@ class DropdownMenu extends Component {
         this.setState({ currentYear: event.target.value }, () => {
             let make = FuelEconomy.fetchMakesBy(this.state.currentYear);
             // Adds one or more elements to the beginning of an array and returns the new length of the array
-            make.unshift("")
+            make.unshift("");
             this.setState({
                 make: make.map(make => {
                     return (
@@ -63,8 +72,10 @@ class DropdownMenu extends Component {
                         </option>
                     );
                 })
-            })
-            // console.log(this.state.currentYear)
+            });
+
+            // Save the user's selected year to cookies
+            cookies.set('year', this.state.currentYear, cookiesOptions);
         });
     }
 
@@ -76,6 +87,8 @@ class DropdownMenu extends Component {
     */
 
     makeChange(event) {
+        // Make cookies available to this function
+        const { cookies } = this.props;
         // When user selects multiple fields but decides to select another make
         // This.setState will clear model and option dropdown menu
         this.setState({
@@ -86,7 +99,7 @@ class DropdownMenu extends Component {
         this.setState({ currentMake: event.target.value }, () => {
             let model = FuelEconomy.fetchModelsBy(this.state.currentYear, this.state.currentMake);
             // Adds one or more elements to the beginning of an array and returns the new length of the array
-            model.unshift("")
+            model.unshift("");
             this.setState({
                 model: model.map(model => {
                     return (
@@ -96,7 +109,9 @@ class DropdownMenu extends Component {
                     );
                 })
             })
-            // console.log(this.state.currentMake)
+
+            // Save the user's selected make to cookies
+            cookies.set('make', this.state.currentMake, cookiesOptions);
         });
 
     }
@@ -113,6 +128,9 @@ class DropdownMenu extends Component {
     */
 
     modelChange(event) {
+        // Make cookies available to this function
+        const { cookies } = this.props;
+
         // When user selects multiple fields but decides to select another model
         // This.setState will clear the option dropdown menu
         this.setState({
@@ -142,8 +160,10 @@ class DropdownMenu extends Component {
             }, () => {
                     // console.log(this.state.id)
                     // console.log(this.state.optionText)
-            })
-            // console.log(this.state.currentModel)
+            });
+
+            // Save the user's selected model to cookies
+            cookies.set('model', this.state.currentModel, cookiesOptions);
         });
     }
 
@@ -155,7 +175,9 @@ class DropdownMenu extends Component {
     */
 
     optionChange(event) {
-        console.log("Option selected")
+        // Make cookies available to this function
+        const { cookies } = this.props;
+
         this.setState({ currentOption: event.target.value }, () => {
             this.setState({
                 currentID: this.state.id[this.state.optionText.indexOf(this.state.currentOption)]
@@ -166,21 +188,28 @@ class DropdownMenu extends Component {
                         this.setState({
                             currentCar: FuelEconomy.fetchCarBy(this.state.currentID),
                         }, () => {
-                            console.log(this.state.currentCar)
-                        })
-                    }
-            })
+                            //console.log(this.state.currentCar)
+                            // Save the user's combined mpg to cookies
+                            cookies.set('mpg', this.state.currentCar.comb08, cookiesOptions);
+                        });
 
+                        // Save the user's car ID to cookies
+                        cookies.set('carID', this.state.currentID, cookiesOptions);
+                    }
+            });
+
+            // Save the user's selected option to cookies
+            cookies.set('option', this.state.currentOption, cookiesOptions);
         });
     }
 
-    handleSlider (props) {
+    handleSlider(props) {
         const { value, dragging, index, ...restProps } = props;
-        // console.log(value)
+
         return (
             <Tooltip
                 prefixCls="rc-slider-tooltip"
-                overlay={value}
+                overlay={value + '%'}
                 visible={dragging}
                 placement="top"
                 key={index}
@@ -189,12 +218,14 @@ class DropdownMenu extends Component {
             </Tooltip>
         );
     };
+
     /**
      *  Renders the list of car years
      *
      *  @returns {HTMLElement} An <option> containing car years
     */
     render() {
+        const { cookies } = this.props;
 
         const wrapperStyle = { width: 400 };
         // const { inputValue } = this.state;
@@ -207,7 +238,7 @@ class DropdownMenu extends Component {
                     {year}
                 </option>
             );
-        })
+        });
 
         return (
             <div className="userform">
@@ -257,7 +288,13 @@ class DropdownMenu extends Component {
                     Car Tank:
                     </h6>
                     <div style={wrapperStyle}>
-                        <Slider min={0} max={100} defaultValue={0} handle={this.handleSlider}/>
+                        <Slider min={0}
+                                max={100}
+                                defaultValue={50}
+                                step={10}
+                                handle={this.handleSlider}
+                                // When we change the slider, save the user's tank fill to cookies
+                                onAfterChange={(value) => { cookies.set('tankFill', value / 100.0, cookiesOptions); }}/>
                     </div>
                 </Form>
             </div>
@@ -265,4 +302,4 @@ class DropdownMenu extends Component {
     }
 }
 
-export default DropdownMenu;
+export default withCookies(DropdownMenu);
