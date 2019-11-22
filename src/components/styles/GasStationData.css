@@ -1,10 +1,8 @@
 .GasStationContainer {
-    display: flex;
-    flex-direction: row;
-    width: 100%;
-    white-space: pre;
+    /* display: flex;
+    white-space: pre; */
 }
 
 .Centered {
-    margin: auto;
+    margin: 5vw;
 }

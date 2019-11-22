@@ -1,11 +1,11 @@
 import React from 'react';
-import GasStationFilterContainer from './GasStationFilterContainer.js';
+import GasStationContainer from "./GasStationData";
+import GasStationFilterContainer from "./GasStationFilterContainer";
 
-const Find = () => (
-    <div>
-        <h1>Find gas.</h1>
-        <GasStationFilterContainer />
-    </div>
+const Find = (props) => (
+	<React.Fragment>
+		<GasStationFilterContainer firebase={props.firebase}/>
+	</React.Fragment>
 )
 
 export default Find;

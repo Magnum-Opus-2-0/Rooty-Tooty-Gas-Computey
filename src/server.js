@@ -1,4 +1,6 @@
+
 //server.js
+//require('dotenv').config();
 const express = require('express');
 const favicon = require('express-favicon');
 const path = require('path');

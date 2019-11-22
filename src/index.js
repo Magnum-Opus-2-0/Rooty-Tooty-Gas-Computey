@@ -1,11 +1,24 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+
 import './index.css';
-import App from './App';
 import * as serviceWorker from './serviceWorker';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
-ReactDOM.render(<App />, document.getElementById('root'));
+import App from './App';
+import Firebase, { FirebaseContext } from './components/Firebase';
+import { CookiesProvider } from 'react-cookie';
+
+const firebase = new Firebase();
+
+ReactDOM.render(
+    <FirebaseContext.Provider value={firebase}>
+        <CookiesProvider>
+            <App firebase={firebase}/>
+        </CookiesProvider>
+    </FirebaseContext.Provider>,	//
+  document.getElementById('root'),
+);
 
 
 // If you want your app to work offline and load faster, you can change

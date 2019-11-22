@@ -11,7 +11,8 @@ class FilterPopup extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            filters: ['Arco', 'Chevron', 'Texaco', 'Mobil', '76'],
+            // filters: ['Arco', 'Chevron', 'Texaco', 'Mobil', '76'],
+            filters: ['Sunoco', 'Xtramart', 'Shell'],
             selectedFilters: [],
             distance: DEFAULT_FILTER_DISTANCE,
         };
@@ -40,11 +41,11 @@ class FilterPopup extends React.Component {
 
     /*
         render()
-        Returns a <div> containing a <select> menu that 
+        Returns a <div> containing a <select> menu that
         has all gas station <option> that the user can filter by.
     */
     render() {
-        const options = this.state.filters.map((filter) => 
+        const options = this.state.filters.map((filter) =>
             <option value={filter}>{filter}</option>
         );
         return (

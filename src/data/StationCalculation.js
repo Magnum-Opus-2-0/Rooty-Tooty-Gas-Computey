@@ -14,13 +14,7 @@ class StationCalculation {
      *                      otherwise.
      */
     comparePrice(stationA, stationB) {
-        if (stationA.price < stationB.price) {
-            return -1;
-        } else if (stationA.price === stationB.price) {
-            return 0;
-        }
-
-        return 1;
+        return Math.sign(stationA.price - stationB.price);
     }
 
     /**
@@ -41,13 +35,8 @@ class StationCalculation {
     compareDistance(stationA, stationB, userLocation) {
         const distA = this.calcDistance(stationA.coords, userLocation);
         const distB = this.calcDistance(stationB.coords, userLocation);
-        if (distA < distB) {
-            return -1;
-        } else if (distA === distB) {
-            return 0;
-        }
-
-        return 1;
+        
+        return Math.sign(distA - distB);
     }
 
     /**
@@ -64,6 +53,7 @@ class StationCalculation {
     calcDistance(locationA, locationB) {
         const RADIUS = 3958.8; // Miles
         if(typeof locationA === 'undefined' || typeof locationB === 'undefined'){
+            console.error('StationCalculation.calcDistance: Received undefined location.');
             return -1;
         }
         else {
@@ -118,6 +108,25 @@ class StationCalculation {
     }
 
     /**
+     * Convenience method to compare cost using UserData.
+     *
+     * This method can be called directly by Array.sort.
+     *
+     * @param {Object}  stationA    An object with a coords property to compare.
+     * @param {Object}  stationB    An object with a coords property to compare.
+     * @param {Object}  user        An object containing the user's data. Must
+     *                              have mpg, tankSize, tankFill, and location
+     *                              properties.
+     * @returns {number}    -1 if stationA has a lower cost than stationB, 0 if
+     *                      stationA has an equivalent cost to stationB, 1 if
+     *                      stationB has a lower cost than stationA, or null if
+     *                      there was an invalid calculation.
+     */
+    compareCostUser(stationA, stationB, user) {
+        return this.compareCost(stationA, stationB, user.mpg, user.tankSize, user.tankFill, user.location);
+    }
+
+    /**
      * Calculate the efficiency of driving to the specified gas station.
      *
      * Function assumes the user will fill their tank when they arrive at the
@@ -161,6 +170,23 @@ class StationCalculation {
 
         let dist = this.calcDistance(station.coords, userLocation);
         return station.price * ((dist / mpg) + volumeMax * (1 - volumeCur));
+    }
+
+    /**
+     * Convenience function to calculate cost using UserData.
+     *
+     * @param {Object}  station An object representing the gas station.
+     *                          The object must contain a coords
+     *                          property with latitude and longitude
+     *                          properties and a price property.
+     * @param {Object}  user    An object containing the user's data. Must
+     *                          have mpg, tankSize, tankFill, and location
+     *                          properties.
+     * @returns {number}    A number representing the efficiency of driving to
+     *                      the specified gas station.
+     */
+    calcCostUser(station, user) {
+        return this.calcCost(user.mpg, user.tankSize, user.tankFill, station, user.location);
     }
 
     /**

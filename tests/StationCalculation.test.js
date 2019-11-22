@@ -1,10 +1,19 @@
 import StationCalculation from "../src/data/StationCalculation";
+import user from "../src/data/UserData";
 
 // Save the old console.error so we can put everything back where we found it
 const oldErr = console.error;
 // We need to save the console error data
 let outputData = "";
 let storelog = inputs => {outputData += inputs};
+
+function resetUser() {
+    user.car = null;
+    user.location.latitude = 0;
+    user.location.longitude = 0;
+    user.tankSize = -1;
+    user.tankFill = -1;
+}
 
 beforeEach(() => {
     // Mock the console error before each and reset outputData
@@ -15,16 +24,88 @@ beforeEach(() => {
 // Put the everything back after each test we run
 afterEach(() => {
     console.error = oldErr;
+    resetUser();
+});
+
+describe('Compare Price', () => {
+    test('A < B', () => {
+        let sc = new StationCalculation();
+
+        expect(sc.comparePrice(debugGasData[0], debugGasData[2])).toBe(-1);
+    });
+
+    test('A = B', () => {
+        let sc = new StationCalculation();
+
+        expect(sc.comparePrice(debugGasData[4], debugGasData[4])).toBe(0);
+    });
+
+    test('A > B', () => {
+        let sc = new StationCalculation();
+
+        expect(sc.comparePrice(debugGasData[6], debugGasData[3])).toBe(1);
+    });
+});
+
+describe('Distance', () => {
+    describe('Calculate', () => {
+        test('Valid', () => {
+            let sc = new StationCalculation();
+
+            expect(sc.calcDistance(debugGasData[5].coords, userLocation).toFixed(2)).toBe('1.64');
+        });
+
+        test('Invalid', () => {
+            let sc = new StationCalculation();
+
+            expect(sc.calcDistance(undefined, userLocation)).toBe(-1);
+            expect(outputData).toBe('StationCalculation.calcDistance: Received undefined location.');
+        });
+    });
+
+    describe('Compare', () => {
+        test('A < B', () => {
+            let sc = new StationCalculation();
+
+            expect(sc.compareDistance(debugGasData[6], debugGasData[0], userLocation)).toBe(-1);
+        });
+
+        test('A = B', () => {
+            let sc = new StationCalculation();
+
+            expect(sc.compareDistance(debugGasData[4], debugGasData[4], userLocation)).toBe(0);
+        });
+
+        test('A > B', () => {
+            let sc = new StationCalculation();
+
+            expect(sc.compareDistance(debugGasData[2], debugGasData[0], userLocation)).toBe(1);
+        });
+    });
 });
 
 describe('Cost', () => {
     describe('Calculation', () => {
-        test('Valid', () => {
-            let sc = new StationCalculation();
+        describe('Valid', () => {
+            test('All params', () => {
+                let sc = new StationCalculation();
 
-            // toFixed returns a rounded string representation of the number
-            expect(sc.calcCost(23, 12, .75, debugGasData[0], userLocation).toFixed(2)).toBe('11.64');
+                // toFixed returns a rounded string representation of the number
+                expect(sc.calcCost(23, 12, .75, debugGasData[0], userLocation).toFixed(2)).toBe('11.64');
+            });
+
+            test('User Data', () => {
+                let sc = new StationCalculation();
+
+                user.mpg = 30;
+                user.tankSize = 15;
+                user.tankFill = .12;
+                user.location = userLocation;
+
+                expect(sc.calcCostUser(debugGasData[0], user).toFixed(2)).toBe('50.56');
+            });
         });
+
 
         describe('Invalid', () => {
             test('MPG', () => {
@@ -63,26 +144,39 @@ describe('Cost', () => {
 
     describe('Compare', () => {
         describe('Valid', () => {
-            test('Station A more cost than B', () => {
-                let sc = new StationCalculation();
+            describe('All parameters', () => {
+                test('Station A more cost than B', () => {
+                    let sc = new StationCalculation();
 
-                // debugGas[0]: 13.67
-                // debugGas[1]: 14.33
-                expect(sc.compareCost(debugGasData[0], debugGasData[1], 14, 10, .75, userLocation)).toBe(-1);
+                    // debugGas[0]: 13.67
+                    // debugGas[1]: 14.33
+                    expect(sc.compareCost(debugGasData[0], debugGasData[1], 14, 10, .75, userLocation)).toBe(-1);
+                });
+
+                test('Station A is exactly as cost as B', () => {
+                    let sc = new StationCalculation();
+
+                    expect(sc.compareCost(debugGasData[2], debugGasData[2], 15, 11, .23, userLocation)).toBe(0);
+                });
+
+                test('Station A is less cost than B', () => {
+                    let sc = new StationCalculation();
+
+                    // debugGas[4]: 19.26
+                    // debugGas[5]: 18.57
+                    expect(sc.compareCost(debugGasData[4], debugGasData[5], 16, 8, .46, userLocation)).toBe(1);
+                });
             });
 
-            test('Station A is exactly as cost as B', () => {
+            test('User Data', () => {
                 let sc = new StationCalculation();
 
-                expect(sc.compareCost(debugGasData[2], debugGasData[2], 15, 11, .23, userLocation)).toBe(0);
-            });
+                user.mpg = 20;
+                user.tankSize = 11;
+                user.tankFill = .62;
+                user.location = userLocation;
 
-            test('Station A is less cost than B', () => {
-                let sc = new StationCalculation();
-
-                // debugGas[4]: 19.26
-                // debugGas[5]: 18.57
-                expect(sc.compareCost(debugGasData[4], debugGasData[5], 16, 8, .46, userLocation)).toBe(1);
+                expect(sc.compareCostUser(debugGasData[0], debugGasData[4], user)).toBe(-1);
             });
         });
 
@@ -97,6 +191,12 @@ describe('Cost', () => {
     });
 });
 
+test('Degree to radians', () => {
+    let sc = new StationCalculation();
+
+    expect(sc.degToRad(360)).toBe(2 * Math.PI);
+});
+
 // 400 W Big Springs Rd
 const userLocation = {
     latitude: 33.976450,
@@ -106,7 +206,7 @@ const userLocation = {
 const debugGasData = [
     {
         name: 'Arco',
-        price: 3.82,
+        price: 3.82, // distance 1.10 miles to userLocation
         coords: {
             latitude: 33.976067,
             longitude: -117.339343

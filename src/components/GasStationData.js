@@ -4,76 +4,12 @@ import './styles/GasStationData.css'
 import FilterPopup from './FilterPopup.js'
 import StationCalculation from "../data/StationCalculation";
 import MapContainer from './Map.js'
+import Firebase from './Firebase'
+import GasStationWrapper from '../data/GasStationWrapper';
+import user from '../data/UserData';
 
-/**
- * A placeholder object of gas station data until we can get data using an API.
- *
- * @type {Array}
- */
-const debugGasData = [
-    {
-        name: 'Arco',
-        price: 3.82,
-        coords: {
-            latitude: 33.976067,
-            longitude: -117.339343
-        },
-        key: 'key-arco-iowa',
-    },
-    {
-        name: 'Shell',
-        price: 4.00,
-        coords: {
-            latitude: 33.975381,
-            longitude: -117.340335
-        },
-        key: 'key-shell-university',
-    },
-    {
-        name: '76',
-        price: 4.12,
-        coords: {
-            latitude: 33.983209,
-            longitude: -117.341269
-        },
-        key: 'key-76-blaine',
-    },
-    {
-        name: 'Arco',
-        price: 3.80,
-        coords: {
-            latitude: 33.982567,
-            longitude: -117.341772
-        },
-        key: 'key-arco-blaine',
-    },
-    {
-        name: 'Shell',
-        price: 4.38,
-        coords: {
-            latitude: 33.983350,
-            longitude: -117.340284
-        },
-        key: 'key-arco-iowa',
-    },
-    {
-        name: 'Chevron',
-        price: 4.20,
-        coords: {
-            latitude: 33.955115,
-            longitude: -117.332514
-        },
-        key: 'key-chevron-canyoncrest',
-    },
-    {
-        name: 'Mobil',
-        price: 4.05,
-        coords: {
-            latitude: 33.977036,
-            longitude: -117.336895
-        },
-        key: 'key-mobil-university',
-    }];
+import { withCookies } from 'react-cookie';
+
 
 /**
  * A container to hold all other gas station data components.
@@ -91,53 +27,129 @@ class GasStationContainer extends React.Component {
     constructor(props) {
         super(props);
 
+        const { cookies } = this.props;
+
         this.state = {
             stationsData: [],
             findClicked: false,
         };
-        
-        this.handleClick = this.handleClick.bind(this);
+
+        // Set user properties. If the user has not yet inputted their car data, we use the default values specified by
+        // the UserData module.
+        user.mpg = cookies.get('mpg') || user.mpg;
+        user.carID = cookies.get('carID') || user.carID;
+        user.tankSize = cookies.get('tankSize') || user.tankSize;
+        user.tankFill = cookies.get('tankFill') || user.tankFill;
+
+        console.log(user);
+
+        this.retrieveData = this.retrieveData.bind(this);
     }
 
-    /**
+    /** retrieveData
      * Handle the user clicking the FIND button.
      *
      * Gets the user's current location. Makes the API call to find gas station
      * data nearby. Stores data in the component's state.
      */
-    handleClick() {
-        console.log('FIND Clicked');
+    retrieveData(){
+        // console.log('FIND Clicked');
         let sc = new StationCalculation();
 
         if(!this.props.isGeolocationAvailable ) {
             console.error('Browser not supported.');
-            return;
+            return false;
         } else if (!this.props.isGeolocationEnabled) {
             console.error('Location not enabled.');
-            return;
+            return false;
         } else if (!this.props.coords) {
             console.warn('Location not yet found. Try again in a moment.');
-            return;
+            return false;
         }
-        // Todo: Access Gas Station API
-        // Just for now let's use the debug data to see our top 5 stations
-        console.log('Longitude: ' + this.props.coords.longitude);
-        console.log('Latitude: ' + this.props.coords.latitude);
 
-        const allStations = debugGasData.slice();
-        // Todo: Call filter function on this
+        // Set the user's location
+        user.location.latitude = this.props.coords.latitude;
+        user.location.longitude = this.props.coords.longitude;
 
-        const filteredStations = allStations.slice();
-        /*
-        const topStations = filteredStations.slice().sort(sc.comparePrice).slice(0, 5);
-        /**/
-        const topStations = filteredStations.slice().sort((stationA, stationB) => {
-            // We will need to change the 50 to the user's car's MPG when car selection is implemented.
-            return sc.compareCost(stationA, stationB, 23, 10, 0.5, this.props.coords);
-        });
+        let allStationsRef = this.props.firebase.getAllStationsRef();
 
-        this.setState({stationsData: topStations});
-        this.setState({findClicked: true});
+        function onData(data) {
+
+            let allStationsRaw = data.val();
+
+            // TODO: integrate StationCalculation::compareCost here
+            //       in an anonymous function.
+            //       Must be anonymous in order to receive more than 2 arguments.
+            let allStationsArr = allStationsRaw.reduce((result, value) => {
+
+                // If not all fields are valid,
+                // don't push a GasStationWrapper.
+                // In effect, this filters our data by stations
+                // with all fields valid.
+                if (value.station && value.reg_price && value.lat && value.lng && value.id)
+                    result.push(new GasStationWrapper(
+                        value.station,
+                        value.reg_price,
+                        value.lat,
+                        value.lng,
+                        value.id
+                        ));
+
+                return result;
+            }, []);
+
+            //Todo: filter and sort array here
+            let sc = new StationCalculation();  // TODO replace with compareCost once we have the info
+
+            // Sort by price * distance
+            allStationsArr.sort((stationA, stationB) => {
+
+                // If the user inputted car options let's use the smart calculation. Otherwise we'll use pure distance.
+                // TODO: Put a switch statement here to let the user decide the type of calculation
+                if (user.tankFill != -1 && user.mpg != -1) {
+                    // Until we have user's tank size, we'll just use a 10 gallon tank
+                    return sc.compareCost(stationA, stationB, user.mpg, 10, user.tankFill, user.location);
+                    /* This can be used once we have all of the user data. All we're missing right now is the tankSize.
+                    return sc.compareCostUser(stationA, stationB, user);
+                     */
+                }
+
+                return sc.compareDistance(stationA, stationB, user.location);
+            });
+
+            let fiveStations = allStationsArr.slice(0,5);
+
+            this.setState({ stationsData: fiveStations});
+            this.setState({findClicked: true});
+
+        };
+        onData = onData.bind(this);
+        allStationsRef.on("value", onData);
+
+        return true;
+    }
+
+    /**
+     * Return the list of filtered gas stations.
+     *
+     * @returns {HTMLElement}   An <ol> containing StationListElements.
+     */
+    filterByGasStationName(stationList, filterList) {
+
+        const filteredStationList = [];
+        if (filterList == null || filterList.length < 1) {
+            return stationList
+        }
+
+        for (let i = 0; i < stationList.length; i++) {
+            for (let j = 0; j < filterList.length; j++) {
+                if (stationList[i].name && stationList[i].name == filterList[j]) {
+                    filteredStationList.push(stationList[i])
+                    break
+                }
+            }
+        }
+        return filteredStationList;
     }
 
     /**
@@ -147,26 +159,32 @@ class GasStationContainer extends React.Component {
      *                          related components.
      */
     render() {
+        let filteredData = this.filterByGasStationName(this.state.stationsData, this.props.selectedFilters);
+        let mapStyle = {'height': '85vh'};
+
         return(
-            <div className="GasStationContainer">
-                <div className="Centered">
-                    <FindStations
-                        name="Find Button"
-                        onClick={this.handleClick}
-                    />
+            <React.Fragment>
+                <div className="container">
+                   <div className="row">
+                        <div className="col">
+                            <StationsList
+                                name="Station List"
+                                stationsData={filteredData}
+                                coords={this.props.coords}
+                                dataCall={this.retrieveData}
+
+                            />
+                        </div>
+                        <div className="col" style={mapStyle}>
+                            <MapContainer
+                                coords={this.props.coords}
+                                stations={filteredData}
+                                buttonClicked={this.state.findClicked}
+                            />
+                        </div>
+                    </div>
                 </div>
-                <StationsList
-                    name="Station List"
-                    stationsData={this.state.stationsData}
-                    coords={this.props.coords}
-                    selectedFilters={this.props.selectedFilters}
-                />
-                <MapContainer
-                    coords={this.props.coords}
-                    stations={this.state.stationsData}
-                    buttonClicked={this.state.findClicked}
-                />
-            </div>
+            </React.Fragment>
         );
     }
 }
@@ -182,53 +200,61 @@ class GasStationContainer extends React.Component {
 class StationsList extends React.Component {
     constructor(props) {
         super(props);
+        this.state={
+            dataRetrieved: false,
+        }
     }
 
-    /**
-     * Render the list of gas stations.
-     *
-     * @returns {HTMLElement}   An <ol> containing StationListElements.
-     */
-    filterByGasStationName() {
-        const data = this.props.stationsData
-        const filters = this.props.selectedFilters
-        if (filters == null || filters.length < 1) {
-            return data
-        }
-        let stations = []
-        for (let i = 0; i < data.length; i++) {
-            for (let j = 0; j < filters.length; j++) {
-                if (data[i].name == filters[j]) {
-                    stations.push(data[i])
-                    break
-                }
-            }
-        }
-        return stations
-    }
 
     render() {
-        let sc = new StationCalculation();
-        const filteredData = this.filterByGasStationName()
-        const sortedData = filteredData.slice().sort(sc.comparePrice).slice(0, 5)
-        const stations = sortedData.map(stationData => {
-            return (
-                <StationListItem
-                    value={stationData.name + ': $' + stationData.price.toFixed(2) + '\n'
-                    + sc.calcDistance(this.props.coords, stationData.coords).toFixed(2) + ' miles.'}
-                    key={stationData.key}
-                />
-            );
-        });
 
-        return (
-            <div className="Centered">
-                <ol>
-                    {stations}
-                </ol>
-            </div>
-        );
-    }
+        // console.log("GasStationData::render()");
+        // console.log(this.props);
+        // First we have to put all of the <StationListItems> in an object so that we can output them all at once later.
+        // We cannot use a loop inside the return statement.
+        //const filterPopup = new FilterPopup();
+        //const filteredData = filterPopup.filter(this.props.stationsData);
+        //const stations = filteredData.map(stationData => {
+        let sc = new StationCalculation();
+
+
+        if(!this.state.dataRetrieved){
+            if(this.props.dataCall()){
+                this.setState({dataRetrieved: true})
+            }
+        }
+
+        if(this.state.dataRetrieved) {
+            console.log("GasStationData::render()");
+            console.log(this.props);
+            // First we have to put all of the <StationListItems> in an object so that we can output them all at once later.
+            // We cannot use a loop inside the return statement.
+            //const filterPopup = new FilterPopup();
+            //const filteredData = filterPopup.filter(this.props.stationsData);
+            //const stations = filteredData.map(stationData => {
+            let sc = new StationCalculation();
+
+            //this.setState({stationsData: filteredData});
+            const stations = this.props.stationsData.map(stationData => {
+                return (
+                    <StationListItem
+                        value={stationData.name + ': $' + Number.parseFloat(stationData.price).toFixed(2) + '\n'
+                        + sc.calcDistance(this.props.coords, stationData.coords).toFixed(2) + ' miles.'}
+                        key={stationData.key}
+                    />
+                );
+            });
+
+            return (
+                <div className="Centered">
+                    <ol onClick={() => console.log('ASS')}>
+                        {stations}
+                    </ol>
+                </div>
+            );
+
+        } else return null;
+    }   //end Render()
 }
 
 /**
@@ -251,31 +277,13 @@ function StationListItem(props) {
     );
 }
 
-/**
- * A button that finds nearby gas stations.
- *
- * props: {
- *     onClick  {function}  The click handler function.
- * }
- * state: none
- *
- * @param props {object}    The props object passed to this React component.
- * @returns {HTMLElement}   A <button> with the text "FIND".
- */
-function FindStations(props) {
-    return (
-        <button
-            onClick={props.onClick}
-        >
-            FIND
-        </button>
-    );
-}
+
+
 export default geolocated({
     positionOptions: {
         enableHighAccuracy: true,
     },
     userDecisionTimeout: 10000,
-})(GasStationContainer);
+})(withCookies(GasStationContainer));
 
 
