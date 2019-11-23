@@ -9,7 +9,7 @@ import App from './App';
 import Firebase, { FirebaseContext } from './components/Firebase';
 import { CookiesProvider } from 'react-cookie';
 
-const firebase = new Firebase();
+const firebase = null; //new Firebase();
 
 ReactDOM.render(
     <FirebaseContext.Provider value={firebase}>
