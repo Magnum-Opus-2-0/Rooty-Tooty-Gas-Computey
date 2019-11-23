@@ -13,9 +13,9 @@ import { withCookies } from 'react-cookie';
 
 const debugData = [
     {
-        station: 'Arco',
+        station: 'Arco123',
         reg_price: 3.82,
-        lat: 33.976067,
+        lat: 34.919967,
         lng: -117.339343,
         key: 'key-arco-iowa',
         id: 1000,
@@ -23,7 +23,7 @@ const debugData = [
     {
         station: 'Shell',
         reg_price: 4.00,
-        lat: 33.975381,
+        lat: 34.075381,
         lng: -117.340335,
         key: 'key-shell-university',
         id: 2000,
@@ -229,6 +229,17 @@ class GasStationContainer extends React.Component {
         return filteredStationList;
     }
 
+    filterByDistance(stationList, maxDistance) {
+        let sc = new StationCalculation();
+        let filteredStationList = []
+        for (let station of stationList) {
+            if (sc.calcDistance(this.props.coords, station.coords) <= maxDistance) {
+                filteredStationList.push(station)
+            }
+        }
+        return filteredStationList;
+    }
+
     /**
      * Render all components related to gas station data.
      *
@@ -237,6 +248,7 @@ class GasStationContainer extends React.Component {
      */
     render() {
         let filteredData = this.filterByGasStationName(this.state.stationsData, this.props.selectedFilters);
+        filteredData = this.filterByDistance(filteredData, this.props.maxDistance)
         let mapStyle = {'height': '85vh'};
 
         return(
