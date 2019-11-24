@@ -49,9 +49,6 @@ class DropdownMenu extends Component {
     *   @returns {HTMLElement} A <option> containing car makes
     */
     yearChange(event) {
-        // Make cookies available to this function
-        const { cookies } = this.props;
-
         // When user selects multiple fields but decides to select another year
         // This.setState will clear the make, model, and option dropdown menu
         this.setState({
@@ -73,9 +70,6 @@ class DropdownMenu extends Component {
                     );
                 })
             });
-
-            // Save the user's selected year to cookies
-            cookies.set('year', this.state.currentYear, cookiesOptions);
         });
     }
 
@@ -85,10 +79,7 @@ class DropdownMenu extends Component {
     *   Calls fetchModelsBy which passes in currentYear and currentMake
     *   @returns {HTMLElement} A <option> containing car models
     */
-
     makeChange(event) {
-        // Make cookies available to this function
-        const { cookies } = this.props;
         // When user selects multiple fields but decides to select another make
         // This.setState will clear model and option dropdown menu
         this.setState({
@@ -108,10 +99,7 @@ class DropdownMenu extends Component {
                         </option>
                     );
                 })
-            })
-
-            // Save the user's selected make to cookies
-            cookies.set('make', this.state.currentMake, cookiesOptions);
+            });
         });
 
     }
@@ -128,9 +116,6 @@ class DropdownMenu extends Component {
     */
 
     modelChange(event) {
-        // Make cookies available to this function
-        const { cookies } = this.props;
-
         // When user selects multiple fields but decides to select another model
         // This.setState will clear the option dropdown menu
         this.setState({
@@ -161,9 +146,6 @@ class DropdownMenu extends Component {
                     // console.log(this.state.id)
                     // console.log(this.state.optionText)
             });
-
-            // Save the user's selected model to cookies
-            cookies.set('model', this.state.currentModel, cookiesOptions);
         });
     }
 
@@ -173,11 +155,7 @@ class DropdownMenu extends Component {
     *   Saves the id to the state currentID
     *   Calls fetchCarBy which passes in currentID
     */
-
     optionChange(event) {
-        // Make cookies available to this function
-        const { cookies } = this.props;
-
         this.setState({ currentOption: event.target.value }, () => {
             this.setState({
                 currentID: this.state.id[this.state.optionText.indexOf(this.state.currentOption)]
@@ -189,17 +167,12 @@ class DropdownMenu extends Component {
                             currentCar: FuelEconomy.fetchCarBy(this.state.currentID),
                         }, () => {
                             //console.log(this.state.currentCar)
-                            // Save the user's combined mpg to cookies
-                            cookies.set('mpg', this.state.currentCar.comb08, cookiesOptions);
-                        });
 
-                        // Save the user's car ID to cookies
-                        cookies.set('carID', this.state.currentID, cookiesOptions);
+                            // Save the car data only after the user gone through all the drop downs
+                            this.saveCarData();
+                        });
                     }
             });
-
-            // Save the user's selected option to cookies
-            cookies.set('option', this.state.currentOption, cookiesOptions);
         });
     }
 
@@ -299,6 +272,25 @@ class DropdownMenu extends Component {
                 </Form>
             </div>
         );
+    }
+
+    /**
+     * Save the user's car data to cookies.
+     *
+     * Data saved: year, make, model, option, combined mpg and car id
+     */
+    saveCarData() {
+        // Make cookies available to this function
+        const { cookies } = this.props;
+
+        // Save all of the car data at once, so that we don't have mismatched data if the user doesn't finish choosing
+        // their car from the dropdowns
+        cookies.set('year', this.state.currentYear, cookiesOptions);
+        cookies.set('make', this.state.currentMake, cookiesOptions);
+        cookies.set('model', this.state.currentModel, cookiesOptions);
+        cookies.set('mpg', this.state.currentCar.comb08, cookiesOptions);
+        cookies.set('carID', this.state.currentID, cookiesOptions);
+        cookies.set('option', this.state.currentOption, cookiesOptions);
     }
 }
 
