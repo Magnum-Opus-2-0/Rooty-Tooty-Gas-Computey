@@ -250,12 +250,7 @@ class DropdownMenu extends Component {
                             </Input>
                         </Col>
                     </FormGroup>
-                    <h6 className="mpgtext">
-                        City MPG: {this.state.currentCar ? this.state.currentCar["city08"] : "N/A"}
-                    </h6>
-                    <h6 className="mpgtext">
-                        Highway MPG: {this.state.currentCar ? this.state.currentCar["highway08"] : "N/A"}
-                    </h6>
+                    <h6 className="mpgtext">{this.carToString()}</h6>
                     <br />
                     <h6 className="mpgtext">
                     Car Tank:
@@ -288,9 +283,43 @@ class DropdownMenu extends Component {
         cookies.set('year', this.state.currentYear, cookiesOptions);
         cookies.set('make', this.state.currentMake, cookiesOptions);
         cookies.set('model', this.state.currentModel, cookiesOptions);
-        cookies.set('mpg', this.state.currentCar.comb08, cookiesOptions);
+        cookies.set('combMPG', this.state.currentCar.comb08, cookiesOptions);
+        cookies.set('highwayMPG', this.state.currentCar.highway08, cookiesOptions);
+        cookies.set('cityMPG', this.state.currentCar.city08, cookiesOptions);
         cookies.set('carID', this.state.currentID, cookiesOptions);
         cookies.set('option', this.state.currentOption, cookiesOptions);
+    }
+
+    /**
+     * Generates a string that represents the user's car.
+     *
+     * Loads the car data from cookies, so that it will still be there when the
+     * user revisits the page.
+     *
+     * @returns {string}    The car data as a string, if the user has chosen a car.
+     *                      Otherwise, the fields appear as N/A.
+     */
+    carToString() {
+        const { cookies } = this.props;
+
+        let ret;
+        let year = cookies.get('year') || '';
+        let make = cookies.get('make') || '';
+        let model = cookies.get('model') || '';
+        let option = cookies.get('option') || '';
+        let city = cookies.get('cityMPG') || 'N/A';
+        let highway = cookies.get('highwayMPG') || 'N/A';
+
+        ret = 'Your car: ';
+        if (year && make && model) {
+            ret += year + ' ' + make + ' ' + model + ' (' + option + ')';
+        } else {
+            ret += 'N/A';
+        }
+
+        ret += '\n\nCity MPG: ' + city + '\nHighway MPG: ' + highway;
+
+        return ret;
     }
 }
 
