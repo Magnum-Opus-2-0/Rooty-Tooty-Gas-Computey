@@ -1,11 +1,9 @@
-import React, { useState } from 'react';
-import FilterPopup from './FilterPopup.js';
+import React from 'react';
 import GasStationContainer from './GasStationData';
-import Firebase from './Firebase'
-import {Nav, Navbar, NavItem, Collapse} from 'reactstrap';
+import {Nav, Navbar, Collapse} from 'reactstrap';
 import {Dropdown, DropdownToggle, DropdownMenu, DropdownItem} from 'reactstrap';
-import {Button, ButtonGroup} from 'reactstrap';
-import { Input, InputGroup, InputGroupAddon, InputGroupText } from 'reactstrap';
+import {Button} from 'reactstrap';
+import { Input, InputGroup, InputGroupText } from 'reactstrap';
 
 export default class GasStationFilterContainer extends React.Component {
     constructor(props) {
@@ -170,7 +168,7 @@ export default class GasStationFilterContainer extends React.Component {
                                 <div style={buttonGroupStyle}>
                                     {this.state.filterButtons}
                                 </div>
-                                
+
                             </InputGroup>
                         </Nav>
                     </Collapse>

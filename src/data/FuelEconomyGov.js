@@ -1,5 +1,4 @@
 var xml_parser = require('fast-xml-parser');
-var he = require('he');
 
 /**
  * The root URL for FuelEconomy.gov's API calls.
