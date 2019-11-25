@@ -13,7 +13,7 @@ export default class GasStationFilterContainer extends React.Component {
         	selectedFilters: [],
         	filterDropdownOpen: false,
 			// availableFilters: ['Arco', 'Chevron', 'Texaco', 'Mobil', '76'],
-			availableFilters: ['Sunoco', 'Xtramart', 'Shell'],
+			availableFilters: ['Shell', 'Sunoco', 'Marathon', 'Xtramart', '1', 'M', 'Citgo', 'B'],
         	filterButtons: []
         }
 
