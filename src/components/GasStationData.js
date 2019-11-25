@@ -36,7 +36,7 @@ class GasStationContainer extends React.Component {
 
         // Set user properties. If the user has not yet inputted their car data, we use the default values specified by
         // the UserData module.
-        user.mpg = cookies.get('mpg') || user.mpg;
+        user.mpg = cookies.get('combMPG') || user.mpg;
         user.carID = cookies.get('carID') || user.carID;
         user.tankSize = cookies.get('tankSize') || user.tankSize;
         user.tankFill = cookies.get('tankFill') || user.tankFill;
