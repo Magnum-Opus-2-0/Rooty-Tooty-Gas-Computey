@@ -289,12 +289,9 @@ class GasStationContainer extends React.Component {
 class StationsList extends React.Component {
     constructor(props) {
         super(props);
-        this.state={
-            dataRetrieved: false,
-        }
     }
 
-
+    dataRetrieved = false;
     render() {
 
         // console.log("GasStationData::render()");
@@ -307,13 +304,13 @@ class StationsList extends React.Component {
         let sc = new StationCalculation();
 
 
-        if(!this.state.dataRetrieved){
+        if(!this.dataRetrieved){
             if(this.props.dataCall()){
-                this.setState({dataRetrieved: true})
+                this.dataRetrieved = true;
             }
         }
 
-        if(this.state.dataRetrieved) {
+        if(this.dataRetrieved) {
             console.log("GasStationData::render()");
             console.log(this.props);
             // First we have to put all of the <StationListItems> in an object so that we can output them all at once later.

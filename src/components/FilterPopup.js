@@ -12,7 +12,7 @@ class FilterPopup extends React.Component {
         super(props);
         this.state = {
             // filters: ['Arco', 'Chevron', 'Texaco', 'Mobil', '76'],
-            filters: ['Sunoco', 'Xtramart', 'Shell'],
+            filters: ['Shell', 'Sunoco', 'Marathon', 'Xtramart', '1', 'M', 'Citgo', 'B'],
             selectedFilters: [],
             distance: DEFAULT_FILTER_DISTANCE,
         };
