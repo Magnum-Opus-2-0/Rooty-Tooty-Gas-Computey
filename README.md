@@ -32,6 +32,17 @@ import Input from '@material-ui/core/Input';
 
 Then, you must install and save that module to the project by typing: `npm install --save module_name`. Example: `npm install --save clsx`
 
+## Testing
+Tests for algorithms and calculations are included on this repository. We use Jest to run our tests,
+and Travis for continuous integration. To run the tests, enter `npm test` from any directory in the
+project.
+
+Currently, we have test suites that check our `StationCalculation`, `UserData`, and `FuelEconomy`
+modules. Most `FuelEconomy` tests use a mocked `XMLhttprequest` object to check that fetch functions
+work as expected, but a few do an actual request to ensure that we get the data we expect from
+the database. This noticeably slows down the `FuelEconomy` test suite but did help us catch a few
+errors.
+
 ## Cookies
 Rooty Tooty Gas Computey makes use of cookies to store a users' car data. By storing the data, a
 user does not have to reenter their car options every time they visit the site.
