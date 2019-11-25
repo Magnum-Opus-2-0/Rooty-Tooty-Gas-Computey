@@ -22,24 +22,48 @@ class DropdownMenu extends Component {
         if (cookies.get('tankFill') === undefined) {
             cookies.set('tankFill', .5, cookiesOptions);
         }
+        if (!cookies.get('option')) {
+            this.state = {
+                currentYear: "",
+                make: [],
+                currentMake: "",
+                model: [],
+                currentModel: "",
+                option: [],
+                optionText: [],
+                currentOption: "",
+                carCityMPG: "",
+                carHWMPG: "",
+                userInputTank: 0,
+                id: [],
+                currentID: "",
+                currentCar: null,
+                optionState: null,
+            };
 
-        this.state = {
-            currentYear: "",
-            make: [],
-            currentMake: "",
-            model: [],
-            currentModel: "",
-            option: [],
-            optionText: [],
-            currentOption: "",
-            carCityMPG: "",
-            carHWMPG: "",
-            userInputTank: 0,
-            id: [],
-            currentID: "",
-            currentCar: null,
-            optionState: null,
-        };
+        } else {
+            let year = cookies.get('year');
+            let make = cookies.get('make');
+            let model = cookies.get('model');
+            let option = cookies.get('option');
+
+            this.state = {
+                currentYear: year,
+                make: FuelEconomy.fetchMakesBy(year).map((make) => {return <option>{make}</option>}),
+                currentMake: make,
+                model: FuelEconomy.fetchModelsBy(year, make).map((model) => {return <option>{model}</option>}),
+                currentModel: model,
+                option: FuelEconomy.fetchOptionsBy(year, make, model).map((option) => {return <option>{option.opt}</option>}),
+                currentOption: option,
+                carCityMPG: cookies.get('cityMPG'),
+                carHWMPG: cookies.get('highwayMPG'),
+                userInputTank: 0,
+                id: [],
+                currentID: cookies.get('carID'),
+                currentCar: null,
+                optionState: null
+            };
+        }
 
         this.yearChange = this.yearChange.bind(this);
         this.makeChange = this.makeChange.bind(this);
@@ -227,7 +251,12 @@ class DropdownMenu extends Component {
                     <FormGroup row>
                         <Label for="exampleSelect" sm={2}>Select year</Label>
                         <Col sm={10}>
-                            <Input type="select" name="select" id="exampleSelect" onChange={this.yearChange}>
+                            <Input type="select"
+                                   name="select-years"
+                                   id="exampleSelect"
+                                   onChange={this.yearChange}
+                                   defaultValue={this.state.currentID ? this.state.currentYear : ' '}
+                            >
                                 {years}
                             </Input>
                         </Col>
@@ -235,7 +264,12 @@ class DropdownMenu extends Component {
                     <FormGroup row>
                         <Label for="exampleSelect" sm={2}>Select make</Label>
                         <Col sm={10}>
-                            <Input type="select" name="select" id="exampleSelect" onChange={this.makeChange}>
+                            <Input type="select"
+                                   name="select-makes"
+                                   id="exampleSelect"
+                                   onChange={this.makeChange}
+                                   defaultValue={this.state.currentID ? this.state.currentMake : ' '}
+                            >
                                 {this.state.make}
                             </Input>
                         </Col>
@@ -243,7 +277,12 @@ class DropdownMenu extends Component {
                     <FormGroup row>
                         <Label for="exampleSelect" sm={2}>Select model</Label>
                         <Col sm={10}>
-                            <Input type="select" name="select" id="exampleSelect" onChange={this.modelChange}>
+                            <Input type="select"
+                                   name="select-models"
+                                   id="exampleSelect"
+                                   onChange={this.modelChange}
+                                   defaultValue={this.state.currentID ? this.state.currentModel : ' '}
+                            >
                                 {this.state.model}
                             </Input>
                         </Col>
@@ -251,7 +290,12 @@ class DropdownMenu extends Component {
                     <FormGroup row>
                         <Label for="exampleSelect" sm={2}>Select options</Label>
                         <Col sm={10}>
-                            <Input type="select" name="select" id="exampleSelect" onChange={this.optionChange}>
+                            <Input type="select"
+                                   name="select-options"
+                                   id="exampleSelect"
+                                   onChange={this.optionChange}
+                                   defaultValue={this.state.currentID ? this.state.currentOption : ' '}
+                            >
                                 {this.state.option}
                             </Input>
                         </Col>
@@ -309,25 +353,30 @@ class DropdownMenu extends Component {
     carToString() {
         const { cookies } = this.props;
 
-        let ret;
-        let year = cookies.get('year') || '';
-        let make = cookies.get('make') || '';
-        let model = cookies.get('model') || '';
-        let option = cookies.get('option') || '';
         let city = cookies.get('cityMPG') || 'N/A';
         let highway = cookies.get('highwayMPG') || 'N/A';
         let fuelType = cookies.get('fuelType') || 'N/A';
 
-        ret = 'Your car: ';
-        if (year && make && model) {
-            ret += year + ' ' + make + ' ' + model + ' (' + option + ')';
-        } else {
-            ret += 'N/A';
+        return '\nCity MPG: ' + city + '\nHighway MPG: ' + highway + '\n\nRecommended fuel type: ' + fuelType;
+    }
+
+    preLoadCarInfo() {
+        const { cookies } = this.props;
+
+        let year = cookies.get('year');
+        let make = cookies.get('make');
+        let model = cookies.get('model');
+        let option = cookies.get('option');
+
+        if (option) {
+            this.setState({
+                make: FuelEconomy.fetchMakesBy(year).map((make) => {return <option>{make}</option>}),
+                model: FuelEconomy.fetchModelsBy(year, make).map((model) => {return <option>{model}</option>}),
+                option: FuelEconomy.fetchOptionsBy(year, make, model).map((option) => {return <option>{option.opt}</option>})
+            }, () => {
+                console.log(this.state.make);
+            });
         }
-
-        ret += '\n\nCity MPG: ' + city + '\nHighway MPG: ' + highway + '\n\nRecommended fuel type: ' + fuelType;
-
-        return ret;
     }
 }
 
