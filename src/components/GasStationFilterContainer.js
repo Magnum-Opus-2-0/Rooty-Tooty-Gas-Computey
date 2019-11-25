@@ -59,11 +59,12 @@ export default class GasStationFilterContainer extends React.Component {
         let elemList = filterList.map(filter => {
             console.log(this)
             return (
-                <React.Fragment>
+                <div>
                     <Button style={optionStyle} onClick={(event) => this.addFilter(filter)}>{filter}</Button><br/>
-                </React.Fragment>
+                </div>
             )
         })
+        console.log(elemList)
         return elemList
     }
 
@@ -147,10 +148,6 @@ export default class GasStationFilterContainer extends React.Component {
 
     render() {
         const buttonGroupStyle = {'margin-left':'0.4em'}
-
-        console.log("this.state.filterOptions:");
-        console.log(this.state.filterOptions);
-
         return (
             <React.Fragment>
                 {/* Navigation bar for the filters */}
@@ -175,7 +172,7 @@ export default class GasStationFilterContainer extends React.Component {
                                 <Dropdown isOpen={this.state.gasStationDropdownOpen} toggle={this.gasStationDropdownToggle} >
                                     <DropdownToggle caret>Gas Stations</DropdownToggle>
                                     <DropdownMenu>
-                                        {this.filterOptions}
+                                        {this.state.filterOptions}
                                     </DropdownMenu>
                                 </Dropdown>
                                 {/* Filter buttons */}

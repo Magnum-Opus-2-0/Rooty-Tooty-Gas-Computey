@@ -10,7 +10,6 @@ import user from '../data/UserData';
 
 import { withCookies } from 'react-cookie';
 
-
 const debugData = [
     {
         station: 'Arco123',
@@ -101,8 +100,6 @@ class GasStationContainer extends React.Component {
         user.tankSize = cookies.get('tankSize') || user.tankSize;
         user.tankFill = cookies.get('tankFill') || user.tankFill;
 
-        console.log(user);
-
         this.retrieveData = this.retrieveData.bind(this);
     }
 
@@ -128,7 +125,7 @@ class GasStationContainer extends React.Component {
      * data nearby. Stores data in the component's state.
      */
     retrieveData(){
-        // console.log('FIND Clicked');
+        
         let sc = new StationCalculation();
 
         if(!this.props.isGeolocationAvailable ) {
