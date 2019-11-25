@@ -374,15 +374,29 @@ class StationsList extends React.Component {
  * @param props {object}    The props object passed to this React component.
  * @returns {HTMLElement}   A <li> containing the station's name.
  */
-function StationListItem(props) {
-    return (
-        <li key={props.key}>
-            <h2>{props.name}</h2>
-            <h6>${props.price} per gallon</h6>
-            <h6>{props.distance} miles away</h6>
-            <h6>${props.cost} to fill tank</h6>
-        </li>
-    );
+class StationListItem extends React.Component {
+    constructor(props) {
+        super(props);
+    }
+
+    printCost() {
+        if (this.props.cost < 0) {
+            return <div/>
+        }
+
+        return <h6>${this.props.cost} to fill tank</h6>
+    }
+
+    render() {
+        return (
+            <li key={this.props.key}>
+                <h2>{this.props.name}</h2>
+                <h6>${this.props.price} per gallon</h6>
+                <h6>{this.props.distance} miles away</h6>
+                {this.printCost()}
+            </li>
+        );
+    }
 }
 
 
