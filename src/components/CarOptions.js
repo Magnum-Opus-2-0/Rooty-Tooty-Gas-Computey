@@ -25,24 +25,48 @@ class DropdownMenu extends Component {
         if (cookies.get('tankFill') === undefined) {
             cookies.set('tankFill', .5, cookiesOptions);
         }
+        if (!cookies.get('option')) {
+            this.state = {
+                currentYear: "",
+                make: [],
+                currentMake: "",
+                model: [],
+                currentModel: "",
+                option: [],
+                optionText: [],
+                currentOption: "",
+                carCityMPG: "",
+                carHWMPG: "",
+                userInputTank: 0,
+                id: [],
+                currentID: "",
+                currentCar: null,
+                optionState: null,
+            };
 
-        this.state = {
-            currentYear: "",
-            make: [],
-            currentMake: "",
-            model: [],
-            currentModel: "",
-            option: [],
-            optionText: [],
-            currentOption: "",
-            carCityMPG: "",
-            carHWMPG: "",
-            userInputTank: 0,
-            id: [],
-            currentID: "",
-            currentCar: null,
-            optionState: null,
-        };
+        } else {
+            let year = cookies.get('year');
+            let make = cookies.get('make');
+            let model = cookies.get('model');
+            let option = cookies.get('option');
+
+            this.state = {
+                currentYear: year,
+                make: FuelEconomy.fetchMakesBy(year).map((make) => {return <option>{make}</option>}),
+                currentMake: make,
+                model: FuelEconomy.fetchModelsBy(year, make).map((model) => {return <option>{model}</option>}),
+                currentModel: model,
+                option: FuelEconomy.fetchOptionsBy(year, make, model).map((option) => {return <option>{option.opt}</option>}),
+                currentOption: option,
+                carCityMPG: cookies.get('cityMPG'),
+                carHWMPG: cookies.get('highwayMPG'),
+                userInputTank: 0,
+                id: [],
+                currentID: cookies.get('carID'),
+                currentCar: null,
+                optionState: null
+            };
+        }
 
         this.yearChange = this.yearChange.bind(this);
         this.makeChange = this.makeChange.bind(this);
@@ -226,78 +250,96 @@ class DropdownMenu extends Component {
             );
         });
 
-        // console.log('TANK SIZE' + ' ' + cookies.get('tankSize'))
-
         return (
-            <Layout>
-                <div className="userform">
-                    <h4>Please input your car</h4>
+          <Layout>
+            <div className="userform">
+                <h4>Please input your car</h4>
+                <br />
+//                 <Form onSubmit={this.handleSubmit}>
+                    <FormGroup row>
+                        <Label for="exampleSelect" sm={2}>Select year</Label>
+                        <Col sm={10}>
+                            <Input type="select"
+                                   name="select-years"
+                                   id="exampleSelect"
+                                   onChange={this.yearChange}
+                                   defaultValue={this.state.currentID ? this.state.currentYear : ' '}
+                            >
+                                {years}
+                            </Input>
+                        </Col>
+                    </FormGroup>
+                    <FormGroup row>
+                        <Label for="exampleSelect" sm={2}>Select make</Label>
+                        <Col sm={10}>
+                            <Input type="select"
+                                   name="select-makes"
+                                   id="exampleSelect"
+                                   onChange={this.makeChange}
+                                   defaultValue={this.state.currentID ? this.state.currentMake : ' '}
+                            >
+                                {this.state.make}
+                            </Input>
+                        </Col>
+                    </FormGroup>
+                    <FormGroup row>
+                        <Label for="exampleSelect" sm={2}>Select model</Label>
+                        <Col sm={10}>
+                            <Input type="select"
+                                   name="select-models"
+                                   id="exampleSelect"
+                                   onChange={this.modelChange}
+                                   defaultValue={this.state.currentID ? this.state.currentModel : ' '}
+                            >
+                                {this.state.model}
+                            </Input>
+                        </Col>
+                    </FormGroup>
+                    <FormGroup row>
+                        <Label for="exampleSelect" sm={2}>Select options</Label>
+                        <Col sm={10}>
+                            <Input type="select"
+                                   name="select-options"
+                                   id="exampleSelect"
+                                   onChange={this.optionChange}
+                                   defaultValue={this.state.currentID ? this.state.currentOption : ' '}
+                            >
+                                {this.state.option}
+                            </Input>
+                        </Col>
+                    </FormGroup>
+                    <h6 className="mpgtext">{this.carToString()}</h6>
                     <br />
-                    {/* <Form onSubmit={(this.handleSubmit)}> */}
-                        <FormGroup row>
-                            <Label for="exampleSelect" sm={2}>Select year</Label>
-                            <Col sm={10}>
-                                <Input type="select" name="select" id="exampleSelect" onChange={this.yearChange}>
-                                    {years}
-                                </Input>
-                            </Col>
-                        </FormGroup>
-                        <FormGroup row>
-                            <Label for="exampleSelect" sm={2}>Select make</Label>
-                            <Col sm={10}>
-                                <Input type="select" name="select" id="exampleSelect" onChange={this.makeChange}>
-                                    {this.state.make}
-                                </Input>
-                            </Col>
-                        </FormGroup>
-                        <FormGroup row>
-                            <Label for="exampleSelect" sm={2}>Select model</Label>
-                            <Col sm={10}>
-                                <Input type="select" name="select" id="exampleSelect" onChange={this.modelChange}>
-                                    {this.state.model}
-                                </Input>
-                            </Col>
-                        </FormGroup>
-                        <FormGroup row>
-                            <Label for="exampleSelect" sm={2}>Select options</Label>
-                            <Col sm={10}>
-                                <Input type="select" name="select" id="exampleSelect" onChange={this.optionChange}>
-                                    {this.state.option}
-                                </Input>
-                            </Col>
-                        </FormGroup>
-                        <h6 className="mpgtext">{this.carToString()}</h6>
-                        <br />
-                        <h6 className="tankfilltext">
-                        Tank Fill:
-                        </h6>
-                        <div style={wrapperStyle}>
-                            <Slider min={0}
-                                    max={100}
-                                    defaultValue={50}
-                                    step={10}
-                                    mobile={true}
-                                    handle={this.handleSlider}
-                                    // When we change the slider, save the user's tank fill to cookies
-                                    onAfterChange={(value) => { cookies.set('tankFill', value / 100.0, cookiesOptions); }}
-                            />
-                        </div>
-                        <br />
-                        <h6 className="tanksizetext">
-                        Tank Size:
-                        </h6>
-                        <div>
-                            <InputNumber
-                                min={0}
-                                max={30}
-                                style={{ width: 100}}
-                                step={1}
-                                onChange={(value) => { cookies.set('tankSize', value, cookiesOptions);}}
+                    <h6 className="tankfilltext">
+                    Tank Fill:
+                    </h6>
+                    <div style={wrapperStyle}>
+                        <Slider min={0}
+                                max={100}
+                                defaultValue={50}
+                                step={10}
                                 mobile={true}
-                            />
-                        </div>
-                    {/* </Form> */}
-                </div>
+                                handle={this.handleSlider}
+                                // When we change the slider, save the user's tank fill to cookies
+                                onAfterChange={(value) => { cookies.set('tankFill', value / 100.0, cookiesOptions); }}
+                        />
+                    </div>
+                    <br />
+                    <h6 className="tanksizetext">
+                    Tank Size:
+                    </h6>
+                    <div>
+                        <InputNumber
+                            min={0}
+                            max={30}
+                            style={{ width: 100}}
+                            step={1}
+                            onChange={(value) => { cookies.set('tankSize', value, cookiesOptions);}}
+                            mobile={true}
+                        />
+                    </div>
+//                   </Form>
+               </div>
             </Layout>
         );
     }
@@ -336,25 +378,30 @@ class DropdownMenu extends Component {
     carToString() {
         const { cookies } = this.props;
 
-        let ret;
-        let year = cookies.get('year') || '';
-        let make = cookies.get('make') || '';
-        let model = cookies.get('model') || '';
-        let option = cookies.get('option') || '';
         let city = cookies.get('cityMPG') || 'N/A';
         let highway = cookies.get('highwayMPG') || 'N/A';
         let fuelType = cookies.get('fuelType') || 'N/A';
 
-        ret = 'Your car: ';
-        if (year && make && model) {
-            ret += year + ' ' + make + ' ' + model + ' (' + option + ')';
-        } else {
-            ret += 'N/A';
+        return '\nCity MPG: ' + city + '\nHighway MPG: ' + highway + '\n\nRecommended fuel type: ' + fuelType;
+    }
+
+    preLoadCarInfo() {
+        const { cookies } = this.props;
+
+        let year = cookies.get('year');
+        let make = cookies.get('make');
+        let model = cookies.get('model');
+        let option = cookies.get('option');
+
+        if (option) {
+            this.setState({
+                make: FuelEconomy.fetchMakesBy(year).map((make) => {return <option>{make}</option>}),
+                model: FuelEconomy.fetchModelsBy(year, make).map((model) => {return <option>{model}</option>}),
+                option: FuelEconomy.fetchOptionsBy(year, make, model).map((option) => {return <option>{option.opt}</option>})
+            }, () => {
+                console.log(this.state.make);
+            });
         }
-
-        ret += '\n\nCity MPG: ' + city + '\nHighway MPG: ' + highway + '\n\nRecommended fuel type: ' + fuelType;
-
-        return ret;
     }
 }
 
