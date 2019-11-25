@@ -60,8 +60,8 @@ car information:
 - `fuelType`: The recommended fuel type for the user's car.
 - `option`: The option/trim of the user's car.
 - `tankSize`: The size of the user's gas tank in gallons.
-- `tankFill`: The current fill of the user's gas tank as a percentage.
+- `tankFill`: The current fill of the user's gas tank as a percentage. Defaults to 50%.
 
-The first 10 cookies are saved after the user enters their car option. `tankSize` and `tankFill`
-are saved as soon as the user inputs them.
+All cookies except the last two are available after the user enters their car option. `tankSize`
+needs user input before it is saved, and `tankFill` is available immediately. 
 
