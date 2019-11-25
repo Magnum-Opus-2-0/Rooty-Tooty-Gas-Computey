@@ -187,9 +187,7 @@ class GasStationContainer extends React.Component {
                 // If the user inputted car options let's use the smart calculation.
                 // Otherwise we'll use pure distance.
                 // TODO: Put a switch statement here to let the user decide the type of calculation
-                if (user.tankFill != -1 && user.mpg != -1) {
-                    // Until we have user's tank size, we'll just use a 10 gallon tank
-                    // return sc.compareCost(stationA, stationB, user.mpg, 10, user.tankFill, user.location);
+                if (user.tankFill != -1 && user.mpg != -1 && user.tankSize != -1) {
                     return sc.compareCostUser(stationA, stationB, user);
                 }
 
