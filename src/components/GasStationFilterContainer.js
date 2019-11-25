@@ -21,17 +21,32 @@ export default class GasStationFilterContainer extends React.Component {
             gasQualityRegular: true,
             gasQualityMid: true,
             gasQualityPremium: true,
+            filterOptions: []
         }
 
         this.setSelectedFilters = this.setSelectedFilters.bind(this)
         this.gasStationDropdownToggle = this.gasStationDropdownToggle.bind(this)
         this.gasGradeDropdownToggle = this.gasGradeDropdownToggle.bind(this)
+        this.retrieveStationNames = this.retrieveStationNames.bind(this);
         //this.addFilter = this.addFilter.bind(this)
 
-        this.filterOptions = this.getFilterOptions(this.state.availableFilters)
+        // this.filterOptions = this.getFilterOptions(this.state.availableFilters)
         this.filterButtons = []
 
         //this.test = this.test.bind(this)
+    }
+
+    retrieveStationNames(namesArray) {
+
+        const newFilterOptions = this.getFilterOptions(namesArray);
+        console.log("in retrieveStationNames");
+        console.log("namesArray");
+        console.log(namesArray);
+        console.log("GasStationFilterContainer's newFilterOptions[0]:");
+        console.log(newFilterOptions[0]);
+        this.setState({filterOptions: newFilterOptions});
+
+ 
     }
 
     getFilterOptions(filterList) {
@@ -133,6 +148,9 @@ export default class GasStationFilterContainer extends React.Component {
     render() {
         const buttonGroupStyle = {'margin-left':'0.4em'}
 
+        console.log("this.state.filterOptions:");
+        console.log(this.state.filterOptions);
+
         return (
             <React.Fragment>
                 {/* Navigation bar for the filters */}
@@ -171,7 +189,11 @@ export default class GasStationFilterContainer extends React.Component {
                 </Navbar>
 
                 {/* Main body of the Find page */}
-                <GasStationContainer selectedFilters={this.state.selectedFilters} maxDistance={this.state.maxDistance} firebase={this.props.firebase} />
+                <GasStationContainer retrieveStationNames={this.retrieveStationNames}
+                    selectedFilters={this.state.selectedFilters}
+                    maxDistance={this.state.maxDistance}
+                    firebase={this.props.firebase}
+                />
                 {/* <FilterPopup setSelectedFilters={this.setSelectedFilters} /> */}
             </React.Fragment>
         );

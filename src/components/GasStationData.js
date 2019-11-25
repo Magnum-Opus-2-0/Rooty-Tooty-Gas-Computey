@@ -180,8 +180,11 @@ class GasStationContainer extends React.Component {
                 return result;
             }, []);
 
-            console.log("stationNames:");
-            console.log(stationNames);
+            // Here, export stationNames to GasStationFilterContainer
+            let stationNamesArr = Array.from(stationNames);
+            console.log("stationNamesArr: ");
+            console.log(stationNamesArr);
+            this.props.retrieveStationNames(stationNamesArr);
 
             //Todo: filter and sort array here
             let sc = new StationCalculation();  // TODO replace with compareCost once we have the info
@@ -189,7 +192,8 @@ class GasStationContainer extends React.Component {
             // Sort by price * distance
             allStationsArr.sort((stationA, stationB) => {
 
-                // If the user inputted car options let's use the smart calculation. Otherwise we'll use pure distance.
+                // If the user inputted car options let's use the smart calculation.
+                // Otherwise we'll use pure distance.
                 // TODO: Put a switch statement here to let the user decide the type of calculation
                 if (user.tankFill != -1 && user.mpg != -1) {
                     // Until we have user's tank size, we'll just use a 10 gallon tank
