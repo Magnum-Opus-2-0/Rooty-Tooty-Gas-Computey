@@ -101,6 +101,21 @@ class GasStationContainer extends React.Component {
         this.retrieveData = this.retrieveData.bind(this);
     }
 
+    static mapStationNames(name) {
+
+        switch(name) {
+
+            case "1":
+            return "7/11*";
+            case "M":
+            return "Mobil*";
+            case "B":
+            return "Arco*";
+            default:
+            return name;
+        }
+    }
+
     /** retrieveData
      * Handle the user clicking the FIND button.
      *
@@ -138,18 +153,20 @@ class GasStationContainer extends React.Component {
                 // don't push a GasStationWrapper.
                 // In effect, this filters our data by stations
                 // with all fields valid.
-                if (value.station && value.reg_price && value.lat && value.lng && value.id
-                    && value.station.length > 1)
+                if (value.station && value.reg_price && value.lat && value.lng && value.id) {
+
+                    // Populate allStationsArr
                     result.push(new GasStationWrapper(
-                        value.station,
+                        GasStationContainer.mapStationNames(value.station),
                         value.reg_price,
                         value.lat,
                         value.lng,
                         value.id
                         ));
 
-                // Populate stationNames
-                if (value.station && value.station.length > 1) stationNames.add(value.station);
+                    // Populate stationNames
+                    stationNames.add(GasStationContainer.mapStationNames(value.station));
+                }
 
                 return result;
             }, []);
@@ -196,7 +213,7 @@ class GasStationContainer extends React.Component {
 
         for (let i = 0; i < stationList.length; i++) {
             for (let j = 0; j < filterList.length; j++) {
-                if (stationList[i].name && stationList[i].name == filterList[j]) {
+                if (stationList[i].name && stationList[i].name === filterList[j]) {
                     filteredStationList.push(stationList[i])
                     break
                 }
@@ -277,8 +294,8 @@ class StationsList extends React.Component {
         }
 
         if(this.state.dataRetrieved) {
-            console.log("GasStationData::render()");
-            console.log(this.props);
+            // console.log("GasStationData::render()");
+            // console.log(this.props);
             // First we have to put all of the <StationListItems> in an object so that we can output them all at once later.
             // We cannot use a loop inside the return statement.
             //const filterPopup = new FilterPopup();
