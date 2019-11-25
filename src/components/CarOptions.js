@@ -20,6 +20,12 @@ class DropdownMenu extends Component {
     constructor(props) {
         super(props);
 
+        const { cookies } = this.props;
+
+        if (cookies.get('tankFill') === undefined) {
+            cookies.set('tankFill', .5, cookiesOptions);
+        }
+
         this.state = {
             currentYear: "",
             make: [],
