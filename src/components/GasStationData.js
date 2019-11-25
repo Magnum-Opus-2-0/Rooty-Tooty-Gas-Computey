@@ -10,7 +10,6 @@ import user from '../data/UserData';
 
 import { withCookies } from 'react-cookie';
 
-
 const debugData = [
     {
         station: 'Arco123',
@@ -101,9 +100,22 @@ class GasStationContainer extends React.Component {
         user.tankSize = cookies.get('tankSize') || user.tankSize;
         user.tankFill = cookies.get('tankFill') || user.tankFill;
 
-        console.log(user);
-
         this.retrieveData = this.retrieveData.bind(this);
+    }
+
+    static mapStationNames(name) {
+
+        switch(name) {
+
+            case "1":
+            return "7/11*";
+            case "M":
+            return "Mobil*";
+            case "B":
+            return "Arco*";
+            default:
+            return name;
+        }
     }
 
     /** retrieveData
@@ -113,7 +125,7 @@ class GasStationContainer extends React.Component {
      * data nearby. Stores data in the component's state.
      */
     retrieveData(){
-        // console.log('FIND Clicked');
+
         let sc = new StationCalculation();
 
         if(!this.props.isGeolocationAvailable ) {
@@ -136,6 +148,7 @@ class GasStationContainer extends React.Component {
         function onData(data) {
 
             let allStationsRaw = data.val();
+            let stationNames = new Set();
 
             // TODO: integrate StationCalculation::compareCost here
             //       in an anonymous function.
@@ -146,17 +159,26 @@ class GasStationContainer extends React.Component {
                 // don't push a GasStationWrapper.
                 // In effect, this filters our data by stations
                 // with all fields valid.
-                if (value.station && value.reg_price && value.lat && value.lng && value.id)
+                if (value.station && value.reg_price && value.lat && value.lng && value.id) {
+
+                    // Populate allStationsArr
                     result.push(new GasStationWrapper(
-                        value.station,
+                        GasStationContainer.mapStationNames(value.station),
                         value.reg_price,
                         value.lat,
                         value.lng,
                         value.id
                         ));
 
+                    // Populate stationNames
+                    stationNames.add(GasStationContainer.mapStationNames(value.station));
+                }
+
                 return result;
             }, []);
+
+            // Here, export stationNames to GasStationFilterContainer
+            this.props.retrieveStationNames(Array.from(stationNames));
 
             //Todo: filter and sort array here
             let sc = new StationCalculation();  // TODO replace with compareCost once we have the info
@@ -164,7 +186,8 @@ class GasStationContainer extends React.Component {
             // Sort by price * distance
             allStationsArr.sort((stationA, stationB) => {
 
-                // If the user inputted car options let's use the smart calculation. Otherwise we'll use pure distance.
+                // If the user inputted car options let's use the smart calculation.
+                // Otherwise we'll use pure distance.
                 // TODO: Put a switch statement here to let the user decide the type of calculation
                 if (user.tankFill != -1 && user.mpg != -1) {
                     // Until we have user's tank size, we'll just use a 10 gallon tank
@@ -180,7 +203,7 @@ class GasStationContainer extends React.Component {
             let fiveStations = allStationsArr.slice(0,5);
 
             this.setState({ stationsData: fiveStations});
-            this.setState({findClicked: true});
+            this.setState({ findClicked: true});
 
         };
         onData = onData.bind(this);
@@ -220,7 +243,7 @@ class GasStationContainer extends React.Component {
 
         for (let i = 0; i < stationList.length; i++) {
             for (let j = 0; j < filterList.length; j++) {
-                if (stationList[i].name && stationList[i].name == filterList[j]) {
+                if (stationList[i].name && stationList[i].name === filterList[j]) {
                     filteredStationList.push(stationList[i])
                     break
                 }
@@ -293,14 +316,9 @@ class StationsList extends React.Component {
 
     dataRetrieved = false;
     render() {
-
-        // console.log("GasStationData::render()");
-        // console.log(this.props);
         // First we have to put all of the <StationListItems> in an object so that we can output them all at once later.
         // We cannot use a loop inside the return statement.
-        //const filterPopup = new FilterPopup();
-        //const filteredData = filterPopup.filter(this.props.stationsData);
-        //const stations = filteredData.map(stationData => {
+
         let sc = new StationCalculation();
 
 
@@ -308,11 +326,10 @@ class StationsList extends React.Component {
             if(this.props.dataCall()){
                 this.dataRetrieved = true;
             }
+          return null;
         }
 
-        if(this.dataRetrieved) {
-            console.log("GasStationData::render()");
-            console.log(this.props);
+        else {
             // First we have to put all of the <StationListItems> in an object so that we can output them all at once later.
             // We cannot use a loop inside the return statement.
             //const filterPopup = new FilterPopup();
@@ -320,7 +337,6 @@ class StationsList extends React.Component {
             //const stations = filteredData.map(stationData => {
             let sc = new StationCalculation();
 
-            //this.setState({stationsData: filteredData});
             const stations = this.props.stationsData.map(stationData => {
                 const stationPrice = Number.parseFloat(stationData.price).toFixed(2);
                 const stationDistance = sc.calcDistance(this.props.coords, stationData.coords).toFixed(2);
@@ -352,7 +368,7 @@ class StationsList extends React.Component {
                 </div>
             );
 
-        } else return null;
+        }
     }   //end Render()
 }
 
