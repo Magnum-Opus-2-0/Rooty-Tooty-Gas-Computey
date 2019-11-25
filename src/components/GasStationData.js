@@ -248,7 +248,7 @@ class GasStationContainer extends React.Component {
      */
     render() {
         let filteredData = this.filterByGasStationName(this.state.stationsData, this.props.selectedFilters);
-        filteredData = this.filterByDistance(filteredData, this.props.maxDistance)
+        filteredData = this.filterByDistance(filteredData, this.props.maxDistance);
         let mapStyle = {'height': '85vh'};
 
         return(
@@ -325,10 +325,20 @@ class StationsList extends React.Component {
 
             //this.setState({stationsData: filteredData});
             const stations = this.props.stationsData.map(stationData => {
+                const stationPrice = Number.parseFloat(stationData.price).toFixed(2);
+                const stationDistance = sc.calcDistance(this.props.coords, stationData.coords).toFixed(2);
+
+                const stationCost = sc.calcCost(user.mpg, 10, user.tankFill, stationData, user.location).toFixed(2);
+                // TODO: use the below line once user inputted tank size is available.
+                /* const stationCost = sc.calcCost(stationData, user).toFixed(2); */
+
+                const stationText = stationData.name + ': $' + stationPrice +
+                    '\n' + stationDistance + ' miles' +
+                    '\nTotal Cost: $' + stationCost;
+
                 return (
                     <StationListItem
-                        value={stationData.name + ': $' + Number.parseFloat(stationData.price).toFixed(2) + '\n'
-                        + sc.calcDistance(this.props.coords, stationData.coords).toFixed(2) + ' miles.'}
+                        value={stationText}
                         key={stationData.key}
                     />
                 );
