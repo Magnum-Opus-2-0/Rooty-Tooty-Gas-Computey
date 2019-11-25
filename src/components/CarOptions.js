@@ -17,6 +17,12 @@ class DropdownMenu extends Component {
     constructor(props) {
         super(props);
 
+        const { cookies } = this.props;
+
+        if (cookies.get('tankFill') === undefined) {
+            cookies.set('tankFill', .5, cookiesOptions);
+        }
+
         this.state = {
             currentYear: "",
             make: [],
@@ -258,7 +264,7 @@ class DropdownMenu extends Component {
                     <div style={wrapperStyle}>
                         <Slider min={0}
                                 max={100}
-                                defaultValue={50}
+                                defaultValue={cookies.get('tankFill') * 100}
                                 step={10}
                                 handle={this.handleSlider}
                                 // When we change the slider, save the user's tank fill to cookies
