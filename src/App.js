@@ -23,9 +23,9 @@ class App extends React.Component {
     }
 
     render() {
-        console.log("App::render()")
-        console.log("App::this.props.firebase:");
-        console.log(this.props.firebase);
+        // console.log("App::render()")
+        // console.log("App::this.props.firebase:");
+        // console.log(this.props.firebase);
         return (
             <React.Fragment>
                 <Header />

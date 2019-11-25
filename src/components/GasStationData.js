@@ -1,10 +1,8 @@
 import React from 'react'
 import { geolocated } from "react-geolocated";
 import './styles/GasStationData.css'
-import FilterPopup from './FilterPopup.js'
 import StationCalculation from "../data/StationCalculation";
 import MapContainer from './Map.js'
-import Firebase from './Firebase'
 import GasStationWrapper from '../data/GasStationWrapper';
 import user from '../data/UserData';
 
@@ -189,12 +187,8 @@ class GasStationContainer extends React.Component {
                 // If the user inputted car options let's use the smart calculation.
                 // Otherwise we'll use pure distance.
                 // TODO: Put a switch statement here to let the user decide the type of calculation
-                if (user.tankFill != -1 && user.mpg != -1) {
-                    // Until we have user's tank size, we'll just use a 10 gallon tank
-                    return sc.compareCost(stationA, stationB, user.mpg, 10, user.tankFill, user.location);
-                    /* This can be used once we have all of the user data. All we're missing right now is the tankSize.
+                if (user.tankFill != -1 && user.mpg != -1 && user.tankSize != -1) {
                     return sc.compareCostUser(stationA, stationB, user);
-                     */
                 }
 
                 return sc.compareDistance(stationA, stationB, user.location);
@@ -339,13 +333,8 @@ class StationsList extends React.Component {
 
             const stations = this.props.stationsData.map(stationData => {
                 const stationPrice = Number.parseFloat(stationData.price).toFixed(2);
-                const stationDistance = sc.calcDistance(this.props.coords, stationData.coords).toFixed(2);
-
+                const stationDistance = sc.calcDistance(user.location, stationData.coords).toFixed(2);
                 const stationCost = sc.calcCostUser(stationData, user).toFixed(2);
-
-                const stationText = stationData.name + ': $' + stationPrice +
-                    '\n' + stationDistance + ' miles' +
-                    '\nTotal Cost: $' + stationCost;
 
                 return (
                     <StationListItem
