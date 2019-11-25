@@ -46,10 +46,11 @@ car information:
 - `year`: The year of the user's car.
 - `make`: The make of the user's car.
 - `model`: The model of the user's car.
+- `fuelType`: The recommended fuel type for the user's car.
 - `option`: The option/trim of the user's car.
 - `tankSize`: The size of the user's gas tank in gallons.
 - `tankFill`: The current fill of the user's gas tank as a percentage.
 
-The first 9 cookies are saved after the user enters their car option. `tankSize` and `tankFill`
+The first 10 cookies are saved after the user enters their car option. `tankSize` and `tankFill`
 are saved as soon as the user inputs them.
 
