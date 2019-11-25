@@ -26,12 +26,16 @@ class MapContainer extends React.Component{
     constructor(props){
         super(props);
         this.state={
-            activeMarker: {},
+            activeMarker: null,
             activeStation: {},
             infoOpen: true,
         };
         this.handleMarkerClick = this.handleMarkerClick.bind(this);
     }
+
+    markerIndex = 0;
+    renderCounter = 0;
+
     /** handleClose
      * Clears the current activeMarker and activeStation so that we are no longer
      *  displaying the last marker that was clicked on. Sets infoOpen to false to
@@ -41,10 +45,7 @@ class MapContainer extends React.Component{
      */
     handleClose = (props) =>{
         if(this.state.infoOpen){
-            this.setState({infoOpen: false});
-            this.setState({activeMarker: null});
-            this.setState({activeStation: null});
-
+            this.setState({infoOpen: false, activeStation: null});
         }
     }
 
@@ -58,14 +59,8 @@ class MapContainer extends React.Component{
      * @param e - The click event. Currently unused.
      */
     handleMarkerClick = (props, marker, e) =>{
-        console.log('Marker clicked!');
-
-        this.setState({activeMarker: marker});
-        this.setState({infoOpen: true});
-        console.log(marker);
-        this.setState({activeStation: this.props.stations[marker.id]});
-        console.log(this.state.activeStation);
-
+        this.markerIndex = marker.id;
+        this.setState({activeMarker: marker, infoOpen: true, activeStation: this.props.stations[this.markerIndex]});
     }
 
     /** displayMarkers
@@ -84,27 +79,68 @@ class MapContainer extends React.Component{
         })
     }
 
-
-    /** displayWindow
-     * Creates a popup window to be rendered on the last marker clicked on. The window displays
-     *  the brand name, price and distance to the station.
-     */
-    displayWindow = () =>{
-        if(this.state.infoOpen && this.state.activeStation) {
-            let sc = new StationCalculation();
+    createWindow(m, index){
+        let sc = new StationCalculation();
+        if(this.state.activeMarker !== null) {
+            console.log("inside activeMarker If statement");
             return (<InfoWindow
                     marker={this.state.activeMarker}
                     visible={this.state.infoOpen}
                     onClose={this.handleClose}
                 >
                     <div className='PopupText'>
-                        {console.log(this.state.activeStation)}
-                        <h1 className='PopupHeader'> {this.state.activeStation.name} </h1>
-                        <div>Price: ${Number.parseFloat(this.state.activeStation.price).toFixed(2)}</div>
-                        <div>Distance: {sc.calcDistance(this.props.coords, this.state.activeStation.coords).toFixed(2)} miles.</div>
+                        <h1 className='PopupHeader'> {this.props.stations[index].name} </h1>
+                        <div>Price: ${Number.parseFloat(this.props.stations[index].price).toFixed(2)}</div>
+                        <div>Distance: {sc.calcDistance(this.props.coords, this.props.stations[index].coords).toFixed(2)} miles.</div>
                     </div>
                 </InfoWindow>
             );
+        }
+        else{
+            console.log("inside default window else statement");
+            console.log(m[0]);
+            if(typeof m[0] !== 'undefined') {
+                return (<InfoWindow
+                        position={{
+                            lat: Number.parseFloat(m[0].props.position.lat) + .005,
+                            lng: Number.parseFloat(m[0].props.position.lng)
+                        }}
+                        visible={this.state.infoOpen}
+                        onClose={this.handleClose}
+                    >
+                        <div className='PopupText'>
+                            <h1 className='PopupHeader'> {this.props.stations[0].name} </h1>
+                            <div>Price: ${Number.parseFloat(this.props.stations[0].price).toFixed(2)}</div>
+                            <div>Distance: {sc.calcDistance(this.props.coords, this.props.stations[0].coords).toFixed(2)} miles.</div>
+                        </div>
+                    </InfoWindow>
+                );
+            }
+            else{
+                return (<InfoWindow
+                        position={{
+                            lat: 0.0,
+                            lng: 0.0
+                        }}
+                        visible={false}
+                        onClose={this.handleClose}
+                    >
+                        <div className='PopupText'>
+                            <h1 className='PopupHeader'> This should not display </h1>
+                        </div>
+                    </InfoWindow>
+                );
+            }
+        }
+    }
+
+    /** displayWindow
+     * Creates a popup window to be rendered on the last marker clicked on. The window displays
+     *  the brand name, price and distance to the station.
+     */
+    displayWindow = (m, index) =>{
+        if(this.props.stations) {
+            return (this.createWindow(m, index));
         }
         else{
             return null
@@ -113,6 +149,7 @@ class MapContainer extends React.Component{
 
     render() {
         if(this.props.buttonClicked && this.props.coords) {
+            let m = this.displayMarkers();
             return (
                 <Map
                     google={this.props.google}
@@ -123,8 +160,8 @@ class MapContainer extends React.Component{
                         lng: this.props.coords.longitude,
                     }}
                     >
-                    {this.displayMarkers()}
-                    {this.displayWindow()}
+                    {m}
+                    {this.displayWindow(m, this.markerIndex)}
 
                 </Map>
             );
@@ -134,6 +171,20 @@ class MapContainer extends React.Component{
         }
     }
 
+    resetDisplay(){
+        this.handleClose(this.props);
+        this.setState({activeMarker: null, infoOpen: true, activeStation: {}});
+    }
+    componentDidUpdate(prevProps, prevState, snapshot) {
+        this.renderCounter++;
+        if(prevProps !== this.props){
+            if(this.state.activeMarker !== null){
+                this.resetDisplay();
+            }
+            console.log("ForceUpdated");
+            this.forceUpdate();
+        }
+    }
 }
 
 /*
