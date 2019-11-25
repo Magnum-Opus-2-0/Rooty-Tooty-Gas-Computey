@@ -248,14 +248,14 @@ class GasStationContainer extends React.Component {
      */
     render() {
         let filteredData = this.filterByGasStationName(this.state.stationsData, this.props.selectedFilters);
-        filteredData = this.filterByDistance(filteredData, this.props.maxDistance)
-        let mapStyle = {'height': '85vh'};
+        filteredData = this.filterByDistance(filteredData, this.props.maxDistance);
+        let mapStyle = {'height': '80vh', 'width': '90%'};
 
         return(
             <React.Fragment>
                 <div className="container">
                    <div className="row">
-                        <div className="col">
+                        <div className="col-sm">
                             <StationsList
                                 name="Station List"
                                 stationsData={filteredData}
@@ -263,13 +263,13 @@ class GasStationContainer extends React.Component {
                                 dataCall={this.retrieveData}
 
                             />
-                        </div>
-                        <div className="col" style={mapStyle}>
-                            <MapContainer
-                                coords={this.props.coords}
-                                stations={filteredData}
-                                buttonClicked={this.state.findClicked}
-                            />
+                       </div>
+                        <div className="col-sm" style={mapStyle}>
+                                <MapContainer
+                                    coords={this.props.coords}
+                                    stations={filteredData}
+                                    buttonClicked={this.state.findClicked}
+                                />
                         </div>
                     </div>
                 </div>
@@ -322,18 +322,31 @@ class StationsList extends React.Component {
 
             //this.setState({stationsData: filteredData});
             const stations = this.props.stationsData.map(stationData => {
+                const stationPrice = Number.parseFloat(stationData.price).toFixed(2);
+                const stationDistance = sc.calcDistance(this.props.coords, stationData.coords).toFixed(2);
+
+                const stationCost = sc.calcCost(user.mpg, 10, user.tankFill, stationData, user.location).toFixed(2);
+                // TODO: use the below line once user inputted tank size is available.
+                /* const stationCost = sc.calcCost(stationData, user).toFixed(2); */
+
+                const stationText = stationData.name + ': $' + stationPrice +
+                    '\n' + stationDistance + ' miles' +
+                    '\nTotal Cost: $' + stationCost;
+
                 return (
                     <StationListItem
-                        value={stationData.name + ': $' + Number.parseFloat(stationData.price).toFixed(2) + '\n'
-                        + sc.calcDistance(this.props.coords, stationData.coords).toFixed(2) + ' miles.'}
+                        name={stationData.name}
+                        price={stationPrice}
+                        distance={stationDistance}
+                        cost={stationCost}
                         key={stationData.key}
                     />
                 );
             });
 
             return (
-                <div className="Centered">
-                    <ol onClick={() => console.log('ASS')}>
+                <div className="StationListContainer">
+                    <ol className="StationList">
                         {stations}
                     </ol>
                 </div>
@@ -347,20 +360,43 @@ class StationsList extends React.Component {
  * A list item containing the data for a nearby gas station.
  *
  * props: {
- *     key      {*}         The unique identifier for each the specified car.
- *     value    {string}    The name, and other gas station data.
+ *     key      {*}             The unique identifier for each the specified car.
+ *     name     {string}        The name of the gas station
+ *     price    {string}        The price per gallon of the gas station represented
+ *                              as a string.
+ *     distance {string}        The distance to the gas station in miles represented
+ *                              as a string.
+ *     cost     {string|null}   The total cost of filling the tank at the gas
+ *                              station represented as a string.
  * }
  * state: none
  *
  * @param props {object}    The props object passed to this React component.
  * @returns {HTMLElement}   A <li> containing the station's name.
  */
-function StationListItem(props) {
-    return (
-        <li key={props.key}>
-            {props.value}
-        </li>
-    );
+class StationListItem extends React.Component {
+    constructor(props) {
+        super(props);
+    }
+
+    printCost() {
+        if (this.props.cost < 0) {
+            return <div/>
+        }
+
+        return <h6>${this.props.cost} to fill tank</h6>
+    }
+
+    render() {
+        return (
+            <li key={this.props.key}>
+                <h2>{this.props.name}</h2>
+                <h6>${this.props.price} per gallon</h6>
+                <h6>{this.props.distance} miles away</h6>
+                {this.printCost()}
+            </li>
+        );
+    }
 }
 
 
