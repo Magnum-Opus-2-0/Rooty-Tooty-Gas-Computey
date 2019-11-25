@@ -12,20 +12,20 @@ export default class GasStationFilterContainer extends React.Component {
         super(props)
         this.state = {
             selectedFilters: [],
-            filterDropdownOpen: false,
-            filterTypeDropdownOpen: false,
+            gasStationDropdownOpen: false,
+            gasGradeDropdownOpen: false,
             // availableFilters: ['Arco', 'Chevron', 'Texaco', 'Mobil', '76'],
             availableFilters: ['Sunoco', 'Xtramart', 'Shell'],
             filterButtons: [],
-            maxDistance: 50,
+            maxDistance: 25,
             gasQualityRegular: true,
             gasQualityMid: true,
             gasQualityPremium: true,
         }
 
         this.setSelectedFilters = this.setSelectedFilters.bind(this)
-        this.filterDropdownToggle = this.filterDropdownToggle.bind(this)
-        this.filterTypeDropdownToggle = this.filterTypeDropdownToggle.bind(this)
+        this.gasStationDropdownToggle = this.gasStationDropdownToggle.bind(this)
+        this.gasGradeDropdownToggle = this.gasGradeDropdownToggle.bind(this)
         //this.addFilter = this.addFilter.bind(this)
 
         this.filterOptions = this.getFilterOptions(this.state.availableFilters)
@@ -52,12 +52,12 @@ export default class GasStationFilterContainer extends React.Component {
         return elemList
     }
 
-    filterDropdownToggle() {
-        this.setState({filterDropdownOpen: !this.state.filterDropdownOpen})
+    gasStationDropdownToggle() {
+        this.setState({gasStationDropdownOpen: !this.state.gasStationDropdownOpen})
     }
 
-    filterTypeDropdownToggle() {
-        this.setState({filterTypeDropdownOpen: !this.state.filterTypeDropdownOpen})
+    gasGradeDropdownToggle() {
+        this.setState({gasGradeDropdownOpen: !this.state.gasGradeDropdownOpen})
     }
 
     /*
@@ -141,11 +141,12 @@ export default class GasStationFilterContainer extends React.Component {
                         <Nav>
                             <InputGroup>
                                 {/* Gas type filter */}
-                                <Dropdown isOpen={this.state.filterTypeDropdownOpen} toggle={this.filterTypeDropdownToggle} >
-                                    <DropdownToggle caret> Gas Type</DropdownToggle>
+                                <Dropdown isOpen={this.state.gasGradeDropdownOpen} toggle={this.gasGradeDropdownToggle} >
+                                    <DropdownToggle caret> Gas Grade</DropdownToggle>
                                     <DropdownMenu>
-                                        <Input onClick={(e) => this.toggleCheckbox(e, 'regular')} addon type="checkbox" aria-label="Regular" checked={this.state.gasQualityRegular} /> Regular<br/>
-                                        <Input onClick={(e) => this.toggleCheckbox(e, 'mid')} addon type="checkbox" aria-label="Mid" checked={this.state.gasQualityMid} /> Mid<br/>
+                                        <DropdownItem header>Gas stations must have</DropdownItem>
+                                        <Input onClick={(e) => this.toggleCheckbox(e, 'regular')} addon type="checkbox" aria-label="Unleaded" checked={this.state.gasQualityRegular} /> Unleaded<br/>
+                                        <Input onClick={(e) => this.toggleCheckbox(e, 'mid')} addon type="checkbox" aria-label="Unleaded Plus" checked={this.state.gasQualityMid} /> Unleaded Plus<br/>
                                         <Input onClick={(e) => this.toggleCheckbox(e, 'premium')} addon type="checkbox" aria-label="Premium" checked={this.state.gasQualityPremium} /> Premium<br/>
                                     </DropdownMenu>
                                 </Dropdown>
@@ -153,7 +154,7 @@ export default class GasStationFilterContainer extends React.Component {
                                 <InputGroupText>Distance</InputGroupText>
                                 <Input onChange={(e) => this.setMaxDistance(e)} type="number" min="1" max="100" placeholder="max distance" value={this.state.maxDistance}></Input>
                                 {/* Filter dropdown */}
-                                <Dropdown isOpen={this.state.filterDropdownOpen} toggle={this.filterDropdownToggle} >
+                                <Dropdown isOpen={this.state.gasStationDropdownOpen} toggle={this.gasStationDropdownToggle} >
                                     <DropdownToggle caret>Gas Stations</DropdownToggle>
                                     <DropdownMenu>
                                         {this.filterOptions}
