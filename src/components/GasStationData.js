@@ -329,9 +329,10 @@ class StationsList extends React.Component {
             if(this.props.dataCall()){
                 this.setState({dataRetrieved: true})
             }
+            return null;
         }
 
-        if(this.state.dataRetrieved) {
+        else {
 
             // First we have to put all of the <StationListItems> in an object so that we can output them all at once later.
             // We cannot use a loop inside the return statement.
@@ -358,7 +359,7 @@ class StationsList extends React.Component {
                 </div>
             );
 
-        } else return null;
+        }
     }   //end Render()
 }
 
