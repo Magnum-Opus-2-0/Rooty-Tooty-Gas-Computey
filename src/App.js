@@ -10,10 +10,17 @@ import Find from './components/Find.js';
 import CarOptions from './components/CarOptions.js';
 import Layout  from './components/Layout';
 
+import { instanceOf } from 'prop-types';
+import { Cookies } from 'react-cookie';
+
 class App extends React.Component {
+    static propTypes = {
+        cookies: instanceOf(Cookies).isRequired
+    };
+
     state = {
         selectedFilters: []
-    }
+    };
 
     setSelectedFilters(list) {
         this.setState({selectedFilters : list})
