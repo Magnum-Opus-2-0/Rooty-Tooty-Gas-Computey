@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import Layout from "./Layout"
-import { FormGroup, Label, Input, Col } from 'reactstrap';
+import { Form, FormGroup, Label, Input, Col } from 'reactstrap';
 import FuelEconomyGov from '../data/FuelEconomyGov';
 import Slider from 'rc-slider';
 import 'rc-slider/assets/index.css';
@@ -255,7 +255,7 @@ class DropdownMenu extends Component {
             <div className="userform">
                 <h4>Please input your car</h4>
                 <br />
-//                 <Form onSubmit={this.handleSubmit}>
+                {/* <Form onSubmit={this.handleSubmit}> */}
                     <FormGroup row>
                         <Label for="exampleSelect" sm={2}>Select year</Label>
                         <Col sm={10}>
@@ -338,7 +338,7 @@ class DropdownMenu extends Component {
                             mobile={true}
                         />
                     </div>
-//                   </Form>
+                 {/* </Form> */}
                </div>
             </Layout>
         );
