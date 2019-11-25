@@ -85,12 +85,15 @@ class DropdownMenu extends Component {
         // When user selects multiple fields but decides to select another year
         // This.setState will clear the make, model, and option dropdown menu
         this.setState({
-            make: <option></option>,
-            model: <option></option>,
-            option: <option></option>
-        });
-        // console.log("Year selected")
-        this.setState({ currentYear: event.target.value }, () => {
+            currentYear: event.target.value,
+            // Reset all other values
+            make: <option> </option>,
+            model: <option> </option>,
+            option: <option> </option>,
+            currentMake: '',
+            currentModel: '',
+            currentOption: '',
+        }, () => {
             let make = FuelEconomy.fetchMakesBy(this.state.currentYear);
             // Adds one or more elements to the beginning of an array and returns the new length of the array
             make.unshift("");
@@ -116,11 +119,12 @@ class DropdownMenu extends Component {
         // When user selects multiple fields but decides to select another make
         // This.setState will clear model and option dropdown menu
         this.setState({
-            model: <option></option>,
-            option: <option></option>
-        });
-        // console.log("Make selected")
-        this.setState({ currentMake: event.target.value }, () => {
+            currentMake: event.target.value,
+            model: <option> </option>,
+            option: <option> </option>,
+            currentModel: '',
+            currentOption: '',
+        }, () => {
             let model = FuelEconomy.fetchModelsBy(this.state.currentYear, this.state.currentMake);
             // Adds one or more elements to the beginning of an array and returns the new length of the array
             model.unshift("");
@@ -152,13 +156,13 @@ class DropdownMenu extends Component {
         // When user selects multiple fields but decides to select another model
         // This.setState will clear the option dropdown menu
         this.setState({
-            option: <option></option>
-        });
-        // console.log("Model selected")
-        this.setState({ currentModel: event.target.value }, () => {
+            currentModel: event.target.value,
+            option: <option> </option>,
+            currentOption: ''
+        }, () => {
             let option = FuelEconomy.fetchOptionsBy(this.state.currentYear, this.state.currentMake, this.state.currentModel)
             // Adds one or more elements to the beginning of an array and returns the new length of the array
-            option.unshift("")
+            option.unshift("");
             this.setState({
                 id: option.map(option => {
                     return option.id ? option.id: " "
