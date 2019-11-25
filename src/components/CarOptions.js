@@ -283,11 +283,12 @@ class DropdownMenu extends Component {
         cookies.set('year', this.state.currentYear, cookiesOptions);
         cookies.set('make', this.state.currentMake, cookiesOptions);
         cookies.set('model', this.state.currentModel, cookiesOptions);
+        cookies.set('option', this.state.currentOption, cookiesOptions);
         cookies.set('combMPG', this.state.currentCar.comb08, cookiesOptions);
         cookies.set('highwayMPG', this.state.currentCar.highway08, cookiesOptions);
         cookies.set('cityMPG', this.state.currentCar.city08, cookiesOptions);
         cookies.set('carID', this.state.currentID, cookiesOptions);
-        cookies.set('option', this.state.currentOption, cookiesOptions);
+        cookies.set('fuelType', this.state.currentCar.fuelType, cookiesOptions);
     }
 
     /**
@@ -309,6 +310,7 @@ class DropdownMenu extends Component {
         let option = cookies.get('option') || '';
         let city = cookies.get('cityMPG') || 'N/A';
         let highway = cookies.get('highwayMPG') || 'N/A';
+        let fuelType = cookies.get('fuelType') || 'N/A';
 
         ret = 'Your car: ';
         if (year && make && model) {
@@ -317,7 +319,7 @@ class DropdownMenu extends Component {
             ret += 'N/A';
         }
 
-        ret += '\n\nCity MPG: ' + city + '\nHighway MPG: ' + highway;
+        ret += '\n\nCity MPG: ' + city + '\nHighway MPG: ' + highway + '\n\nRecommended fuel type: ' + fuelType;
 
         return ret;
     }
