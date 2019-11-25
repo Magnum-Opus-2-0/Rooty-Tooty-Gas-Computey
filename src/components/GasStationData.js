@@ -249,7 +249,7 @@ class GasStationContainer extends React.Component {
     render() {
         let filteredData = this.filterByGasStationName(this.state.stationsData, this.props.selectedFilters);
         filteredData = this.filterByDistance(filteredData, this.props.maxDistance);
-        let mapStyle = {'height': '85vh', 'width': '90%'};
+        let mapStyle = {'height': '80vh', 'width': '90%'};
 
         return(
             <React.Fragment>
@@ -265,11 +265,11 @@ class GasStationContainer extends React.Component {
                             />
                        </div>
                         <div className="col-sm" style={mapStyle}>
-                            <MapContainer
-                                coords={this.props.coords}
-                                stations={filteredData}
-                                buttonClicked={this.state.findClicked}
-                            />
+                                <MapContainer
+                                    coords={this.props.coords}
+                                    stations={filteredData}
+                                    buttonClicked={this.state.findClicked}
+                                />
                         </div>
                     </div>
                 </div>

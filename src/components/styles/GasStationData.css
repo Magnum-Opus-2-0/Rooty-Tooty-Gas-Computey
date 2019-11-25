@@ -6,6 +6,8 @@
 .StationListContainer {
     margin: 3vw;
     white-space: pre;
+    height: 80vh;
+    overflow: scroll;
 }
 
 .StationList {
