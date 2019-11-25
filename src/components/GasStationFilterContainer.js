@@ -39,14 +39,7 @@ export default class GasStationFilterContainer extends React.Component {
     retrieveStationNames(namesArray) {
 
         const newFilterOptions = this.getFilterOptions(namesArray);
-        console.log("in retrieveStationNames");
-        console.log("namesArray");
-        console.log(namesArray);
-        console.log("GasStationFilterContainer's newFilterOptions[0]:");
-        console.log(newFilterOptions[0]);
         this.setState({filterOptions: newFilterOptions});
-
- 
     }
 
     getFilterOptions(filterList) {
@@ -57,14 +50,12 @@ export default class GasStationFilterContainer extends React.Component {
             'width': '100%',
         }
         let elemList = filterList.map(filter => {
-            console.log(this)
             return (
                 <div>
                     <Button style={optionStyle} onClick={(event) => this.addFilter(filter)}>{filter}</Button><br/>
                 </div>
             )
         })
-        console.log(elemList)
         return elemList
     }
 

@@ -125,7 +125,7 @@ class GasStationContainer extends React.Component {
      * data nearby. Stores data in the component's state.
      */
     retrieveData(){
-        
+
         let sc = new StationCalculation();
 
         if(!this.props.isGeolocationAvailable ) {
@@ -178,10 +178,7 @@ class GasStationContainer extends React.Component {
             }, []);
 
             // Here, export stationNames to GasStationFilterContainer
-            let stationNamesArr = Array.from(stationNames);
-            console.log("stationNamesArr: ");
-            console.log(stationNamesArr);
-            this.props.retrieveStationNames(stationNamesArr);
+            this.props.retrieveStationNames(Array.from(stationNames));
 
             //Todo: filter and sort array here
             let sc = new StationCalculation();  // TODO replace with compareCost once we have the info
@@ -322,14 +319,9 @@ class StationsList extends React.Component {
 
 
     render() {
-
-        // console.log("GasStationData::render()");
-        // console.log(this.props);
         // First we have to put all of the <StationListItems> in an object so that we can output them all at once later.
         // We cannot use a loop inside the return statement.
-        //const filterPopup = new FilterPopup();
-        //const filteredData = filterPopup.filter(this.props.stationsData);
-        //const stations = filteredData.map(stationData => {
+
         let sc = new StationCalculation();
 
 
@@ -340,8 +332,7 @@ class StationsList extends React.Component {
         }
 
         if(this.state.dataRetrieved) {
-            // console.log("GasStationData::render()");
-            // console.log(this.props);
+
             // First we have to put all of the <StationListItems> in an object so that we can output them all at once later.
             // We cannot use a loop inside the return statement.
             //const filterPopup = new FilterPopup();
@@ -349,7 +340,6 @@ class StationsList extends React.Component {
             //const stations = filteredData.map(stationData => {
             let sc = new StationCalculation();
 
-            //this.setState({stationsData: filteredData});
             const stations = this.props.stationsData.map(stationData => {
                 return (
                     <StationListItem
