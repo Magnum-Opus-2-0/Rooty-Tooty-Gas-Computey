@@ -1,11 +1,14 @@
 import React, { Component } from 'react';
-import { Button, Form, FormGroup, Label, Input, Col } from 'reactstrap';
+import Layout from "./Layout"
+import { FormGroup, Label, Input, Col } from 'reactstrap';
 import FuelEconomyGov from '../data/FuelEconomyGov';
-import Slider, { Range } from 'rc-slider';
+import Slider from 'rc-slider';
 import 'rc-slider/assets/index.css';
 import 'rc-tooltip/assets/bootstrap.css';
 import './styles/CarOptions.css'
 import Tooltip from 'rc-tooltip';
+import InputNumber from "rc-input-number";
+import 'rc-input-number/assets/index.css'
 import { withCookies } from 'react-cookie';
 
 const FuelEconomy = new FuelEconomyGov();
@@ -198,6 +201,10 @@ class DropdownMenu extends Component {
         );
     };
 
+    // handleInput(props) {
+
+    // }
+
     /**
      *  Renders the list of car years
      *
@@ -219,59 +226,79 @@ class DropdownMenu extends Component {
             );
         });
 
+        // console.log('TANK SIZE' + ' ' + cookies.get('tankSize'))
+
         return (
-            <div className="userform">
-                <h4>Please input your car</h4>
-                <br />
-                <Form onSubmit={this.handleSubmit}>
-                    <FormGroup row>
-                        <Label for="exampleSelect" sm={2}>Select year</Label>
-                        <Col sm={10}>
-                            <Input type="select" name="select" id="exampleSelect" onChange={this.yearChange}>
-                                {years}
-                            </Input>
-                        </Col>
-                    </FormGroup>
-                    <FormGroup row>
-                        <Label for="exampleSelect" sm={2}>Select make</Label>
-                        <Col sm={10}>
-                            <Input type="select" name="select" id="exampleSelect" onChange={this.makeChange}>
-                                {this.state.make}
-                            </Input>
-                        </Col>
-                    </FormGroup>
-                    <FormGroup row>
-                        <Label for="exampleSelect" sm={2}>Select model</Label>
-                        <Col sm={10}>
-                            <Input type="select" name="select" id="exampleSelect" onChange={this.modelChange}>
-                                {this.state.model}
-                            </Input>
-                        </Col>
-                    </FormGroup>
-                    <FormGroup row>
-                        <Label for="exampleSelect" sm={2}>Select options</Label>
-                        <Col sm={10}>
-                            <Input type="select" name="select" id="exampleSelect" onChange={this.optionChange}>
-                                {this.state.option}
-                            </Input>
-                        </Col>
-                    </FormGroup>
-                    <h6 className="mpgtext">{this.carToString()}</h6>
+            <Layout>
+                <div className="userform">
+                    <h4>Please input your car</h4>
                     <br />
-                    <h6 className="mpgtext">
-                    Car Tank:
-                    </h6>
-                    <div style={wrapperStyle}>
-                        <Slider min={0}
-                                max={100}
-                                defaultValue={cookies.get('tankFill') * 100}
-                                step={10}
-                                handle={this.handleSlider}
-                                // When we change the slider, save the user's tank fill to cookies
-                                onAfterChange={(value) => { cookies.set('tankFill', value / 100.0, cookiesOptions); }}/>
-                    </div>
-                </Form>
-            </div>
+                    {/* <Form onSubmit={(this.handleSubmit)}> */}
+                        <FormGroup row>
+                            <Label for="exampleSelect" sm={2}>Select year</Label>
+                            <Col sm={10}>
+                                <Input type="select" name="select" id="exampleSelect" onChange={this.yearChange}>
+                                    {years}
+                                </Input>
+                            </Col>
+                        </FormGroup>
+                        <FormGroup row>
+                            <Label for="exampleSelect" sm={2}>Select make</Label>
+                            <Col sm={10}>
+                                <Input type="select" name="select" id="exampleSelect" onChange={this.makeChange}>
+                                    {this.state.make}
+                                </Input>
+                            </Col>
+                        </FormGroup>
+                        <FormGroup row>
+                            <Label for="exampleSelect" sm={2}>Select model</Label>
+                            <Col sm={10}>
+                                <Input type="select" name="select" id="exampleSelect" onChange={this.modelChange}>
+                                    {this.state.model}
+                                </Input>
+                            </Col>
+                        </FormGroup>
+                        <FormGroup row>
+                            <Label for="exampleSelect" sm={2}>Select options</Label>
+                            <Col sm={10}>
+                                <Input type="select" name="select" id="exampleSelect" onChange={this.optionChange}>
+                                    {this.state.option}
+                                </Input>
+                            </Col>
+                        </FormGroup>
+                        <h6 className="mpgtext">{this.carToString()}</h6>
+                        <br />
+                        <h6 className="tankfilltext">
+                        Tank Fill:
+                        </h6>
+                        <div style={wrapperStyle}>
+                            <Slider min={0}
+                                    max={100}
+                                    defaultValue={50}
+                                    step={10}
+                                    mobile={true}
+                                    handle={this.handleSlider}
+                                    // When we change the slider, save the user's tank fill to cookies
+                                    onAfterChange={(value) => { cookies.set('tankFill', value / 100.0, cookiesOptions); }}
+                            />
+                        </div>
+                        <br />
+                        <h6 className="tanksizetext">
+                        Tank Size:
+                        </h6>
+                        <div>
+                            <InputNumber
+                                min={0}
+                                max={30}
+                                style={{ width: 100}}
+                                step={1}
+                                onChange={(value) => { cookies.set('tankSize', value, cookiesOptions);}}
+                                mobile={true}
+                            />
+                        </div>
+                    {/* </Form> */}
+                </div>
+            </Layout>
         );
     }
 

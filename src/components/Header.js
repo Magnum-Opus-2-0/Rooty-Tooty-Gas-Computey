@@ -1,7 +1,5 @@
 import React from 'react';
 import './styles/Header.css';
-import logo from '../images/Logo.png';
-import styled from 'styled-components';
 import {
     Collapse,
     Navbar,
@@ -10,27 +8,7 @@ import {
     Nav,
     NavItem,
     NavLink,
-    UncontrolledDropdown,
-    DropdownToggle,
-    DropdownMenu,
-    DropdownItem
 } from 'reactstrap';
-
-// const Styles = styled.div`
-//     .navbar {
-//         background-color: black;
-//     }
-
-//     .navlink {
-//         color: white;
-
-//         &:hover {
-//             color: blue;
-//         }
-//     }
-// `;
-
-
 
 const Header = (props) => {
     const [isOpen, setIsOpen] = React.useState(false);

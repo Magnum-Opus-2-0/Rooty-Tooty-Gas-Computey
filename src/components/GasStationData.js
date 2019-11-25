@@ -341,9 +341,7 @@ class StationsList extends React.Component {
                 const stationPrice = Number.parseFloat(stationData.price).toFixed(2);
                 const stationDistance = sc.calcDistance(this.props.coords, stationData.coords).toFixed(2);
 
-                const stationCost = sc.calcCost(user.mpg, 10, user.tankFill, stationData, user.location).toFixed(2);
-                // TODO: use the below line once user inputted tank size is available.
-                /* const stationCost = sc.calcCost(stationData, user).toFixed(2); */
+                const stationCost = sc.calcCostUser(stationData, user).toFixed(2);
 
                 const stationText = stationData.name + ': $' + stationPrice +
                     '\n' + stationDistance + ' miles' +
