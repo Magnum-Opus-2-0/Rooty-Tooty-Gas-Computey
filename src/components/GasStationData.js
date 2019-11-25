@@ -11,6 +11,66 @@ import user from '../data/UserData';
 import { withCookies } from 'react-cookie';
 
 
+const debugData = [
+    {
+        station: 'Arco123',
+        reg_price: 3.82,
+        lat: 34.919967,
+        lng: -117.339343,
+        key: 'key-arco-iowa',
+        id: 1000,
+    },
+    {
+        station: 'Shell',
+        reg_price: 4.00,
+        lat: 34.075381,
+        lng: -117.340335,
+        key: 'key-shell-university',
+        id: 2000,
+    },
+    {
+        station: '76',
+        reg_price: 4.12,
+        lat: 33.983209,
+        lng: -117.341269,
+        key: 'key-76-blaine',
+        id: 3000,
+    },
+    {
+        station: 'Arco',
+        price: 3.80,
+        lat: 33.982567,
+        lng: -117.341772,
+        key: 'key-arco-blaine',
+        id: 4000,
+    },
+    {
+        station: 'Shell',
+        price: 4.38,
+        lat: 33.983350,
+        lng: -117.340284,
+        key: 'key-arco-iowa',
+        id: 5000,
+    },
+    {
+        station: 'Chevron',
+        price: 4.20,
+        lat: 33.955115,
+        lng: -117.332514,
+        key: 'key-chevron-canyoncrest',
+        id: 6000,
+    },
+    {
+        station: 'Mobil',
+        price: 4.05,
+        lat: 33.977036,
+        lng: -117.336895,
+        key: 'key-mobil-university',
+        id: 7000,
+    }
+];
+
+
 /**
  * A container to hold all other gas station data components.
  *
@@ -71,7 +131,7 @@ class GasStationContainer extends React.Component {
         user.location.latitude = this.props.coords.latitude;
         user.location.longitude = this.props.coords.longitude;
 
-        let allStationsRef = this.props.firebase.getAllStationsRef();
+        let allStationsRef = (this.props.firebase) ? this.props.firebase.getAllStationsRef() : null;
 
         function onData(data) {
 
@@ -124,7 +184,24 @@ class GasStationContainer extends React.Component {
 
         };
         onData = onData.bind(this);
-        allStationsRef.on("value", onData);
+        if (allStationsRef) {
+            allStationsRef.on("value", onData);
+        } else {
+            // This executes only if firebase is null
+            // Populatives list with hard-coded debug data
+            let fiveStations = [];
+            debugData.map((value) => {
+                fiveStations.push(new GasStationWrapper(
+                    value.station,
+                    value.reg_price,
+                    value.lat,
+                    value.lng,
+                    value.id
+                ));
+            });
+            this.setState({stationsData: fiveStations});
+            this.setState({findClicked: true});
+        }
 
         return true;
     }
@@ -152,6 +229,17 @@ class GasStationContainer extends React.Component {
         return filteredStationList;
     }
 
+    filterByDistance(stationList, maxDistance) {
+        let sc = new StationCalculation();
+        let filteredStationList = []
+        for (let station of stationList) {
+            if (sc.calcDistance(this.props.coords, station.coords) <= maxDistance) {
+                filteredStationList.push(station)
+            }
+        }
+        return filteredStationList;
+    }
+
     /**
      * Render all components related to gas station data.
      *
@@ -160,6 +248,7 @@ class GasStationContainer extends React.Component {
      */
     render() {
         let filteredData = this.filterByGasStationName(this.state.stationsData, this.props.selectedFilters);
+        filteredData = this.filterByDistance(filteredData, this.props.maxDistance)
         let mapStyle = {'height': '85vh'};
 
         return(
@@ -200,12 +289,9 @@ class GasStationContainer extends React.Component {
 class StationsList extends React.Component {
     constructor(props) {
         super(props);
-        this.state={
-            dataRetrieved: false,
-        }
     }
 
-
+    dataRetrieved = false;
     render() {
 
         // console.log("GasStationData::render()");
@@ -218,13 +304,13 @@ class StationsList extends React.Component {
         let sc = new StationCalculation();
 
 
-        if(!this.state.dataRetrieved){
+        if(!this.dataRetrieved){
             if(this.props.dataCall()){
-                this.setState({dataRetrieved: true})
+                this.dataRetrieved = true;
             }
         }
 
-        if(this.state.dataRetrieved) {
+        if(this.dataRetrieved) {
             console.log("GasStationData::render()");
             console.log(this.props);
             // First we have to put all of the <StationListItems> in an object so that we can output them all at once later.
