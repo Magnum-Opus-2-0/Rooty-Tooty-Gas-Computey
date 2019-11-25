@@ -97,8 +97,8 @@ class MapContainer extends React.Component{
             );
         }
         else{
-            console.log("inside default window else statement");
-            console.log(m[0]);
+            // console.log("inside default window else statement");
+            // console.log(m[0]);
             if(typeof m[0] !== 'undefined') {
                 return (<InfoWindow
                         position={{
@@ -181,7 +181,7 @@ class MapContainer extends React.Component{
             if(this.state.activeMarker !== null){
                 this.resetDisplay();
             }
-            console.log("ForceUpdated");
+            // console.log("ForceUpdated");
             this.forceUpdate();
         }
     }

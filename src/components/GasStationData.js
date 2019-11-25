@@ -1,10 +1,8 @@
 import React from 'react'
 import { geolocated } from "react-geolocated";
 import './styles/GasStationData.css'
-import FilterPopup from './FilterPopup.js'
 import StationCalculation from "../data/StationCalculation";
 import MapContainer from './Map.js'
-import Firebase from './Firebase'
 import GasStationWrapper from '../data/GasStationWrapper';
 import user from '../data/UserData';
 
