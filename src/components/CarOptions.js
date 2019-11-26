@@ -343,7 +343,7 @@ class DropdownMenu extends Component {
                     </h6>
                     <div>
                         <InputNumber
-                            min={0}
+                            min={1}
                             max={30}
                             defaultValue={defaultTankSize}
                             style={{ width: 100}}
