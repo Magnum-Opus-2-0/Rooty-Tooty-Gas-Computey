@@ -221,7 +221,7 @@ class GasStationContainer extends React.Component {
             return sc.compareDistance(stationA, stationB, user.location);
         });
 
-        return allStationsArr.slice(0,5);
+        return allStationsArr;
     }
 
     /**
@@ -267,7 +267,7 @@ class GasStationContainer extends React.Component {
     render() {
         let filteredData = this.filterByDistance(this.state.stationsData, this.props.maxDistance);
         filteredData = this.filterByGasStationName(filteredData, this.props.selectedFilters);
-        filteredData = this.sortData(filteredData);
+        filteredData = this.sortData(filteredData).slice(0, 5);
         let mapStyle = {'height': '80vh', 'width': '90%'};
 
         return(
