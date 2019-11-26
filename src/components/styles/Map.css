@@ -1,15 +1,12 @@
 .PopupText {
-    background-color: azure;
     color: black !important;
     font-size: medium;
-    margin-left: 10px;
     white-space: pre;
 }
 
 .PopupHeader{
     color: crimson;
     font-size: large;
-    margin-left: 5px;
 }
 
 html, body, .container {

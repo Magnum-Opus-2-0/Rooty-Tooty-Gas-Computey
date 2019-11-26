@@ -3,6 +3,15 @@
     white-space: pre; */
 }
 
-.Centered {
-    margin: 5vw;
+.StationListContainer {
+    margin: 3vw;
+    white-space: pre;
+    height: 80vh;
+    overflow: scroll;
 }
+
+.StationList {
+    font-size: 1.95em;
+    list-style-type: none;
+}
+

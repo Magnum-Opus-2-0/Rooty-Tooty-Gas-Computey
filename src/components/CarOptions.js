@@ -1,11 +1,14 @@
 import React, { Component } from 'react';
-import { Button, Form, FormGroup, Label, Input, Col } from 'reactstrap';
+import Layout from "./Layout"
+import { Form, FormGroup, Label, Input, Col } from 'reactstrap';
 import FuelEconomyGov from '../data/FuelEconomyGov';
-import Slider, { Range } from 'rc-slider';
+import Slider from 'rc-slider';
 import 'rc-slider/assets/index.css';
 import 'rc-tooltip/assets/bootstrap.css';
 import './styles/CarOptions.css'
 import Tooltip from 'rc-tooltip';
+import InputNumber from "rc-input-number";
+import 'rc-input-number/assets/index.css'
 import { withCookies } from 'react-cookie';
 
 const FuelEconomy = new FuelEconomyGov();
@@ -17,23 +20,53 @@ class DropdownMenu extends Component {
     constructor(props) {
         super(props);
 
-        this.state = {
-            currentYear: "",
-            make: [],
-            currentMake: "",
-            model: [],
-            currentModel: "",
-            option: [],
-            optionText: [],
-            currentOption: "",
-            carCityMPG: "",
-            carHWMPG: "",
-            userInputTank: 0,
-            id: [],
-            currentID: "",
-            currentCar: null,
-            optionState: null,
-        };
+        const { cookies } = this.props;
+
+        if (cookies.get('tankFill') === undefined) {
+            cookies.set('tankFill', .5, cookiesOptions);
+        }
+        if (!cookies.get('option')) {
+            this.state = {
+                currentYear: "",
+                make: [],
+                currentMake: "",
+                model: [],
+                currentModel: "",
+                option: [],
+                optionText: [],
+                currentOption: "",
+                carCityMPG: "",
+                carHWMPG: "",
+                userInputTank: 0,
+                id: [],
+                currentID: "",
+                currentCar: null,
+                optionState: null,
+            };
+
+        } else {
+            let year = cookies.get('year');
+            let make = cookies.get('make');
+            let model = cookies.get('model');
+            let option = cookies.get('option');
+
+            this.state = {
+                currentYear: year,
+                make: FuelEconomy.fetchMakesBy(year).map((make) => {return <option>{make}</option>}),
+                currentMake: make,
+                model: FuelEconomy.fetchModelsBy(year, make).map((model) => {return <option>{model}</option>}),
+                currentModel: model,
+                option: FuelEconomy.fetchOptionsBy(year, make, model).map((option) => {return <option>{option.opt}</option>}),
+                currentOption: option,
+                carCityMPG: cookies.get('cityMPG'),
+                carHWMPG: cookies.get('highwayMPG'),
+                userInputTank: 0,
+                id: [],
+                currentID: cookies.get('carID'),
+                currentCar: null,
+                optionState: null
+            };
+        }
 
         this.yearChange = this.yearChange.bind(this);
         this.makeChange = this.makeChange.bind(this);
@@ -52,12 +85,15 @@ class DropdownMenu extends Component {
         // When user selects multiple fields but decides to select another year
         // This.setState will clear the make, model, and option dropdown menu
         this.setState({
-            make: <option></option>,
-            model: <option></option>,
-            option: <option></option>
-        });
-        // console.log("Year selected")
-        this.setState({ currentYear: event.target.value }, () => {
+            currentYear: event.target.value,
+            // Reset all other values
+            make: <option> </option>,
+            model: <option> </option>,
+            option: <option> </option>,
+            currentMake: '',
+            currentModel: '',
+            currentOption: '',
+        }, () => {
             let make = FuelEconomy.fetchMakesBy(this.state.currentYear);
             // Adds one or more elements to the beginning of an array and returns the new length of the array
             make.unshift("");
@@ -83,11 +119,12 @@ class DropdownMenu extends Component {
         // When user selects multiple fields but decides to select another make
         // This.setState will clear model and option dropdown menu
         this.setState({
-            model: <option></option>,
-            option: <option></option>
-        });
-        // console.log("Make selected")
-        this.setState({ currentMake: event.target.value }, () => {
+            currentMake: event.target.value,
+            model: <option> </option>,
+            option: <option> </option>,
+            currentModel: '',
+            currentOption: '',
+        }, () => {
             let model = FuelEconomy.fetchModelsBy(this.state.currentYear, this.state.currentMake);
             // Adds one or more elements to the beginning of an array and returns the new length of the array
             model.unshift("");
@@ -119,13 +156,13 @@ class DropdownMenu extends Component {
         // When user selects multiple fields but decides to select another model
         // This.setState will clear the option dropdown menu
         this.setState({
-            option: <option></option>
-        });
-        // console.log("Model selected")
-        this.setState({ currentModel: event.target.value }, () => {
+            currentModel: event.target.value,
+            option: <option> </option>,
+            currentOption: ''
+        }, () => {
             let option = FuelEconomy.fetchOptionsBy(this.state.currentYear, this.state.currentMake, this.state.currentModel)
             // Adds one or more elements to the beginning of an array and returns the new length of the array
-            option.unshift("")
+            option.unshift("");
             this.setState({
                 id: option.map(option => {
                     return option.id ? option.id: " "
@@ -192,6 +229,10 @@ class DropdownMenu extends Component {
         );
     };
 
+    // handleInput(props) {
+
+    // }
+
     /**
      *  Renders the list of car years
      *
@@ -214,14 +255,20 @@ class DropdownMenu extends Component {
         });
 
         return (
+          <Layout>
             <div className="userform">
                 <h4>Please input your car</h4>
                 <br />
-                <Form onSubmit={this.handleSubmit}>
+                {/* <Form onSubmit={this.handleSubmit}> */}
                     <FormGroup row>
                         <Label for="exampleSelect" sm={2}>Select year</Label>
                         <Col sm={10}>
-                            <Input type="select" name="select" id="exampleSelect" onChange={this.yearChange}>
+                            <Input type="select"
+                                   name="select-years"
+                                   id="exampleSelect"
+                                   onChange={this.yearChange}
+                                   defaultValue={this.state.currentID ? this.state.currentYear : ' '}
+                            >
                                 {years}
                             </Input>
                         </Col>
@@ -229,7 +276,12 @@ class DropdownMenu extends Component {
                     <FormGroup row>
                         <Label for="exampleSelect" sm={2}>Select make</Label>
                         <Col sm={10}>
-                            <Input type="select" name="select" id="exampleSelect" onChange={this.makeChange}>
+                            <Input type="select"
+                                   name="select-makes"
+                                   id="exampleSelect"
+                                   onChange={this.makeChange}
+                                   defaultValue={this.state.currentID ? this.state.currentMake : ' '}
+                            >
                                 {this.state.make}
                             </Input>
                         </Col>
@@ -237,7 +289,12 @@ class DropdownMenu extends Component {
                     <FormGroup row>
                         <Label for="exampleSelect" sm={2}>Select model</Label>
                         <Col sm={10}>
-                            <Input type="select" name="select" id="exampleSelect" onChange={this.modelChange}>
+                            <Input type="select"
+                                   name="select-models"
+                                   id="exampleSelect"
+                                   onChange={this.modelChange}
+                                   defaultValue={this.state.currentID ? this.state.currentModel : ' '}
+                            >
                                 {this.state.model}
                             </Input>
                         </Col>
@@ -245,27 +302,49 @@ class DropdownMenu extends Component {
                     <FormGroup row>
                         <Label for="exampleSelect" sm={2}>Select options</Label>
                         <Col sm={10}>
-                            <Input type="select" name="select" id="exampleSelect" onChange={this.optionChange}>
+                            <Input type="select"
+                                   name="select-options"
+                                   id="exampleSelect"
+                                   onChange={this.optionChange}
+                                   defaultValue={this.state.currentID ? this.state.currentOption : ' '}
+                            >
                                 {this.state.option}
                             </Input>
                         </Col>
                     </FormGroup>
                     <h6 className="mpgtext">{this.carToString()}</h6>
                     <br />
-                    <h6 className="mpgtext">
-                    Car Tank:
+                    <h6 className="tankfilltext">
+                    Tank Fill:
                     </h6>
                     <div style={wrapperStyle}>
                         <Slider min={0}
                                 max={100}
                                 defaultValue={50}
                                 step={10}
+                                mobile={true}
                                 handle={this.handleSlider}
                                 // When we change the slider, save the user's tank fill to cookies
-                                onAfterChange={(value) => { cookies.set('tankFill', value / 100.0, cookiesOptions); }}/>
+                                onAfterChange={(value) => { cookies.set('tankFill', value / 100.0, cookiesOptions); }}
+                        />
                     </div>
-                </Form>
-            </div>
+                    <br />
+                    <h6 className="tanksizetext">
+                    Tank Size:
+                    </h6>
+                    <div>
+                        <InputNumber
+                            min={0}
+                            max={30}
+                            style={{ width: 100}}
+                            step={1}
+                            onChange={(value) => { cookies.set('tankSize', value, cookiesOptions);}}
+                            mobile={true}
+                        />
+                    </div>
+                 {/* </Form> */}
+               </div>
+            </Layout>
         );
     }
 
@@ -303,25 +382,30 @@ class DropdownMenu extends Component {
     carToString() {
         const { cookies } = this.props;
 
-        let ret;
-        let year = cookies.get('year') || '';
-        let make = cookies.get('make') || '';
-        let model = cookies.get('model') || '';
-        let option = cookies.get('option') || '';
         let city = cookies.get('cityMPG') || 'N/A';
         let highway = cookies.get('highwayMPG') || 'N/A';
         let fuelType = cookies.get('fuelType') || 'N/A';
 
-        ret = 'Your car: ';
-        if (year && make && model) {
-            ret += year + ' ' + make + ' ' + model + ' (' + option + ')';
-        } else {
-            ret += 'N/A';
+        return '\nCity MPG: ' + city + '\nHighway MPG: ' + highway + '\n\nRecommended fuel type: ' + fuelType;
+    }
+
+    preLoadCarInfo() {
+        const { cookies } = this.props;
+
+        let year = cookies.get('year');
+        let make = cookies.get('make');
+        let model = cookies.get('model');
+        let option = cookies.get('option');
+
+        if (option) {
+            this.setState({
+                make: FuelEconomy.fetchMakesBy(year).map((make) => {return <option>{make}</option>}),
+                model: FuelEconomy.fetchModelsBy(year, make).map((model) => {return <option>{model}</option>}),
+                option: FuelEconomy.fetchOptionsBy(year, make, model).map((option) => {return <option>{option.opt}</option>})
+            }, () => {
+                console.log(this.state.make);
+            });
         }
-
-        ret += '\n\nCity MPG: ' + city + '\nHighway MPG: ' + highway + '\n\nRecommended fuel type: ' + fuelType;
-
-        return ret;
     }
 }
 

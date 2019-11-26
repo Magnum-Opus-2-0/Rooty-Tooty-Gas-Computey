@@ -1,17 +1,13 @@
 import React from 'react';
-import './App.css';
 import { BrowserRouter as Router, Route, Switch} from 'react-router-dom';
+import { instanceOf } from 'prop-types';
+import { Cookies } from 'react-cookie';
 
-import FilterPopup from './components/FilterPopup.js';
-import GasStationContainer from './components/GasStationData.js';
+import './App.css';
 import Home from './components/Home.js';
 import Header from './components/Header.js';
 import Find from './components/Find.js';
 import CarOptions from './components/CarOptions.js';
-import Layout  from './components/Layout';
-
-import { instanceOf } from 'prop-types';
-import { Cookies } from 'react-cookie';
 
 class App extends React.Component {
     static propTypes = {
@@ -27,9 +23,9 @@ class App extends React.Component {
     }
 
     render() {
-        console.log("App::render()")
-        console.log("App::this.props.firebase:");
-        console.log(this.props.firebase);
+        // console.log("App::render()")
+        // console.log("App::this.props.firebase:");
+        // console.log(this.props.firebase);
         return (
             <React.Fragment>
                 <Header />

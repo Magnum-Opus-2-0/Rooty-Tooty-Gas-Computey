@@ -1,11 +1,9 @@
-import React, { useState } from 'react';
-import FilterPopup from './FilterPopup.js';
+import React from 'react';
 import GasStationContainer from './GasStationData';
-import Firebase from './Firebase'
-import {Nav, Navbar, NavItem, Collapse} from 'reactstrap';
+import {Nav, Navbar, Collapse} from 'reactstrap';
 import {Dropdown, DropdownToggle, DropdownMenu, DropdownItem} from 'reactstrap';
-import {Button, ButtonGroup} from 'reactstrap';
-import { Input, InputGroup, InputGroupAddon, InputGroupText } from 'reactstrap';
+import {Button} from 'reactstrap';
+import { Input, InputGroup, InputGroupText } from 'reactstrap';
 
 export default class GasStationFilterContainer extends React.Component {
     constructor(props) {
@@ -21,17 +19,25 @@ export default class GasStationFilterContainer extends React.Component {
             gasQualityRegular: true,
             gasQualityMid: true,
             gasQualityPremium: true,
+            filterOptions: []
         }
 
         this.setSelectedFilters = this.setSelectedFilters.bind(this)
         this.gasStationDropdownToggle = this.gasStationDropdownToggle.bind(this)
         this.gasGradeDropdownToggle = this.gasGradeDropdownToggle.bind(this)
+        this.retrieveStationNames = this.retrieveStationNames.bind(this);
         //this.addFilter = this.addFilter.bind(this)
 
-        this.filterOptions = this.getFilterOptions(this.state.availableFilters)
+        // this.filterOptions = this.getFilterOptions(this.state.availableFilters)
         this.filterButtons = []
 
         //this.test = this.test.bind(this)
+    }
+
+    retrieveStationNames(namesArray) {
+
+        const newFilterOptions = this.getFilterOptions(namesArray);
+        this.setState({filterOptions: newFilterOptions});
     }
 
     getFilterOptions(filterList) {
@@ -42,11 +48,10 @@ export default class GasStationFilterContainer extends React.Component {
             'width': '100%',
         }
         let elemList = filterList.map(filter => {
-            console.log(this)
             return (
-                <React.Fragment>
+                <div>
                     <Button style={optionStyle} onClick={(event) => this.addFilter(filter)}>{filter}</Button><br/>
-                </React.Fragment>
+                </div>
             )
         })
         return elemList
@@ -132,7 +137,6 @@ export default class GasStationFilterContainer extends React.Component {
 
     render() {
         const buttonGroupStyle = {'margin-left':'0.4em'}
-
         return (
             <React.Fragment>
                 {/* Navigation bar for the filters */}
@@ -157,21 +161,25 @@ export default class GasStationFilterContainer extends React.Component {
                                 <Dropdown isOpen={this.state.gasStationDropdownOpen} toggle={this.gasStationDropdownToggle} >
                                     <DropdownToggle caret>Gas Stations</DropdownToggle>
                                     <DropdownMenu>
-                                        {this.filterOptions}
+                                        {this.state.filterOptions}
                                     </DropdownMenu>
                                 </Dropdown>
                                 {/* Filter buttons */}
                                 <div style={buttonGroupStyle}>
                                     {this.state.filterButtons}
                                 </div>
-                                
+
                             </InputGroup>
                         </Nav>
                     </Collapse>
                 </Navbar>
 
                 {/* Main body of the Find page */}
-                <GasStationContainer selectedFilters={this.state.selectedFilters} maxDistance={this.state.maxDistance} firebase={this.props.firebase} />
+                <GasStationContainer retrieveStationNames={this.retrieveStationNames}
+                    selectedFilters={this.state.selectedFilters}
+                    maxDistance={this.state.maxDistance}
+                    firebase={this.props.firebase}
+                />
                 {/* <FilterPopup setSelectedFilters={this.setSelectedFilters} /> */}
             </React.Fragment>
         );

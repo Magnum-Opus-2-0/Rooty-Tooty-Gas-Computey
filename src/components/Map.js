@@ -89,7 +89,7 @@ class MapContainer extends React.Component{
                     onClose={this.handleClose}
                 >
                     <div className='PopupText'>
-                        <h1 className='PopupHeader'> {this.props.stations[index].name} </h1>
+                        <h1 className='PopupHeader'>{this.props.stations[index].name}</h1>
                         <div>Price: ${Number.parseFloat(this.props.stations[index].price).toFixed(2)}</div>
                         <div>Distance: {sc.calcDistance(this.props.coords, this.props.stations[index].coords).toFixed(2)} miles.</div>
                     </div>
@@ -97,8 +97,8 @@ class MapContainer extends React.Component{
             );
         }
         else{
-            console.log("inside default window else statement");
-            console.log(m[0]);
+            // console.log("inside default window else statement");
+            // console.log(m[0]);
             if(typeof m[0] !== 'undefined') {
                 return (<InfoWindow
                         position={{
@@ -109,7 +109,7 @@ class MapContainer extends React.Component{
                         onClose={this.handleClose}
                     >
                         <div className='PopupText'>
-                            <h1 className='PopupHeader'> {this.props.stations[0].name} </h1>
+                            <h1 className='PopupHeader'>{this.props.stations[0].name}</h1>
                             <div>Price: ${Number.parseFloat(this.props.stations[0].price).toFixed(2)}</div>
                             <div>Distance: {sc.calcDistance(this.props.coords, this.props.stations[0].coords).toFixed(2)} miles.</div>
                         </div>
@@ -126,7 +126,7 @@ class MapContainer extends React.Component{
                         onClose={this.handleClose}
                     >
                         <div className='PopupText'>
-                            <h1 className='PopupHeader'> This should not display </h1>
+                            <h1 className='PopupHeader'>This should not display</h1>
                         </div>
                     </InfoWindow>
                 );
@@ -181,7 +181,7 @@ class MapContainer extends React.Component{
             if(this.state.activeMarker !== null){
                 this.resetDisplay();
             }
-            console.log("ForceUpdated");
+            // console.log("ForceUpdated");
             this.forceUpdate();
         }
     }

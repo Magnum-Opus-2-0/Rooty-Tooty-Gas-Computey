@@ -3,6 +3,16 @@
     white-space: pre;
 }
 
+.tankfilltext {
+    font-weight: 400;
+    white-space: pre;
+}
+
+.tanksizetext {
+    font-weight: 400;
+    white-space: pre;
+}
+
 .userform {
     margin-top: 50px;
 }
