@@ -161,8 +161,13 @@ class MapContainer extends React.Component{
                     }}
                     >
                     {m}
+                    <Marker
+                        lat={this.props.coords.latitude}
+                        lng={this.props.coords.longitude}
+                        name="My Location"
+                        options={{icon:"http://maps.google.com/mapfiles/ms/icons/blue-dot.png"}}
+                        />
                     {this.displayWindow(m, this.markerIndex)}
-
                 </Map>
             );
         }
