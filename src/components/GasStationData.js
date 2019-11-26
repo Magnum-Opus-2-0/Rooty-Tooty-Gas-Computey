@@ -123,9 +123,6 @@ class GasStationContainer extends React.Component {
      * data nearby. Stores data in the component's state.
      */
     retrieveData(){
-
-        let sc = new StationCalculation();
-
         if(!this.props.isGeolocationAvailable ) {
             console.error('Browser not supported.');
             return false;
@@ -144,8 +141,6 @@ class GasStationContainer extends React.Component {
         let allStationsRef = (this.props.firebase) ? this.props.firebase.getAllStationsRef() : null;
 
         function onData(data) {
-            console.log('ON DATA CALLED');
-
             let allStationsRaw = data.val();
             let stationNames = new Set();
 
