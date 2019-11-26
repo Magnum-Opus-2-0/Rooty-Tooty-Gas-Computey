@@ -4,14 +4,19 @@ import {Nav, Navbar, Collapse} from 'reactstrap';
 import {Dropdown, DropdownToggle, DropdownMenu, DropdownItem} from 'reactstrap';
 import {Button} from 'reactstrap';
 import { Input, InputGroup, InputGroupText } from 'reactstrap';
+import { withCookies } from 'react-cookie';
 
-export default class GasStationFilterContainer extends React.Component {
+class GasStationFilterContainer extends React.Component {
     constructor(props) {
         super(props)
+
         this.state = {
             selectedFilters: [],
             gasStationDropdownOpen: false,
             gasGradeDropdownOpen: false,
+            gasCalcDropdownOpen: false,
+            calcFunctionSelected: "price",
+            smartFunctionDisabled: false,
             // availableFilters: ['Arco', 'Chevron', 'Texaco', 'Mobil', '76'],
             availableFilters: ['Sunoco', 'Xtramart', 'Shell'],
             filterButtons: [],
@@ -26,6 +31,7 @@ export default class GasStationFilterContainer extends React.Component {
         this.gasStationDropdownToggle = this.gasStationDropdownToggle.bind(this)
         this.gasGradeDropdownToggle = this.gasGradeDropdownToggle.bind(this)
         this.retrieveStationNames = this.retrieveStationNames.bind(this);
+        this.gasCalcDropdownToggle = this.gasCalcDropdownToggle.bind(this);
         //this.addFilter = this.addFilter.bind(this)
 
         // this.filterOptions = this.getFilterOptions(this.state.availableFilters)
@@ -64,6 +70,12 @@ export default class GasStationFilterContainer extends React.Component {
     gasGradeDropdownToggle() {
         this.setState({gasGradeDropdownOpen: !this.state.gasGradeDropdownOpen})
     }
+
+    gasCalcDropdownToggle() {
+        this.setState({gasCalcDropdownOpen: !this.state.gasCalcDropdownOpen})
+    }
+
+
 
     /*
         setSelectedFilters()
@@ -135,8 +147,27 @@ export default class GasStationFilterContainer extends React.Component {
         }
     }
 
+    selectComparisonFunction(event) {
+        console.log("Edward is super cool")
+        this.setState({calcFunctionSelected: event.target.value})
+    }
+
     render() {
         const buttonGroupStyle = {'margin-left':'0.4em'}
+        const { cookies } = this.props;
+        const mpg = cookies.get('combMPG');
+        const tankSize = cookies.get('tankSize');
+        const tankFill = cookies.get('tankFill');
+        let smartButtonDisabled = mpg === undefined || tankSize === undefined || tankFill === undefined;
+        let dropdownName = '-----';
+        console.log('STATE:' + this.state.calcFunctionSelected)
+        if (this.state.calcFunctionSelected == "price") {
+            dropdownName = 'Compare Price';
+        } else if (this.state.calcFunctionSelected == "distance") {
+            dropdownName = 'Compare Distance';
+        } else if (this.state.calcFunctionSelected == "smart") {
+            dropdownName = 'Smart Calculation';
+        }
         return (
             <React.Fragment>
                 {/* Navigation bar for the filters */}
@@ -144,8 +175,19 @@ export default class GasStationFilterContainer extends React.Component {
                     <Collapse isOpen={true} navbar>
                         <Nav>
                             <InputGroup>
+                                {/* Calculation Switching */}
+                                <Dropdown className="pr-2" isOpen={this.state.gasCalcDropdownOpen} toggle={this.gasCalcDropdownToggle} >
+                                    <DropdownToggle caret>
+                                        {dropdownName}
+                                    </DropdownToggle>
+                                    <DropdownMenu>
+                                        <DropdownItem onClick={(e) => this.selectComparisonFunction(e)} value="price">Compare Price</DropdownItem>
+                                        <DropdownItem onClick={(e) => this.selectComparisonFunction(e)} value="distance">Compare Distance</DropdownItem>
+                                        <DropdownItem onClick={(e) => this.selectComparisonFunction(e)} value="smart" disabled={smartButtonDisabled ? 'disabled' : null}>Smart Calculation</DropdownItem>
+                                    </DropdownMenu>
+                                </Dropdown>
                                 {/* Gas type filter */}
-                                <Dropdown isOpen={this.state.gasGradeDropdownOpen} toggle={this.gasGradeDropdownToggle} >
+                                <Dropdown className="pr-2" isOpen={this.state.gasGradeDropdownOpen} toggle={this.gasGradeDropdownToggle} >
                                     <DropdownToggle caret> Gas Grade</DropdownToggle>
                                     <DropdownMenu>
                                         <DropdownItem header>Gas stations must have</DropdownItem>
@@ -156,9 +198,9 @@ export default class GasStationFilterContainer extends React.Component {
                                 </Dropdown>
                                 {/* Distance filter */}
                                 <InputGroupText>Distance</InputGroupText>
-                                <Input onChange={(e) => this.setMaxDistance(e)} type="number" min="1" max="100" placeholder="max distance" value={this.state.maxDistance}></Input>
+                                <Input style={{width: '5em' }}onChange={(e) => this.setMaxDistance(e)} type="number" min="1" max="100" placeholder="max distance" value={this.state.maxDistance}></Input>
                                 {/* Filter dropdown */}
-                                <Dropdown isOpen={this.state.gasStationDropdownOpen} toggle={this.gasStationDropdownToggle} >
+                                <Dropdown className="pl-2"isOpen={this.state.gasStationDropdownOpen} toggle={this.gasStationDropdownToggle} >
                                     <DropdownToggle caret>Gas Stations</DropdownToggle>
                                     <DropdownMenu>
                                         {this.state.filterOptions}
@@ -168,7 +210,6 @@ export default class GasStationFilterContainer extends React.Component {
                                 <div style={buttonGroupStyle}>
                                     {this.state.filterButtons}
                                 </div>
-
                             </InputGroup>
                         </Nav>
                     </Collapse>
@@ -179,9 +220,13 @@ export default class GasStationFilterContainer extends React.Component {
                     selectedFilters={this.state.selectedFilters}
                     maxDistance={this.state.maxDistance}
                     firebase={this.props.firebase}
+                    calcFunctionSelected={this.state.calcFunctionSelected}
                 />
                 {/* <FilterPopup setSelectedFilters={this.setSelectedFilters} /> */}
             </React.Fragment>
         );
     }
 }
+
+export default withCookies(GasStationFilterContainer);
+
