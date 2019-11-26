@@ -123,9 +123,6 @@ class GasStationContainer extends React.Component {
      * data nearby. Stores data in the component's state.
      */
     retrieveData(){
-
-        let sc = new StationCalculation();
-
         if(!this.props.isGeolocationAvailable ) {
             console.error('Browser not supported.');
             return false;
@@ -144,7 +141,6 @@ class GasStationContainer extends React.Component {
         let allStationsRef = (this.props.firebase) ? this.props.firebase.getAllStationsRef() : null;
 
         function onData(data) {
-
             let allStationsRaw = data.val();
             let stationNames = new Set();
 
@@ -178,28 +174,12 @@ class GasStationContainer extends React.Component {
             // Here, export stationNames to GasStationFilterContainer
             this.props.retrieveStationNames(Array.from(stationNames));
 
-            //Todo: filter and sort array here
-            let sc = new StationCalculation();  // TODO replace with compareCost once we have the info
 
-            // Sort by price * distance
-            allStationsArr.sort((stationA, stationB) => {
-
-                // If the user inputted car options let's use the smart calculation.
-                // Otherwise we'll use pure distance.
-                // TODO: Put a switch statement here to let the user decide the type of calculation
-                if (user.tankFill != -1 && user.mpg != -1 && user.tankSize != -1) {
-                    return sc.compareCostUser(stationA, stationB, user);
-                }
-
-                return sc.compareDistance(stationA, stationB, user.location);
-            });
-
-            let fiveStations = allStationsArr.slice(0,5);
-
-            this.setState({ stationsData: fiveStations});
+            this.setState({ stationsData: allStationsArr.slice()});
             this.setState({ findClicked: true});
 
-        };
+        }
+
         onData = onData.bind(this);
         if (allStationsRef) {
             allStationsRef.on("value", onData);
@@ -221,6 +201,27 @@ class GasStationContainer extends React.Component {
         }
 
         return true;
+    }
+
+    sortData(stationsData) {
+        //Todo: filter and sort array here
+        let sc = new StationCalculation();  // TODO replace with compareCost once we have the info
+
+        // Sort by price * distance
+        let allStationsArr = stationsData.slice();
+        allStationsArr.sort((stationA, stationB) => {
+
+            // If the user inputted car options let's use the smart calculation.
+            // Otherwise we'll use pure distance.
+            // TODO: Put a switch statement here to let the user decide the type of calculation
+            if (user.tankFill != -1 && user.mpg != -1 && user.tankSize != -1) {
+                return sc.compareCostUser(stationA, stationB, user);
+            }
+
+            return sc.compareDistance(stationA, stationB, user.location);
+        });
+
+        return allStationsArr;
     }
 
     /**
@@ -264,8 +265,9 @@ class GasStationContainer extends React.Component {
      *                          related components.
      */
     render() {
-        let filteredData = this.filterByGasStationName(this.state.stationsData, this.props.selectedFilters);
-        filteredData = this.filterByDistance(filteredData, this.props.maxDistance);
+        let filteredData = this.filterByDistance(this.state.stationsData, this.props.maxDistance);
+        filteredData = this.filterByGasStationName(filteredData, this.props.selectedFilters);
+        filteredData = this.sortData(filteredData).slice(0, 5);
         let mapStyle = {'height': '80vh', 'width': '90%'};
 
         return(
