@@ -94,18 +94,21 @@ class DropdownMenu extends Component {
             currentModel: '',
             currentOption: '',
         }, () => {
-            let make = FuelEconomy.fetchMakesBy(this.state.currentYear);
-            // Adds one or more elements to the beginning of an array and returns the new length of the array
-            make.unshift("");
-            this.setState({
-                make: make.map(make => {
-                    return (
-                        <option>
-                            {make}
-                        </option>
-                    );
-                })
-            });
+            // Only send the request if we have the year
+            if (this.state.currentYear) {
+                let make = FuelEconomy.fetchMakesBy(this.state.currentYear);
+                // Adds one or more elements to the beginning of an array and returns the new length of the array
+                make.unshift("");
+                this.setState({
+                    make: make.map(make => {
+                        return (
+                            <option>
+                                {make}
+                            </option>
+                        );
+                    })
+                });
+            }
         });
     }
 
@@ -125,18 +128,21 @@ class DropdownMenu extends Component {
             currentModel: '',
             currentOption: '',
         }, () => {
-            let model = FuelEconomy.fetchModelsBy(this.state.currentYear, this.state.currentMake);
-            // Adds one or more elements to the beginning of an array and returns the new length of the array
-            model.unshift("");
-            this.setState({
-                model: model.map(model => {
-                    return (
-                        <option>
-                            {model}
-                        </option>
-                    );
-                })
-            });
+            // Only send the request if we have the year and make
+            if (this.state.currentYear && this.state.currentMake) {
+                let model = FuelEconomy.fetchModelsBy(this.state.currentYear, this.state.currentMake);
+                // Adds one or more elements to the beginning of an array and returns the new length of the array
+                model.unshift("");
+                this.setState({
+                    model: model.map(model => {
+                        return (
+                            <option>
+                                {model}
+                            </option>
+                        );
+                    })
+                });
+            }
         });
 
     }
@@ -160,29 +166,28 @@ class DropdownMenu extends Component {
             option: <option> </option>,
             currentOption: ''
         }, () => {
-            let option = FuelEconomy.fetchOptionsBy(this.state.currentYear, this.state.currentMake, this.state.currentModel)
-            // Adds one or more elements to the beginning of an array and returns the new length of the array
-            option.unshift("");
-            this.setState({
-                id: option.map(option => {
-                    return option.id ? option.id: " "
+            if (this.state.currentYear && this.state.currentMake && this.state.currentModel) {
+                let option = FuelEconomy.fetchOptionsBy(this.state.currentYear, this.state.currentMake, this.state.currentModel);
+                // Adds one or more elements to the beginning of an array and returns the new length of the array
+                option.unshift("");
+                this.setState({
+                    id: option.map(option => {
+                        return option.id ? option.id: " "
 
-                }),
-                optionText: option.map(option => {
-                    return option.opt ? option.opt : " "
+                    }),
+                    optionText: option.map(option => {
+                        return option.opt ? option.opt : " "
 
-                }),
-                option: option.map(option => {
-                    return (
-                        <option>
-                            {option.opt}
-                        </option>
-                    );
-                })
-            }, () => {
-                    // console.log(this.state.id)
-                    // console.log(this.state.optionText)
-            });
+                    }),
+                    option: option.map(option => {
+                        return (
+                            <option>
+                                {option.opt}
+                            </option>
+                        );
+                    })
+                });
+            }
         });
     }
 
@@ -196,7 +201,6 @@ class DropdownMenu extends Component {
         this.setState({ currentOption: event.target.value }, () => {
             this.setState({
                 currentID: this.state.id[this.state.optionText.indexOf(this.state.currentOption)]
-
             }, () => {
                     // console.log("Button clicked")
                     if (this.state.currentID) {
