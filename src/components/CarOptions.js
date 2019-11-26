@@ -245,6 +245,11 @@ class DropdownMenu extends Component {
     render() {
         const { cookies } = this.props;
 
+        // Set the default tank fill to value saved in cookies. If there is no cookie, set it to 50%.
+        let defaultTankFill = (cookies.get('tankFill') || .5) * 100;
+        // Set the default tank size to value saved in cookies. If there is no cookie, set it to empty.
+        let defaultTankSize = cookies.get('tankSize') || '';
+
         const wrapperStyle = { width: 400 };
         // const { inputValue } = this.state;
         let years = FuelEconomy.fetchYears();
@@ -324,7 +329,7 @@ class DropdownMenu extends Component {
                     <div style={wrapperStyle}>
                         <Slider min={0}
                                 max={100}
-                                defaultValue={50}
+                                defaultValue={defaultTankFill}
                                 step={10}
                                 mobile={true}
                                 handle={this.handleSlider}
@@ -338,8 +343,9 @@ class DropdownMenu extends Component {
                     </h6>
                     <div>
                         <InputNumber
-                            min={0}
+                            min={1}
                             max={30}
+                            defaultValue={defaultTankSize}
                             style={{ width: 100}}
                             step={1}
                             onChange={(value) => { cookies.set('tankSize', value, cookiesOptions);}}
