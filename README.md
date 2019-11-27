@@ -19,9 +19,9 @@ packages
 
 #### Start Options
 - The default start mode is to build and start a Node server (`"start": "node src/server.js"`).
-This start mode will start the [local host](`http://localhost:3000`) server at port `8080`.
+This start mode will start the local host server at port `8080`.
 - It is also possible to start the local server without Node (`"start": "react-scripts start"`).
-This start mode will start the [local host](`http://localhost:3000`) server at port `3000`.
+This start mode will start the local host server at port `3000`.
 
 ## How to make changes
 
