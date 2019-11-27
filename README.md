@@ -34,14 +34,20 @@ Then, you must install and save that module to the project by typing: `npm insta
 
 ## Testing
 Tests for algorithms and calculations are included on this repository. We use Jest to run our tests,
-and Travis for continuous integration. To run the tests, enter `npm test` from any directory in the
-project.
+and Travis CI for continuous integration. You can either checkout the latest test logs here, or
+run the tests on your own.
 
 Currently, we have test suites that check our `StationCalculation`, `UserData`, and `FuelEconomy`
 modules. Most `FuelEconomy` tests use a mocked `XMLhttprequest` object to check that fetch functions
-work as expected, but a few do an actual request to ensure that we get the data we expect from
-the database. This noticeably slows down the `FuelEconomy` test suite but did help us catch a few
-errors.
+work as expected, but a few perform an actual request to ensure that we get the data we expect from
+the database. This noticeably slows down the `FuelEconomy` test suite, but it was necessary to help
+us catch errors.
+
+### Running Tests
+To run the tests, make sure all packages have been installed by entering the `npm install` command.
+After installing, run `npm test` from any directory in the project. This will start Jest and run
+the tests suites. Note: If a test suite is taking a long time to run, it will finish; slow tests
+are the result of an actual `XMLhttprequest` to a database.
 
 ## Cookies
 Rooty Tooty Gas Computey makes use of cookies to store a users' car data. By storing the data, a
