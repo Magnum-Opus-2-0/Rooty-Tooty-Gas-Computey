@@ -23,19 +23,6 @@ This start mode will start the local host server at port `8080`.
 - It is also possible to start the local server without Node (`"start": "react-scripts start"`).
 This start mode will start the local host server at port `3000`.
 
-## How to make changes
-
-If you include a new library or module, such as:
-
-```
-import React from 'react';
-import clsx from 'clsx';
-import { createStyles, makeStyles, useTheme, Theme } from '@material-ui/core/styles';
-import Input from '@material-ui/core/Input';
-```
-
-Then, you must install and save that module to the project by typing: `npm install --save module_name`. Example: `npm install --save clsx`
-
 ## Testing
 Tests for algorithms and calculations are included on this repository. We use Jest to run our tests,
 and Travis CI for continuous integration. You can either checkout the latest test logs here, or
@@ -52,6 +39,21 @@ To run the tests, make sure all packages have been installed by entering the `np
 After installing, run `npm test` from any directory in the project. This will start Jest and run
 the tests suites. Note: If a test suite is taking a long time to run, it will finish; slow tests
 are the result of an actual `XMLhttprequest` to a database.
+
+## How to Contribute
+Make sure you've read through the [Getting Started](#getting-started) section. Once everything is
+installed, you can create a new branch and start making changes!
+
+To install a new module, make sure you save it to the `package.json` by typing:
+`npm install --save <module_name>`
+
+When you're happy with your changes, make sure you run the tests to ensure everything is still
+working. If all the tests have passed, create a pull request describing the changes you made, so that
+a team member can review your code. 
+
+For more information about contributions feel free to read through our
+[Project Info](https://docs.google.com/document/d/1cLvmys3CL1e2-GMoNYXEPQQOBPJ_EXaBvf9AuGsjxrk/edit?usp=sharing)
+document.
 
 ## Cookies
 Rooty Tooty Gas Computey makes use of cookies to store a users' car data. By storing the data, a
