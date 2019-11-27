@@ -25,8 +25,8 @@ This start mode will start the local host server at port `3000`.
 
 ## Testing
 Tests for algorithms and calculations are included on this repository. We use Jest to run our tests,
-and Travis CI for continuous integration. You can either checkout the latest test logs here, or
-run the tests on your own.
+and Travis CI for continuous integration. You can either checkout the latest test logs
+[here](https://travis-ci.com/Magnum-Opus-2-0/Rooty-Tooty-Gas-Computey), or run the tests on your own.
 
 Currently, we have test suites that check our `StationCalculation`, `UserData`, and `FuelEconomy`
 modules. Most `FuelEconomy` tests use a mocked `XMLhttprequest` object to check that fetch functions
