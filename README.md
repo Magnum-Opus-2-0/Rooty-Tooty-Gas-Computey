@@ -56,7 +56,7 @@ For more information about contributions feel free to read through our
 document.
 
 ## Cookies
-Rooty Tooty Gas Computey makes use of cookies to store a users' car data. By storing the data, a
+Rooty Tooty Gas Computey makes use of cookies to store a user's car data. By storing the data, a
 user does not have to reenter their car options every time they visit the site.
 
 As a developer, you have these cookies available to you after a user has entered all of their
