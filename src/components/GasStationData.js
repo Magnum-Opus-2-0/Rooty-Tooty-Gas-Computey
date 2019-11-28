@@ -5,6 +5,7 @@ import StationCalculation from "../data/StationCalculation";
 import MapContainer from './Map.js'
 import GasStationWrapper from '../data/GasStationWrapper';
 import user from '../data/UserData';
+import { UncontrolledCollapse } from 'reactstrap';
 
 import { withCookies } from 'react-cookie';
 
@@ -351,7 +352,7 @@ class StationsList extends React.Component {
             //const stations = filteredData.map(stationData => {
             let sc = new StationCalculation();
 
-            const stations = this.props.stationsData.map(stationData => {
+            const stations = this.props.stationsData.map((stationData, index) => {
                 const stationPrice = Number.parseFloat(stationData.price).toFixed(2);
                 const stationDistance = sc.calcDistance(user.location, stationData.coords).toFixed(2);
                 const stationCost = sc.calcCostUser(stationData, user).toFixed(2);
@@ -363,6 +364,8 @@ class StationsList extends React.Component {
                         distance={stationDistance}
                         cost={stationCost}
                         key={stationData.key}
+                        station={stationData}
+                        index={index}
                     />
                 );
             });
@@ -391,11 +394,10 @@ class StationsList extends React.Component {
  *                              as a string.
  *     cost     {string|null}   The total cost of filling the tank at the gas
  *                              station represented as a string.
+ *     station  {object}        The station from which we will pull prices.
+ *     index    {number}        The index of the element in the list.
  * }
  * state: none
- *
- * @param props {object}    The props object passed to this React component.
- * @returns {HTMLElement}   A <li> containing the station's name.
  */
 class StationListItem extends React.Component {
     constructor(props) {
@@ -410,14 +412,73 @@ class StationListItem extends React.Component {
         return <h6>${this.props.cost} to fill tank</h6>
     }
 
+    /**
+     * Render the React component.
+     *
+     * @returns {HTMLElement}   A <li> containing the station's name.
+     */
     render() {
         return (
             <li key={this.props.key}>
                 <h2>{this.props.name}</h2>
-                <h6>${this.props.price} per gallon</h6>
+                {/*<h6>${this.props.price} per gallon</h6>*/}
+                <FuelPrices station={this.props.station}
+                            index={this.props.index}/>
                 <h6>{this.props.distance} miles away</h6>
                 {this.printCost()}
             </li>
+        );
+    }
+}
+
+/**
+ * A component that contains all fuel prices for the specified gas station.
+ *
+ * The regular price is always displayed, and the component expands to reveal
+ * mid and premium prices when the regular price is clicked.
+ *
+ * props: {
+ *     station  {object}    The gas station from which to pull prices.
+ *     index    {number}    The index of the station in the list.
+ * }
+ *
+ * state: none
+ */
+class FuelPrices extends React.Component {
+    constructor(props) {
+        super(props);
+    }
+
+    displayPrice(price) {
+        if (price && price > 0) {
+            return '$' + price;
+        }
+
+        return 'Price Unavailable';
+    }
+
+    render() {
+        return (
+            <div>
+                <h6 id={'reg_price_' + this.props.index}
+                    className='FuelPriceCollapse'
+                >
+                    Reg: {this.displayPrice(this.props.station.price)}
+                </h6>
+                <UncontrolledCollapse toggler={'#reg_price_' + this.props.index}>
+                    {/* TODO: Get other prices from station when they become available to us */}
+                    <h6 id={'reg_price_' + this.props.index}
+                        className='FuelPriceCollapse'
+                    >
+                        Mid: {this.displayPrice(undefined)}
+                    </h6>
+                    <h6 id={'reg_price_' + this.props.index}
+                        className='FuelPriceCollapse'
+                    >
+                        Pre: {this.displayPrice(undefined)}
+                    </h6>
+                </UncontrolledCollapse>
+            </div>
         );
     }
 }
