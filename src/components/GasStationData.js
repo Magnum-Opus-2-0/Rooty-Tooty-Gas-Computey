@@ -223,20 +223,13 @@ class GasStationContainer extends React.Component {
 
             switch (this.props.calcFunctionSelected) {
                 case "price":
-                    console.log("PRICE")
                     return sc.comparePrice(stationA, stationB);
-                    break;
                 case "distance":
-                    console.log("DISTANCE")
                     return sc.compareDistance(stationA, stationB, user.location);
-                    break;
                 case "smart":
-                    console.log("SMART")
                     return sc.compareCostUser(stationA, stationB, user);
-                    break;
                 default:
                     return -1;
-                    break;
             }
         });
 
