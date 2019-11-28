@@ -451,7 +451,7 @@ class FuelPrices extends React.Component {
 
     displayPrice(price) {
         if (price && price > 0) {
-            return '$' + price;
+            return '$' + price + ' per gallon';
         }
 
         return 'Price Unavailable';
@@ -463,19 +463,19 @@ class FuelPrices extends React.Component {
                 <h6 id={'reg_price_' + this.props.index}
                     className='FuelPriceCollapse'
                 >
-                    Reg: {this.displayPrice(this.props.station.price)}
+                    Unleaded: {this.displayPrice(this.props.station.price)}
                 </h6>
                 <UncontrolledCollapse toggler={'#reg_price_' + this.props.index}>
                     {/* TODO: Get other prices from station when they become available to us */}
                     <h6 id={'reg_price_' + this.props.index}
                         className='FuelPriceCollapse'
                     >
-                        Mid: {this.displayPrice(undefined)}
+                        Unleaded Plus: {this.displayPrice(undefined)}
                     </h6>
                     <h6 id={'reg_price_' + this.props.index}
                         className='FuelPriceCollapse'
                     >
-                        Pre: {this.displayPrice(undefined)}
+                        Premium: {this.displayPrice(undefined)}
                     </h6>
                 </UncontrolledCollapse>
             </div>
