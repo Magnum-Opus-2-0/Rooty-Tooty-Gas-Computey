@@ -274,15 +274,19 @@ class GasStationContainer extends React.Component {
     }
 
     filterByGasGrade(stationList, regular, mid, premium) {
-        // If all gas grades are not selected, ignore this filter
         if (!regular && !mid && !premium) {
             return stationList;
         }
 
         let filteredStationList = [];
         for (let station of stationList) {
-            filteredStationList.push(station);
-        }
+            const hasRegular = !regular || station.priceRegular != Infinity;
+            const hasMid = !mid || station.priceMid != Infinity;
+            const hasPremium = !premium || station.pricePremium != Infinity;
+            if (hasRegular && hasMid && hasPremium) {
+                filteredStationList.push(station);
+            }
+        }   
         return filteredStationList;
     }
 
@@ -296,7 +300,7 @@ class GasStationContainer extends React.Component {
         let filteredData = this.filterByDistance(this.state.stationsData, this.props.maxDistance);
         filteredData = this.filterByGasStationName(filteredData, this.props.selectedFilters);
         filteredData = this.filterByGasGrade(filteredData, this.props.gasGrades.regular, this.props.gasGrades.mid, this.props.gasGrades.premium);
-        filteredData = this.sortData(filteredData).slice(0, 5);
+        filteredData = this.sortData(filteredData).slice(0, 25);
         let mapStyle = {'height': '80vh', 'width': '90%'};
 
         return(
