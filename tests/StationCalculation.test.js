@@ -30,7 +30,7 @@ afterEach(() => {
 describe('Compare Price', () => {
     test('A < B', () => {
         let sc = new StationCalculation();
-
+        console.log(debugGasData[0])
         expect(sc.comparePrice(debugGasData[0], debugGasData[2])).toBe(-1);
     });
 
@@ -164,7 +164,7 @@ describe('Cost', () => {
 
                     // debugGas[4]: 19.26
                     // debugGas[5]: 18.57
-                    expect(sc.compareCost(debugGasData[4], debugGasData[5], 16, 8, .46, userLocation)).toBe(1);
+                    expect(sc.compareCost(debugGasData[4], debugGasData[5], 16, 8, .46, userLocation)).toBe(-1);
                 });
             });
 
@@ -206,7 +206,11 @@ const userLocation = {
 const debugGasData = [
     {
         name: 'Arco',
-        price: 3.82, // distance 1.10 miles to userLocation
+        prices: {
+            regular: 3.82, // distance 1.10 miles to userLocation
+            mid: 4.06,
+            premium: 4.18
+        },
         coords: {
             latitude: 33.976067,
             longitude: -117.339343
@@ -215,7 +219,11 @@ const debugGasData = [
     },
     {
         name: 'Shell',
-        price: 4.00,
+        prices: {
+            regular: 4.00,
+            mid: 4.26,
+            premium: 4.38
+        },
         coords: {
             latitude: 33.975381,
             longitude: -117.340335
@@ -224,7 +232,11 @@ const debugGasData = [
     },
     {
         name: '76',
-        price: 4.12,
+        prices: {
+            regular: 4.12,
+            mid: 4.38,
+            premium: 4.51
+        },
         coords: {
             latitude: 33.983209,
             longitude: -117.341269
@@ -233,7 +245,11 @@ const debugGasData = [
     },
     {
         name: 'Arco',
-        price: 3.80,
+        prices: {
+            regular: 3.80,
+            mid: 4.05,
+            premium: 4.16
+        },
         coords: {
             latitude: 33.982567,
             longitude: -117.341772
@@ -242,7 +258,11 @@ const debugGasData = [
     },
     {
         name: 'Shell',
-        price: 4.38,
+        prices: {
+            regular: 4.20,
+            mid: 4.47,
+            premium: 4.60
+        },
         coords: {
             latitude: 33.983350,
             longitude: -117.340284
@@ -251,7 +271,11 @@ const debugGasData = [
     },
     {
         name: 'Chevron',
-        price: 4.20,
+        prices: {
+            regular: 4.20,
+            mid: 4.47,
+            premium: 4.60
+        },
         coords: {
             latitude: 33.955115,
             longitude: -117.332514
@@ -260,7 +284,11 @@ const debugGasData = [
     },
     {
         name: 'Mobil',
-        price: 4.05,
+        prices: {
+            regular: 4.05,
+            mid: 4.31,
+            premium: 4.43
+        },
         coords: {
             latitude: 33.977036,
             longitude: -117.336895

@@ -103,17 +103,15 @@ class GasStationContainer extends React.Component {
     }
 
     static mapStationNames(name) {
-
         switch(name) {
-
             case "1":
-            return "7/11*";
+                return "7/11*";
             case "M":
-            return "Mobil*";
+                return "Mobil*";
             case "B":
-            return "Arco*";
+                return "Arco*";
             default:
-            return name;
+                return name;
         }
     }
 
@@ -154,16 +152,27 @@ class GasStationContainer extends React.Component {
                 // don't push a GasStationWrapper.
                 // In effect, this filters our data by stations
                 // with all fields valid.
-                if (value.station && value.reg_price && value.lat && value.lng && value.id) {
-
+                if (value.station && value.reg_price && value.mid_price && value.pre_price && value.lat && value.lng && value.id) {
+                    let name = GasStationContainer.mapStationNames(value.station);
+                    const prices = {
+                        regular: value.reg_price,
+                        mid: value.mid_price,
+                        premium: value.pre_price
+                    };
+                    const coords = {
+                        latitude: value.lat,
+                        longitude: value.lng
+                    };
+                    const gasStation = new GasStationWrapper(name, prices, coords, value.id);
+                    result.push(gasStation);
                     // Populate allStationsArr
-                    result.push(new GasStationWrapper(
-                        GasStationContainer.mapStationNames(value.station),
-                        value.reg_price,
-                        value.lat,
-                        value.lng,
-                        value.id
-                        ));
+                    // result.push(new GasStationWrapper(
+                    //     GasStationContainer.mapStationNames(value.station),
+                    //     value.reg_price,
+                    //     value.lat,
+                    //     value.lng,
+                    //     value.id
+                    //     ));
 
                     // Populate stationNames
                     stationNames.add(GasStationContainer.mapStationNames(value.station));
@@ -189,13 +198,17 @@ class GasStationContainer extends React.Component {
             // Populatives list with hard-coded debug data
             let fiveStations = [];
             debugData.map((value) => {
-                fiveStations.push(new GasStationWrapper(
-                    value.station,
-                    value.reg_price,
-                    value.lat,
-                    value.lng,
-                    value.id
-                ));
+                const prices = {
+                    regular: value.reg_price,
+                    mid: value.mid_price,
+                    premium: value.pre_price
+                };
+                const coords = {
+                    latitude: value.lat,
+                    longitude: value.lng
+                };
+                const gasStation = new GasStationWrapper(value.station, prices, coords, value.id);
+                fiveStations.push(gasStation);
             });
             this.setState({stationsData: fiveStations});
             this.setState({findClicked: true});
@@ -250,6 +263,9 @@ class GasStationContainer extends React.Component {
     }
 
     filterByDistance(stationList, maxDistance) {
+        if (maxDistance <= 0) {
+            return stationList;
+        }
         let sc = new StationCalculation();
         let filteredStationList = []
         for (let station of stationList) {
@@ -257,6 +273,23 @@ class GasStationContainer extends React.Component {
                 filteredStationList.push(station)
             }
         }
+        return filteredStationList;
+    }
+
+    filterByGasGrade(stationList, regular, mid, premium) {
+        if (!regular && !mid && !premium) {
+            return stationList;
+        }
+
+        let filteredStationList = [];
+        for (let station of stationList) {
+            const hasRegular = !regular || station.priceRegular != Infinity;
+            const hasMid = !mid || station.priceMid != Infinity;
+            const hasPremium = !premium || station.pricePremium != Infinity;
+            if (hasRegular && hasMid && hasPremium) {
+                filteredStationList.push(station);
+            }
+        }   
         return filteredStationList;
     }
 
@@ -269,7 +302,8 @@ class GasStationContainer extends React.Component {
     render() {
         let filteredData = this.filterByDistance(this.state.stationsData, this.props.maxDistance);
         filteredData = this.filterByGasStationName(filteredData, this.props.selectedFilters);
-        filteredData = this.sortData(filteredData).slice(0, 5);
+        filteredData = this.filterByGasGrade(filteredData, this.props.gasGrades.regular, this.props.gasGrades.mid, this.props.gasGrades.premium);
+        filteredData = this.sortData(filteredData).slice(0, 25);
         let mapStyle = {'height': '80vh', 'width': '90%'};
 
         return(
@@ -336,7 +370,7 @@ class StationsList extends React.Component {
             let sc = new StationCalculation();
 
             const stations = this.props.stationsData.map((stationData, index) => {
-                const stationPrice = Number.parseFloat(stationData.price).toFixed(2);
+                const stationPrice = Number.parseFloat(stationData.priceRegular).toFixed(2);
                 const stationDistance = sc.calcDistance(user.location, stationData.coords).toFixed(2);
                 const stationCost = sc.calcCostUser(stationData, user).toFixed(2);
 
@@ -404,7 +438,7 @@ class StationListItem extends React.Component {
         return (
             <li key={this.props.key}>
                 <h2>{this.props.name}</h2>
-                {/*<h6>${this.props.price} per gallon</h6>*/}
+                {/*<h6>${this.props.priceRegular} per gallon</h6>*/}
                 <FuelPrices station={this.props.station}
                             index={this.props.index}/>
                 <h6>{this.props.distance} miles away</h6>
@@ -433,11 +467,11 @@ class FuelPrices extends React.Component {
     }
 
     displayPrice(price) {
-        if (price && price > 0) {
+        if (price && !isNaN(price) && price != Infinity && price > 0) {
             return '$' + price + ' per gallon';
         }
 
-        return 'Price Unavailable';
+        return 'N/A';
     }
 
     render() {
@@ -446,19 +480,19 @@ class FuelPrices extends React.Component {
                 <h6 id={'reg_price_' + this.props.index}
                     className='FuelPriceCollapse'
                 >
-                    Unleaded: {this.displayPrice(this.props.station.price)}
+                    <strong>Unleaded</strong>: {this.displayPrice(this.props.station.priceRegular)}
                 </h6>
                 <UncontrolledCollapse toggler={'#reg_price_' + this.props.index}>
                     {/* TODO: Get other prices from station when they become available to us */}
                     <h6 id={'reg_price_' + this.props.index}
                         className='FuelPriceCollapse'
                     >
-                        Unleaded Plus: {this.displayPrice(undefined)}
+                        <strong>Unleaded Plus</strong>: {this.displayPrice(this.props.station.priceMid)}
                     </h6>
                     <h6 id={'reg_price_' + this.props.index}
                         className='FuelPriceCollapse'
                     >
-                        Premium: {this.displayPrice(undefined)}
+                        <strong>Premium</strong>: {this.displayPrice(this.props.station.pricePremium)}
                     </h6>
                 </UncontrolledCollapse>
             </div>
