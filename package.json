@@ -8,7 +8,7 @@
     },
     "scripts": {
         "test": "jest --passWithNoTests",
-        "start": "node src/server.js",
+        "start": "react-scripts start",
         "build": "react-scripts build",
         "eject": "react-scripts eject"
     },

@@ -21,9 +21,9 @@ class GasStationFilterContainer extends React.Component {
             availableFilters: ['Sunoco', 'Xtramart', 'Shell'],
             filterButtons: [],
             maxDistance: 25,
-            gasQualityRegular: true,
-            gasQualityMid: true,
-            gasQualityPremium: true,
+            gasGradeRegular: true,
+            gasGradeMid: true,
+            gasGradePremium: true,
             filterOptions: []
         }
 
@@ -133,16 +133,16 @@ class GasStationFilterContainer extends React.Component {
         }
     }
 
-    toggleCheckbox(event, gasQuality) {
-        switch(gasQuality) {
+    toggleCheckbox(event, gasGrade) {
+        switch(gasGrade) {
             case 'regular':
-                this.setState({gasQualityRegular: !this.state.gasQualityRegular})
+                this.setState({gasGradeRegular: !this.state.gasGradeRegular})
                 break
             case 'mid':
-                this.setState({gasQualityMid: !this.state.gasQualityMid})
+                this.setState({gasGradeMid: !this.state.gasGradeMid})
                 break
             case 'premium':
-                this.setState({gasQualityPremium: !this.state.gasQualityPremium})
+                this.setState({gasGradePremium: !this.state.gasGradePremium})
                 break
         }
     }
@@ -186,14 +186,14 @@ class GasStationFilterContainer extends React.Component {
                                         <DropdownItem onClick={(e) => this.selectComparisonFunction(e)} value="smart" disabled={smartButtonDisabled ? 'disabled' : null}>Smart Calculation</DropdownItem>
                                     </DropdownMenu>
                                 </Dropdown>
-                                {/* Gas type filter */}
+                                {/* Gas grade filter */}
                                 <Dropdown className="pr-2" isOpen={this.state.gasGradeDropdownOpen} toggle={this.gasGradeDropdownToggle} >
                                     <DropdownToggle caret> Gas Grade</DropdownToggle>
                                     <DropdownMenu>
                                         <DropdownItem header>Gas stations must have</DropdownItem>
-                                        <Input onClick={(e) => this.toggleCheckbox(e, 'regular')} addon type="checkbox" aria-label="Unleaded" checked={this.state.gasQualityRegular} /> Unleaded<br/>
-                                        <Input onClick={(e) => this.toggleCheckbox(e, 'mid')} addon type="checkbox" aria-label="Unleaded Plus" checked={this.state.gasQualityMid} /> Unleaded Plus<br/>
-                                        <Input onClick={(e) => this.toggleCheckbox(e, 'premium')} addon type="checkbox" aria-label="Premium" checked={this.state.gasQualityPremium} /> Premium<br/>
+                                        <Input onClick={(e) => this.toggleCheckbox(e, 'regular')} addon type="checkbox" aria-label="Unleaded" checked={this.state.gasGradeRegular} /> Unleaded<br/>
+                                        <Input onClick={(e) => this.toggleCheckbox(e, 'mid')} addon type="checkbox" aria-label="Unleaded Plus" checked={this.state.gasGradeMid} /> Unleaded Plus<br/>
+                                        <Input onClick={(e) => this.toggleCheckbox(e, 'premium')} addon type="checkbox" aria-label="Premium" checked={this.state.gasGradePremium} /> Premium<br/>
                                     </DropdownMenu>
                                 </Dropdown>
                                 {/* Distance filter */}
@@ -217,10 +217,15 @@ class GasStationFilterContainer extends React.Component {
 
                 {/* Main body of the Find page */}
                 <GasStationContainer retrieveStationNames={this.retrieveStationNames}
-                    selectedFilters={this.state.selectedFilters}
-                    maxDistance={this.state.maxDistance}
-                    firebase={this.props.firebase}
-                    calcFunctionSelected={this.state.calcFunctionSelected}
+                    selectedFilters={this.state.selectedFilters} 
+                    maxDistance={this.state.maxDistance} 
+                    firebase={this.props.firebase} 
+                    calcFunctionSelected={this.state.calcFunctionSelected} 
+                    gasGrades={{
+                        regular: this.state.gasGradeRegular,
+                        mid: this.state.gasGradeMid,
+                        premium: this.state.gasGradePremium
+                    }}
                 />
                 {/* <FilterPopup setSelectedFilters={this.setSelectedFilters} /> */}
             </React.Fragment>

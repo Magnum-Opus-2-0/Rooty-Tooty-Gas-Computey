@@ -14,7 +14,7 @@ class StationCalculation {
      *                      otherwise.
      */
     comparePrice(stationA, stationB) {
-        return Math.sign(stationA.price - stationB.price);
+        return Math.sign(stationA.priceRegular - stationB.priceRegular);
     }
 
     /**
@@ -169,7 +169,7 @@ class StationCalculation {
         }
 
         let dist = this.calcDistance(station.coords, userLocation);
-        return station.price * ((dist / mpg) + volumeMax * (1 - volumeCur));
+        return station.priceRegular * ((dist / mpg) + volumeMax * (1 - volumeCur));
     }
 
     /**
