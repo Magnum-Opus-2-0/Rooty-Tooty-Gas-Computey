@@ -263,6 +263,9 @@ class GasStationContainer extends React.Component {
     }
 
     filterByDistance(stationList, maxDistance) {
+        if (maxDistance <= 0) {
+            return stationList;
+        }
         let sc = new StationCalculation();
         let filteredStationList = []
         for (let station of stationList) {

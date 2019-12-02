@@ -123,13 +123,13 @@ class GasStationFilterContainer extends React.Component {
     }
 
     setMaxDistance(event) {
-        const distance = parseFloat(event.target.value)
-        if (!isNaN(distance) && distance >= 0) {
-            this.setState({maxDistance: distance})
-        } else if (event.target.value == "") {
-            this.setState({maxDistance: 0})
+        const distance = parseFloat(event.target.value);
+        if (!isNaN(distance) && distance >= 0 && distance <= 9999) {
+            this.setState({maxDistance: distance});
+        } else if (event.target.value == "" || distance <= 0) {
+            this.setState({maxDistance: 0});
         } else {
-            this.setState({maxDistance: this.state.maxDistance})
+            this.setState({maxDistance: this.state.maxDistance});
         }
     }
 
@@ -148,7 +148,6 @@ class GasStationFilterContainer extends React.Component {
     }
 
     selectComparisonFunction(event) {
-        console.log("Edward is super cool")
         this.setState({calcFunctionSelected: event.target.value})
     }
 
@@ -160,7 +159,6 @@ class GasStationFilterContainer extends React.Component {
         const tankFill = cookies.get('tankFill');
         let smartButtonDisabled = mpg === undefined || tankSize === undefined || tankFill === undefined;
         let dropdownName = '-----';
-        console.log('STATE:' + this.state.calcFunctionSelected)
         if (this.state.calcFunctionSelected == "price") {
             dropdownName = 'Compare Price';
         } else if (this.state.calcFunctionSelected == "distance") {
@@ -168,6 +166,7 @@ class GasStationFilterContainer extends React.Component {
         } else if (this.state.calcFunctionSelected == "smart") {
             dropdownName = 'Smart Calculation';
         }
+        console.log(this.state.maxDistance)
         return (
             <React.Fragment>
                 {/* Navigation bar for the filters */}
@@ -198,7 +197,7 @@ class GasStationFilterContainer extends React.Component {
                                 </Dropdown>
                                 {/* Distance filter */}
                                 <InputGroupText>Distance</InputGroupText>
-                                <Input style={{width: '5em' }}onChange={(e) => this.setMaxDistance(e)} type="number" min="1" max="100" placeholder="max distance" value={this.state.maxDistance}></Input>
+                                <Input style={{'max-width':'15%'}} onChange={(e) => this.setMaxDistance(e)} type="number" min="0" max="9999" placeholder="in miles" value={this.state.maxDistance > 0 ? this.state.maxDistance : ""}></Input>
                                 {/* Filter dropdown */}
                                 <Dropdown className="pl-2"isOpen={this.state.gasStationDropdownOpen} toggle={this.gasStationDropdownToggle} >
                                     <DropdownToggle caret>Gas Stations</DropdownToggle>
