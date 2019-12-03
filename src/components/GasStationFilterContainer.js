@@ -166,7 +166,6 @@ class GasStationFilterContainer extends React.Component {
         } else if (this.state.calcFunctionSelected == "smart") {
             dropdownName = 'Smart Calculation';
         }
-        console.log(this.state.maxDistance)
         return (
             <React.Fragment>
                 {/* Navigation bar for the filters */}

@@ -6,6 +6,7 @@ import MapContainer from './Map.js'
 import GasStationWrapper from '../data/GasStationWrapper';
 import user from '../data/UserData';
 import { UncontrolledCollapse } from 'reactstrap';
+import {Button} from 'reactstrap';
 
 import { withCookies } from 'react-cookie';
 
@@ -306,11 +307,15 @@ class GasStationContainer extends React.Component {
         filteredData = this.sortData(filteredData).slice(0, 5);
         let mapStyle = {'height': '80vh', 'width': '90%'};
 
+        
+        
+
         return(
             <React.Fragment>
                 <div className="container">
                    <div className="row">
                         <div className="col-sm">
+                            
                             <StationsList
                                 name="Station List"
                                 stationsData={filteredData}
@@ -426,7 +431,7 @@ class StationListItem extends React.Component {
             return <div/>
         }
 
-        return <h6>${this.props.cost} to fill tank</h6>
+        return (<h6>${this.props.cost} to fill tank</h6>)
     }
 
     /**
@@ -435,6 +440,9 @@ class StationListItem extends React.Component {
      * @returns {HTMLElement}   A <li> containing the station's name.
      */
     render() {
+        const baseURL = "https://www.google.com/maps/search/google+maps+";
+        const closestCoords = this.props.station.coords.latitude + "," + this.props.station.longitude;
+        const directionsURL = baseURL + closestCoords;
         return (
             <li key={this.props.key}>
                 <h2>{this.props.name}</h2>
@@ -443,6 +451,7 @@ class StationListItem extends React.Component {
                             index={this.props.index}/>
                 <h6>{this.props.distance} miles away</h6>
                 {this.printCost()}
+                <Button onClick={() => window.open(directionsURL)}>Get Directions</Button>
             </li>
         );
     }
