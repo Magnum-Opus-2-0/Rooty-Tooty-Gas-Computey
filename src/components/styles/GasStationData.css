@@ -10,6 +10,12 @@
     overflow: scroll;
 }
 
+.StationListContainerNoScroll {
+    margin: 3vw;
+    white-space: pre;
+    height: 80vh;
+}
+
 .StationList {
     font-size: 1.95em;
     list-style-type: none;
