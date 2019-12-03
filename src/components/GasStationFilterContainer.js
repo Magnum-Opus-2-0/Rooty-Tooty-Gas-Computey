@@ -177,12 +177,12 @@ class GasStationFilterContainer extends React.Component {
                                 {/* Calculation Switching */}
                                 <Dropdown className="pr-2" isOpen={this.state.gasCalcDropdownOpen} toggle={this.gasCalcDropdownToggle} >
                                     <DropdownToggle caret>
-                                        {dropdownName}
+                                        {/*dropdownName*/}Sort by
                                     </DropdownToggle>
                                     <DropdownMenu>
-                                        <DropdownItem onClick={(e) => this.selectComparisonFunction(e)} value="price">Compare Price</DropdownItem>
-                                        <DropdownItem onClick={(e) => this.selectComparisonFunction(e)} value="distance">Compare Distance</DropdownItem>
-                                        <DropdownItem onClick={(e) => this.selectComparisonFunction(e)} value="smart" disabled={smartButtonDisabled ? 'disabled' : null}>Smart Calculation</DropdownItem>
+                                        <DropdownItem onClick={(e) => this.selectComparisonFunction(e)} value="price">{this.state.calcFunctionSelected == "price" ? "✔️" : " "} Price only</DropdownItem>
+                                        <DropdownItem onClick={(e) => this.selectComparisonFunction(e)} value="distance">{this.state.calcFunctionSelected == "distance" ? "✔️" : " "} Distance only</DropdownItem>
+                                        <DropdownItem onClick={(e) => this.selectComparisonFunction(e)} value="smart" disabled={smartButtonDisabled ? 'disabled' : null}>{this.state.calcFunctionSelected == "smart" ? "✔️" : " "} Smart calculation</DropdownItem>
                                     </DropdownMenu>
                                 </Dropdown>
                                 {/* Gas grade filter */}
@@ -197,7 +197,7 @@ class GasStationFilterContainer extends React.Component {
                                 </Dropdown>
                                 {/* Distance filter */}
                                 <InputGroupText>Distance</InputGroupText>
-                                <Input style={{'max-width':'15%'}} onChange={(e) => this.setMaxDistance(e)} type="number" min="0" max="9999" placeholder="in miles" value={this.state.maxDistance > 0 ? this.state.maxDistance : ""}></Input>
+                                <Input style={{'max-width':'6em'}} onChange={(e) => this.setMaxDistance(e)} type="number" min="0" max="9999" placeholder="in miles" value={this.state.maxDistance > 0 ? this.state.maxDistance : ""}></Input>
                                 {/* Filter dropdown */}
                                 <Dropdown className="pl-2"isOpen={this.state.gasStationDropdownOpen} toggle={this.gasStationDropdownToggle} >
                                     <DropdownToggle caret>Gas Stations</DropdownToggle>

@@ -303,7 +303,7 @@ class GasStationContainer extends React.Component {
         let filteredData = this.filterByDistance(this.state.stationsData, this.props.maxDistance);
         filteredData = this.filterByGasStationName(filteredData, this.props.selectedFilters);
         filteredData = this.filterByGasGrade(filteredData, this.props.gasGrades.regular, this.props.gasGrades.mid, this.props.gasGrades.premium);
-        filteredData = this.sortData(filteredData).slice(0, 25);
+        filteredData = this.sortData(filteredData).slice(0, 5);
         let mapStyle = {'height': '80vh', 'width': '90%'};
 
         return(
@@ -386,9 +386,9 @@ class StationsList extends React.Component {
                     />
                 );
             });
-
+            console.log("LENGTH " + this.props.stationsData.length)
             return (
-                <div className="StationListContainer">
+                <div className={this.props.stationsData.length >= 5 ? "StationListContainer" : "StationListContainerNoScroll"}>
                     <ol className="StationList">
                         {stations}
                     </ol>
