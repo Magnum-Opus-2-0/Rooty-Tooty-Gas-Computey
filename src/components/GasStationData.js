@@ -386,7 +386,7 @@ class StationsList extends React.Component {
                     />
                 );
             });
-            console.log("LENGTH " + this.props.stationsData.length)
+            
             return (
                 <div className={this.props.stationsData.length >= 5 ? "StationListContainer" : "StationListContainerNoScroll"}>
                     <ol className="StationList">
