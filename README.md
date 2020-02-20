@@ -2,15 +2,22 @@
 
 [![Build Status](https://travis-ci.com/Magnum-Opus-2-0/Rooty-Tooty-Gas-Computey.svg?branch=master)](https://travis-ci.com/Magnum-Opus-2-0/Rooty-Tooty-Gas-Computey)
 
-A better Gas Buddy
+A better Gas Buddy only in Riverside, CA
 
 [Visit the site!](https://rooty-tooty-gas-computey.herokuapp.com/)
+
+## Images
+Displays cheapest gas stations nearby.
+<img src="src/images/GasStationMap.png">
+
+Users are able to choose their car options, tank fill, tank size, displays city mpg and highway mpg.
+<img src="src/images/CarOptions.png">
 
 ## Getting Started
 ### Installation
 1. Clone the repo to your desired location using `git clone https://github.com/Magnum-Opus-2-0/Rooty-Tooty-Gas-Computey.git`
 2. Run the `npm install` command in the root directory of the project to install all required
-packages
+packages.
 
 ### How to Use
 1. Type `npm run build` to compile the project.
@@ -49,7 +56,7 @@ To install a new module, make sure you save it to the `package.json` by typing:
 
 When you're happy with your changes, make sure you run the tests to ensure everything is still
 working. If all the tests have passed, create a pull request describing the changes you made, so that
-a team member can review your code. 
+a team member can review your code.
 
 For more information about contributions feel free to read through our
 [Project Info](https://docs.google.com/document/d/1cLvmys3CL1e2-GMoNYXEPQQOBPJ_EXaBvf9AuGsjxrk/edit?usp=sharing)
@@ -75,5 +82,5 @@ car information:
 - `tankFill`: The current fill of the user's gas tank as a percentage. Defaults to 50%.
 
 All cookies except the last two are available after the user enters their car option. `tankSize`
-needs user input before it is saved, and `tankFill` is available immediately. 
+needs user input before it is saved, and `tankFill` is available immediately.
 
