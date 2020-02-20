@@ -10,7 +10,7 @@ A better Gas Buddy only in Riverside, CA
 Displays cheapest gas stations nearby.
 <img src="src/images/GasStationMap.png">
 
-Users are able to choose their car options, tank fill, tank size, displays city mpg and highway mpg.
+Users are able to choose their car options, tank fill, tank size, displays city and highway mpg.
 <img src="src/images/CarOptions.png">
 
 ## Getting Started
