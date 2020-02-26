@@ -6,13 +6,6 @@ A better Gas Buddy only in Riverside, CA
 
 [Visit the site!](https://rooty-tooty-gas-computey.herokuapp.com/)
 
-## Images
-Displays cheapest gas stations nearby.
-<img src="src/images/GasStationMap.png">
-
-Users are able to choose their car options, tank fill, tank size, displays city and highway mpg.
-<img src="src/images/CarOptions.png">
-
 ## Getting Started
 ### Installation
 1. Clone the repo to your desired location using `git clone https://github.com/Magnum-Opus-2-0/Rooty-Tooty-Gas-Computey.git`
@@ -84,3 +77,9 @@ car information:
 All cookies except the last two are available after the user enters their car option. `tankSize`
 needs user input before it is saved, and `tankFill` is available immediately.
 
+## Images
+Displays cheapest gas stations nearby.
+<img src="src/images/GasStationMap.png">
+
+Users are able to choose their car options, tank fill, tank size, displays city and highway mpg.
+<img src="src/images/CarOptions.png">
