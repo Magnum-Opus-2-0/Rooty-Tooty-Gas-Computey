@@ -41,7 +41,7 @@
     "devDependencies": {
         "@babel/core": "^7.6.4",
         "@babel/preset-env": "^7.6.3",
-        "acorn": "^7.1.0",
+        "acorn": "^7.1.1",
         "babel-jest": "^24.9.0",
         "enzyme": "^3.10.0",
         "enzyme-adapter-react-16": "^1.15.1",
